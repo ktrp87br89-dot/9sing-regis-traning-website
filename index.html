@@ -107,13 +107,48 @@
     </main>
 
     <div id="editModal" class="hidden fixed inset-0 z-[70] bg-black/80 backdrop-blur flex items-center justify-center p-4">
-        <div class="glass w-full max-w-sm rounded-2xl p-6 border border-slate-600">
-            <h3 class="text-white font-bold text-lg mb-4">แก้ไขสถานะ</h3>
+        <div class="glass w-full max-w-sm rounded-2xl p-6 border border-slate-600 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-white font-bold text-lg mb-4">แก้ไขข้อมูล</h3>
             <input type="hidden" id="editRowId">
+            
             <div class="space-y-4">
-                <div><label class="text-xs text-slate-400">สถานะ</label><select id="editStatus" class="w-full mt-1 p-2 rounded-lg bg-slate-800 text-white border border-slate-600"><option value="Active">Active</option><option value="Passed">Passed</option><option value="Resigned">Resigned</option><option value="New Job">New Job</option><option value="Back Office">Back Office</option><option value="Other">Other</option></select></div>
-                <div><label class="text-xs text-slate-400">หมายเหตุ</label><textarea id="editNote" rows="3" class="w-full mt-1 p-2 rounded-lg bg-slate-800 text-white border border-slate-600"></textarea></div>
+                <div>
+                    <label class="text-xs text-slate-400">ทีม (Team)</label>
+                    <select id="editTeamSelect" onchange="toggleTeamInput(this)" class="w-full mt-1 p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-sm">
+                        <option value="RETAIL 1">RETAIL 1</option>
+                        <option value="RETAIL 2">RETAIL 2</option>
+                        <option value="RETAIL 3">RETAIL 3</option>
+                        <option value="RETAIL 4">RETAIL 4</option>
+                        <option value="PA 1A">PA 1A</option>
+                        <option value="PA 1B">PA 1B</option>
+                        <option value="PA 1C">PA 1C</option>
+                        <option value="PA 1D">PA 1D</option>
+                        <option value="PA 2A">PA 2A</option>
+                        <option value="PA 2B">PA 2B</option>
+                        <option value="PA 2C">PA 2C</option>
+                        <option value="OTHER" class="text-yellow-400 font-bold">+ พิมพ์เอง (Other)</option>
+                    </select>
+                    <input type="text" id="editTeamInput" class="hidden w-full mt-2 p-2 rounded-lg bg-slate-700 text-white border border-slate-500 text-sm" placeholder="ระบุชื่อทีม...">
+                </div>
+
+                <div>
+                    <label class="text-xs text-slate-400">สถานะ</label>
+                    <select id="editStatus" class="w-full mt-1 p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-sm">
+                        <option value="Active">Active</option>
+                        <option value="Passed">Passed</option>
+                        <option value="Resigned">Resigned</option>
+                        <option value="New Job">New Job</option>
+                        <option value="Back Office">Back Office</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="text-xs text-slate-400">หมายเหตุ</label>
+                    <textarea id="editNote" rows="2" class="w-full mt-1 p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-sm"></textarea>
+                </div>
             </div>
+
             <div class="flex gap-3 mt-6">
                 <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 py-2 rounded-lg border border-slate-600 text-slate-400">ยกเลิก</button>
                 <button onclick="saveAdminEdit()" class="flex-1 py-2 rounded-lg bg-cyan-600 text-white font-bold">บันทึก</button>
@@ -125,7 +160,7 @@
         // **********************************************
         // 🔴 ใส่ URL ที่ Deploy แล้ว ตรงนี้
         // **********************************************
-        const API_URL = "https://script.google.com/macros/s/AKfycbytLMNXWplIH_4IeGGllAfU_26Q9tn2LvMu4p1fvOkOYJlWQLmXas1SS7VGGQoel4K4/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbymmpBI0gnGtcgDa861YGMUjdL3e3TkN3j6gc8kz5idH4pIuRhNzL36nLiRNMxgULmx/exec"; 
         // **********************************************
         let adminPassCache = "";
 
@@ -174,7 +209,6 @@
             const el = document.getElementById(id); const btn = el.querySelector('button');
             if(val) { 
                 el.classList.add('border-green-500/30'); 
-                // 🔴 ปรับ CSS ให้แสดงวันที่+เวลา ได้สวยงาม (text-xs)
                 btn.className="w-full h-auto py-2 rounded-lg bg-green-500/20 text-green-400 cursor-default"; 
                 btn.innerHTML=`<span class="font-bold text-[10px] whitespace-normal leading-tight">${val}</span>`; 
                 btn.onclick=null; 
@@ -211,18 +245,16 @@
             data.forEach(row => {
                 const tr = document.createElement('tr'); tr.className = "hover:bg-white/5 transition border-b border-slate-700";
                 
-                // 🔴 แสดง icon เช็คชื่อ (ถ้ามีข้อมูลให้เป็นเขียว)
                 const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-green-400" title="${v}"></i>` : `<i class="fa-regular fa-circle text-slate-600"></i>`;
-                
                 let badge = "bg-slate-700 text-slate-300";
                 if(row.status==='Active') badge="bg-blue-500/20 text-blue-400"; if(row.status==='Passed') badge="bg-green-500/20 text-green-400"; if(['Resigned','New Job'].includes(row.status)) badge="bg-red-500/20 text-red-400";
                 
                 tr.innerHTML = `
-                    <td class="p-4"><div class="font-bold text-white">${row.name}</div><div class="text-[10px] text-slate-400">${row.nickname} | ${row.dept}</div></td>
+                    <td class="p-4"><div class="font-bold text-white">${row.name}</div><div class="text-[10px] text-slate-400">${row.nickname} | ${row.dept}</div><div class="text-[10px] text-cyan-400">ทีม: ${row.team}</div></td>
                     <td class="p-4 text-center">${icon(row.d1)}</td><td class="p-4 text-center">${icon(row.d2)}</td><td class="p-4 text-center">${icon(row.d3)}</td>
                     <td class="p-4 text-center"><span class="px-2 py-1 rounded text-[10px] uppercase font-bold ${badge}">${row.status}</span></td>
                     <td class="p-4 text-center flex justify-center gap-2">
-                        <button onclick="openEditModal(${row.row}, '${row.status}', '${row.note||''}')" class="text-cyan-400 bg-cyan-900/30 p-2 rounded-lg hover:bg-cyan-900/50"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="openEditModal(${row.row}, '${row.status}', '${row.team}', '${row.note||''}')" class="text-cyan-400 bg-cyan-900/30 p-2 rounded-lg hover:bg-cyan-900/50"><i class="fa-solid fa-pen"></i></button>
                         <button onclick="deleteUser(${row.row})" class="text-red-400 bg-red-900/30 p-2 rounded-lg hover:bg-red-900/50"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
@@ -230,11 +262,57 @@
             });
         }
 
+        // Logic จัดการ Dropdown และ Input ช่องทีม
+        function toggleTeamInput(select) {
+            const input = document.getElementById('editTeamInput');
+            if (select.value === 'OTHER') {
+                input.classList.remove('hidden');
+                input.focus();
+            } else {
+                input.classList.add('hidden');
+            }
+        }
+
         // Admin Edit & Delete
-        function openEditModal(row, status, note) { document.getElementById('editRowId').value=row; document.getElementById('editStatus').value=status; document.getElementById('editNote').value=note; document.getElementById('editModal').classList.remove('hidden'); }
+        function openEditModal(row, status, team, note) {
+            document.getElementById('editRowId').value = row;
+            document.getElementById('editStatus').value = status;
+            document.getElementById('editNote').value = note;
+
+            // Logic เลือก Team ให้ตรง
+            const select = document.getElementById('editTeamSelect');
+            const input = document.getElementById('editTeamInput');
+            
+            // ตรวจสอบว่าทีมที่มีอยู่ ตรงกับ Choice ไหนไหม
+            const options = Array.from(select.options).map(o => o.value);
+            if (options.includes(team)) {
+                select.value = team;
+                input.classList.add('hidden');
+                input.value = "";
+            } else {
+                select.value = 'OTHER';
+                input.classList.remove('hidden');
+                input.value = team;
+            }
+
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
         async function saveAdminEdit() {
             document.getElementById('editModal').classList.add('hidden');
-            const res = await fetchAPI({ action: 'admin_update', row: document.getElementById('editRowId').value, status: document.getElementById('editStatus').value, note: document.getElementById('editNote').value });
+            
+            // ดึงค่า Team (ถ้าเลือก Other ให้เอาค่าจาก Input)
+            const select = document.getElementById('editTeamSelect');
+            const input = document.getElementById('editTeamInput');
+            const finalTeam = select.value === 'OTHER' ? input.value : select.value;
+
+            const res = await fetchAPI({ 
+                action: 'admin_update', 
+                row: document.getElementById('editRowId').value, 
+                team: finalTeam,
+                status: document.getElementById('editStatus').value, 
+                note: document.getElementById('editNote').value 
+            });
             if(res.status==='success') loadAdminData();
         }
 
