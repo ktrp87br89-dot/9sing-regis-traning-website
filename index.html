@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HR Training Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; background-color: #0f172a; color: #e2e8f0; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .glass-input { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); color: white; transition: all 0.3s; }
+        .glass-input:focus { border-color: #38bdf8; background: rgba(0, 0, 0, 0.5); outline: none; }
+        .nav-active { color: #38bdf8; border-bottom: 2px solid #38bdf8; background: rgba(56, 189, 248, 0.1); }
+        .loader { width: 48px; height: 48px; border: 5px solid #FFF; border-bottom-color: #38bdf8; border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite; }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden bg-slate-900">
+
+    <nav class="glass sticky top-0 z-50 flex justify-around text-xs font-medium uppercase tracking-wide shadow-lg">
+        <button onclick="switchTab('register')" id="nav-register" class="flex-1 py-4 text-slate-400 transition-all nav-active"><i class="fa-solid fa-user-plus text-xl block mb-1"></i> ลงทะเบียน</button>
+        <button onclick="switchTab('checkin')" id="nav-checkin" class="flex-1 py-4 text-slate-400 transition-all"><i class="fa-solid fa-qrcode text-xl block mb-1"></i> เช็คชื่อ</button>
+        <button onclick="switchTab('admin')" id="nav-admin" class="flex-1 py-4 text-slate-400 transition-all"><i class="fa-solid fa-user-shield text-xl block mb-1"></i> Admin</button>
+    </nav>
+
+    <main class="flex-1 overflow-y-auto p-4 relative scroll-smooth pb-20">
+        <div id="loadingOverlay" class="hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center">
+            <span class="loader mb-4"></span>
+            <p class="text-cyan-400 font-bold animate-pulse">กำลังประมวลผล...</p>
+        </div>
+
+        <section id="page-register" class="max-w-md mx-auto animate-fade-in">
+            <div class="glass rounded-2xl p-6 shadow-2xl relative overflow-hidden mt-4">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-cyan-500/20 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+                <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2"><span class="w-1.5 h-6 bg-cyan-400 rounded-full"></span> ลงทะเบียน</h2>
+                <form id="regForm" onsubmit="handleRegister(event)" class="space-y-4">
+                    <div class="grid grid-cols-3 gap-3">
+                        <div><label class="text-xs text-slate-400 ml-1">คำนำหน้า</label><select name="prefix" class="w-full p-3 rounded-xl glass-input text-sm"><option class="text-black">นาย</option><option class="text-black">นาง</option><option class="text-black">นางสาว</option></select></div>
+                        <div class="col-span-2"><label class="text-xs text-slate-400 ml-1">ชื่อ-นามสกุล</label><input type="text" name="name" required class="w-full p-3 rounded-xl glass-input text-sm" placeholder="ภาษาไทย"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="text-xs text-slate-400 ml-1">ชื่อเล่น</label><input type="text" name="nickname" required class="w-full p-3 rounded-xl glass-input text-sm"></div>
+                        <div><label class="text-xs text-slate-400 ml-1">เบอร์โทร</label><input type="tel" name="phone" required pattern="[0-9]{10}" class="w-full p-3 rounded-xl glass-input text-sm" placeholder="08xxxxxxxx"></div>
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 ml-1">แผนก</label>
+                        <select name="dept" class="w-full p-3 rounded-xl glass-input text-sm">
+                            <option value="Telesales Product" class="text-black">Telesales Product</option>
+                            <option value="Telesales Insurance" class="text-black">Telesales Insurance</option>
+                            <option value="Back Office" class="text-black">Back Office</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="text-xs text-slate-400 ml-1">ทีม</label><input type="text" name="team" class="w-full p-3 rounded-xl glass-input text-sm"></div>
+                        <div><label class="text-xs text-slate-400 ml-1">ผู้แนะนำ</label><input type="text" name="recruiter" class="w-full p-3 rounded-xl glass-input text-sm"></div>
+                    </div>
+                    <button type="submit" class="w-full mt-4 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg transition transform active:scale-95">ยืนยัน</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="page-checkin" class="hidden max-w-md mx-auto mt-4">
+            <div class="glass rounded-2xl p-8 text-center shadow-2xl">
+                <div class="w-20 h-20 bg-slate-800 rounded-full mx-auto flex items-center justify-center mb-6 border border-slate-700 shadow-inner"><i class="fa-solid fa-fingerprint text-4xl text-cyan-400"></i></div>
+                <h2 class="text-xl font-bold text-white mb-2">เช็คชื่อเข้าอบรม</h2>
+                <div class="relative max-w-xs mx-auto mb-6"><input type="tel" id="checkinPhone" class="w-full pl-12 pr-4 py-3 rounded-xl glass-input text-lg tracking-widest text-center" placeholder="08xxxxxxxx"><i class="fa-solid fa-mobile-screen absolute left-4 top-4 text-slate-500 text-lg"></i></div>
+                <button onclick="checkStatus()" class="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold transition shadow-lg">ตรวจสอบ</button>
+                <div id="profileCard" class="hidden mt-8 text-left border-t border-slate-700 pt-6 animate-fade-up">
+                    <div class="flex justify-between items-start mb-4">
+                        <div><h3 class="text-lg font-bold text-cyan-400" id="uiName">...</h3><p class="text-xs text-slate-400"><span id="uiNick">...</span> | <span id="uiDept">...</span></p></div>
+                        <span id="uiStatus" class="px-2 py-1 rounded text-[10px] font-bold uppercase bg-green-500/20 text-green-400 border border-green-500/30">Active</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div id="boxD1" class="glass p-2 rounded-xl text-center"><span class="text-[10px] text-slate-500 uppercase font-bold block mb-2">Day 1</span><button onclick="doCheckIn(1)" class="w-full h-auto py-2 rounded-lg bg-slate-800 text-slate-400 transition flex items-center justify-center"><i class="fa-solid fa-check"></i></button></div>
+                        <div id="boxD2" class="glass p-2 rounded-xl text-center"><span class="text-[10px] text-slate-500 uppercase font-bold block mb-2">Day 2</span><button onclick="doCheckIn(2)" class="w-full h-auto py-2 rounded-lg bg-slate-800 text-slate-400 transition flex items-center justify-center"><i class="fa-solid fa-check"></i></button></div>
+                        <div id="boxD3" class="glass p-2 rounded-xl text-center"><span class="text-[10px] text-slate-500 uppercase font-bold block mb-2">Day 3</span><button onclick="doCheckIn(3)" class="w-full h-auto py-2 rounded-lg bg-slate-800 text-slate-400 transition flex items-center justify-center"><i class="fa-solid fa-check"></i></button></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-admin" class="hidden h-full flex flex-col mt-4">
+            <div id="adminLogin" class="max-w-xs mx-auto glass p-8 rounded-2xl text-center mt-10">
+                <i class="fa-solid fa-lock text-3xl text-red-400 mb-4"></i>
+                <h3 class="text-white font-bold mb-4">Admin Access</h3>
+                <input type="password" id="adminPass" class="w-full p-3 rounded-xl glass-input text-center mb-4" placeholder="Password">
+                <button onclick="adminAccess()" class="w-full py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold">Login</button>
+            </div>
+            <div id="adminDashboard" class="hidden flex-1 flex flex-col">
+                <div class="flex justify-between items-center mb-4 px-2">
+                    <h2 class="text-white font-bold text-lg"><i class="fa-solid fa-list mr-2 text-cyan-400"></i>รายชื่อ</h2>
+                    <button onclick="loadAdminData()" class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-rotate"></i> Refresh</button>
+                </div>
+                <div class="flex-1 overflow-auto glass rounded-xl">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-slate-800 text-slate-400 text-[10px] font-bold uppercase sticky top-0">
+                            <tr><th class="p-4">Name</th><th class="p-4 text-center">D1</th><th class="p-4 text-center">D2</th><th class="p-4 text-center">D3</th><th class="p-4 text-center">Status</th><th class="p-4 text-center">Action</th></tr>
+                        </thead>
+                        <tbody id="adminTable" class="divide-y divide-slate-700 text-sm text-slate-300"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="editModal" class="hidden fixed inset-0 z-[70] bg-black/80 backdrop-blur flex items-center justify-center p-4">
+        <div class="glass w-full max-w-sm rounded-2xl p-6 border border-slate-600">
+            <h3 class="text-white font-bold text-lg mb-4">แก้ไขสถานะ</h3>
+            <input type="hidden" id="editRowId">
+            <div class="space-y-4">
+                <div><label class="text-xs text-slate-400">สถานะ</label><select id="editStatus" class="w-full mt-1 p-2 rounded-lg bg-slate-800 text-white border border-slate-600"><option value="Active">Active</option><option value="Passed">Passed</option><option value="Resigned">Resigned</option><option value="New Job">New Job</option><option value="Back Office">Back Office</option><option value="Other">Other</option></select></div>
+                <div><label class="text-xs text-slate-400">หมายเหตุ</label><textarea id="editNote" rows="3" class="w-full mt-1 p-2 rounded-lg bg-slate-800 text-white border border-slate-600"></textarea></div>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 py-2 rounded-lg border border-slate-600 text-slate-400">ยกเลิก</button>
+                <button onclick="saveAdminEdit()" class="flex-1 py-2 rounded-lg bg-cyan-600 text-white font-bold">บันทึก</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // **********************************************
+        // 🔴 ใส่ URL ที่ Deploy แล้ว ตรงนี้
+        // **********************************************
+        const API_URL = "https://script.google.com/macros/s/AKfycbytLMNXWplIH_4IeGGllAfU_26Q9tn2LvMu4p1fvOkOYJlWQLmXas1SS7VGGQoel4K4/exec"; 
+        // **********************************************
+        let adminPassCache = "";
+
+        async function fetchAPI(payload) {
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+            try {
+                const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+                return await response.json();
+            } catch (error) { return { status: 'error', message: 'Connection Failed' }; }
+            finally { document.getElementById('loadingOverlay').classList.add('hidden'); }
+        }
+
+        function switchTab(tab) {
+            ['register', 'checkin', 'admin'].forEach(t => {
+                document.getElementById(`page-${t}`).classList.add('hidden');
+                document.getElementById(`nav-${t}`).classList.remove('nav-active', 'text-cyan-400');
+            });
+            document.getElementById(`page-${tab}`).classList.remove('hidden');
+            document.getElementById(`nav-${tab}`).classList.add('nav-active', 'text-cyan-400');
+        }
+
+        // Register & Checkin
+        async function handleRegister(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const res = await fetchAPI({ action: 'register', ...Object.fromEntries(formData) });
+            if (res.status === 'success') { Swal.fire('สำเร็จ', 'ลงทะเบียนเรียบร้อย', 'success'); e.target.reset(); switchTab('checkin'); }
+            else { Swal.fire('ผิดพลาด', res.message, 'error'); }
+        }
+
+        async function checkStatus() {
+            const phone = document.getElementById('checkinPhone').value;
+            if (!phone) return Swal.fire('แจ้งเตือน', 'กรุณากรอกเบอร์โทร', 'warning');
+            const res = await fetchAPI({ action: 'login', phone });
+            if (res.status === 'success') {
+                const d = res.data;
+                document.getElementById('uiName').innerText = d.name; document.getElementById('uiNick').innerText = d.nickname; document.getElementById('uiDept').innerText = d.dept; document.getElementById('uiStatus').innerText = d.status;
+                document.getElementById('profileCard').classList.remove('hidden');
+                ['1','2','3'].forEach(i => updateCheckBtn(`boxD${i}`, i, d[`d${i}`]));
+            } else {
+                Swal.fire('ไม่พบข้อมูล', '', 'error'); document.getElementById('profileCard').classList.add('hidden');
+            }
+        }
+
+        function updateCheckBtn(id, day, val) {
+            const el = document.getElementById(id); const btn = el.querySelector('button');
+            if(val) { 
+                el.classList.add('border-green-500/30'); 
+                // 🔴 ปรับ CSS ให้แสดงวันที่+เวลา ได้สวยงาม (text-xs)
+                btn.className="w-full h-auto py-2 rounded-lg bg-green-500/20 text-green-400 cursor-default"; 
+                btn.innerHTML=`<span class="font-bold text-[10px] whitespace-normal leading-tight">${val}</span>`; 
+                btn.onclick=null; 
+            }
+            else { 
+                el.classList.remove('border-green-500/30'); 
+                btn.className="w-full h-auto py-2 rounded-lg bg-slate-800 hover:bg-cyan-600 text-slate-400 hover:text-white"; 
+                btn.innerHTML=`<i class="fa-solid fa-check"></i>`; 
+                btn.onclick=()=>doCheckIn(day); 
+            }
+        }
+
+        async function doCheckIn(day) {
+            const phone = document.getElementById('checkinPhone').value;
+            const cf = await Swal.fire({ title: `เช็คชื่อวันที่ ${day}?`, showCancelButton: true, confirmButtonText: 'ยืนยัน', background: '#1e293b', color: '#fff' });
+            if (cf.isConfirmed) {
+                const res = await fetchAPI({ action: 'checkin', phone, day });
+                if (res.status === 'success') { checkStatus(); Swal.fire({icon:'success', title:'สำเร็จ', toast:true, position:'top-end', showConfirmButton:false, timer:2000}); }
+            }
+        }
+
+        // Admin
+        async function adminAccess() {
+            const pass = document.getElementById('adminPass').value;
+            const res = await fetchAPI({ action: 'get_admin', pass });
+            if (res.status === 'success') { adminPassCache = pass; document.getElementById('adminLogin').classList.add('hidden'); document.getElementById('adminDashboard').classList.remove('hidden'); renderAdminTable(res.data); }
+            else { Swal.fire('รหัสผ่านผิด', '', 'error'); }
+        }
+
+        async function loadAdminData() { if(adminPassCache) { const res = await fetchAPI({ action: 'get_admin', pass: adminPassCache }); if(res.status==='success') renderAdminTable(res.data); } }
+
+        function renderAdminTable(data) {
+            const tbody = document.getElementById('adminTable'); tbody.innerHTML = '';
+            data.forEach(row => {
+                const tr = document.createElement('tr'); tr.className = "hover:bg-white/5 transition border-b border-slate-700";
+                
+                // 🔴 แสดง icon เช็คชื่อ (ถ้ามีข้อมูลให้เป็นเขียว)
+                const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-green-400" title="${v}"></i>` : `<i class="fa-regular fa-circle text-slate-600"></i>`;
+                
+                let badge = "bg-slate-700 text-slate-300";
+                if(row.status==='Active') badge="bg-blue-500/20 text-blue-400"; if(row.status==='Passed') badge="bg-green-500/20 text-green-400"; if(['Resigned','New Job'].includes(row.status)) badge="bg-red-500/20 text-red-400";
+                
+                tr.innerHTML = `
+                    <td class="p-4"><div class="font-bold text-white">${row.name}</div><div class="text-[10px] text-slate-400">${row.nickname} | ${row.dept}</div></td>
+                    <td class="p-4 text-center">${icon(row.d1)}</td><td class="p-4 text-center">${icon(row.d2)}</td><td class="p-4 text-center">${icon(row.d3)}</td>
+                    <td class="p-4 text-center"><span class="px-2 py-1 rounded text-[10px] uppercase font-bold ${badge}">${row.status}</span></td>
+                    <td class="p-4 text-center flex justify-center gap-2">
+                        <button onclick="openEditModal(${row.row}, '${row.status}', '${row.note||''}')" class="text-cyan-400 bg-cyan-900/30 p-2 rounded-lg hover:bg-cyan-900/50"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteUser(${row.row})" class="text-red-400 bg-red-900/30 p-2 rounded-lg hover:bg-red-900/50"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Admin Edit & Delete
+        function openEditModal(row, status, note) { document.getElementById('editRowId').value=row; document.getElementById('editStatus').value=status; document.getElementById('editNote').value=note; document.getElementById('editModal').classList.remove('hidden'); }
+        async function saveAdminEdit() {
+            document.getElementById('editModal').classList.add('hidden');
+            const res = await fetchAPI({ action: 'admin_update', row: document.getElementById('editRowId').value, status: document.getElementById('editStatus').value, note: document.getElementById('editNote').value });
+            if(res.status==='success') loadAdminData();
+        }
+
+        async function deleteUser(row) {
+            const cf = await Swal.fire({
+                title: 'ยืนยันการลบ?', text: "ข้อมูลจะหายไปถาวร ไม่สามารถกู้คืนได้",
+                icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', confirmButtonText: 'ลบทันที', cancelButtonText: 'ยกเลิก', background: '#1e293b', color: '#fff'
+            });
+            if (cf.isConfirmed) {
+                const res = await fetchAPI({ action: 'admin_delete', row: row });
+                if (res.status === 'success') { Swal.fire({icon:'success', title:'ลบเรียบร้อย', showConfirmButton:false, timer:1500, background: '#1e293b', color: '#fff'}); loadAdminData(); }
+            }
+        }
+    </script>
+</body>
+</html>
