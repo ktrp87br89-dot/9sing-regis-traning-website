@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปผลการอบรม (v4.5 Ultimate Connect)</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        
+        body { font-family: 'Sarabun', sans-serif; background-color: #f1f5f9; }
+        
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+        .status-online { background-color: #22c55e; box-shadow: 0 0 8px #22c55e; }
+        .status-offline { background-color: #ef4444; }
+
+        @media print {
+            .no-print, #sidebar, #connection-bar { display: none !important; }
+            #main-content { margin-left: 0 !important; width: 100% !important; padding: 0 !important; }
+            .card { box-shadow: none; border: 1px solid #cbd5e1; break-inside: avoid; }
+            body { background: white; }
+        }
+    </style>
+</head>
+<body class="text-slate-700">
+
+    <div id="loadingOverlay" class="fixed inset-0 bg-white/90 backdrop-blur-sm z-[60] hidden flex items-center justify-center flex-col">
+        <div class="loader mb-4"></div>
+        <p class="text-lg font-bold text-slate-700">กำลังเชื่อมต่อ Google Sheets...</p>
+        <p class="text-sm text-slate-500 mt-1">กำลังดึงข้อมูลผ่านช่องทางพิเศษ (JSONP)</p>
+    </div>
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <aside id="sidebar" class="w-64 bg-slate-900 text-slate-300 flex-shrink-0 hidden md:flex flex-col shadow-2xl z-20">
+            <div class="p-6 flex items-center justify-center border-b border-slate-800 bg-slate-950 relative">
+                <div class="text-center relative z-10">
+                    <div class="w-12 h-12 bg-blue-600 rounded-2xl mx-auto flex items-center justify-center text-white mb-3 shadow-lg">
+                        <i class="fa-brands fa-google-drive text-2xl"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-white tracking-wide">HR Monitor</h2>
+                    <p class="text-[10px] text-blue-400 uppercase tracking-widest mt-1">v4.5 Ultimate</p>
+                </div>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-3">
+                <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-2">Main Menu</div>
+                <a href="#" onclick="location.reload()" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-800 text-white border border-slate-700">
+                    <i class="fa-solid fa-gauge-high w-5 text-blue-400"></i> <span class="font-medium">Dashboard</span>
+                </a>
+                
+                <div class="pt-6 pb-2 px-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Data Source</div>
+                
+                <button onclick="connectToSheet(true)" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-900/40 text-blue-100 border border-blue-500/30 hover:bg-blue-800 transition-colors group">
+                    <i class="fa-solid fa-link w-5 text-blue-400"></i> 
+                    <span class="text-sm font-medium">เชื่อมต่อใหม่ (Refresh)</span>
+                </button>
+
+                <label for="fileInput" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-900/20 text-slate-300 hover:text-white cursor-pointer transition-colors border border-transparent hover:border-emerald-500/30 group">
+                    <i class="fa-solid fa-file-csv w-5 group-hover:text-emerald-400"></i> 
+                    <span class="text-sm">อัปโหลดไฟล์เอง (Backup)</span>
+                </label>
+                <input type="file" id="fileInput" accept=".csv, .xlsx, .xls" class="hidden">
+
+                <button onclick="clearAllData()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-900/20 text-red-400 hover:text-red-300 transition-colors mt-4 border border-transparent hover:border-red-500/30">
+                    <i class="fa-solid fa-trash-can w-5"></i> <span class="text-sm">ล้างข้อมูลทั้งหมด</span>
+                </button>
+            </nav>
+
+            <div class="p-4 bg-slate-950 border-t border-slate-800">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                    <span id="connectionStatus"><span class="status-dot status-offline"></span> Offline</span>
+                </div>
+            </div>
+        </aside>
+
+        <div id="main-content" class="flex-1 flex flex-col h-screen overflow-y-auto relative bg-slate-50">
+            
+            <header class="bg-white/90 backdrop-blur-md sticky top-0 z-40 px-8 py-4 flex justify-between items-center border-b border-slate-200 shadow-sm">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        สรุปผลการอบรมพนักงาน
+                        <span id="liveBadge" class="hidden px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-[10px] font-bold uppercase tracking-wide border border-green-200 animate-pulse">
+                            Online
+                        </span>
+                    </h1>
+                    <p class="text-sm text-slate-500 mt-1"><i class="fa-regular fa-calendar mr-1"></i> ข้อมูลล่าสุดจาก Google Sheet ของคุณ</p>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="connectToSheet(true)" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg shadow-lg shadow-blue-200 transition text-sm font-bold flex items-center gap-2 transform active:scale-95 group">
+                        <i class="fa-solid fa-rotate group-hover:animate-spin"></i> รีเฟรช (Sync)
+                    </button>
+                    <button onclick="saveHTML()" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-4 py-2.5 rounded-lg shadow-sm transition text-sm font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i> Save HTML
+                    </button>
+                    <button onclick="window.print()" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-4 py-2.5 rounded-lg shadow-sm transition text-sm font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-print"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div id="urlBar" class="hidden bg-blue-50 border-b border-blue-100 px-8 py-2 text-xs text-blue-700 flex justify-between items-center">
+                <span><i class="fa-solid fa-link mr-2"></i> เชื่อมต่อกับ Sheet ID: <span id="currentUrlDisplay" class="font-mono font-semibold">...</span></span>
+            </div>
+
+            <main class="p-8 space-y-6 max-w-full mx-auto w-full">
+                
+                <section class="card p-6 no-print bg-white">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-5 items-end">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase">กรองตามทีม</label>
+                            <select id="teamFilter" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+                                <option value="all">ทั้งหมด (All Teams)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase">ค้นหาชื่อ</label>
+                            <input type="text" id="nameFilter" placeholder="พิมพ์ชื่อ..." class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase">ตั้งแต่วันที่</label>
+                            <input type="date" id="startDateFilter" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 text-slate-600">
+                        </div>
+                        <div class="flex gap-2">
+                            <div class="flex-1">
+                                <label class="block text-xs font-bold text-slate-500 mb-1.5 uppercase">ถึงวันที่</label>
+                                <input type="date" id="endDateFilter" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 text-slate-600">
+                            </div>
+                            <button onclick="resetFilters()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition self-end">
+                                <i class="fa-solid fa-rotate-left"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                    <div class="card p-5 border-l-4 border-slate-500"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">จำนวนสิทธิ์รวม</p><h3 class="text-3xl font-bold text-slate-700" id="kpi-total">0</h3></div>
+                    <div class="card p-5 border-l-4 border-blue-500"><p class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1">จำนวนคนจริง</p><h3 class="text-3xl font-bold text-blue-600" id="kpi-unique">0</h3></div>
+                    <div class="card p-5 border-l-4 border-green-500"><p class="text-[10px] font-bold text-green-500 uppercase tracking-widest mb-1">ผ่านการอบรม</p><h3 class="text-3xl font-bold text-green-600" id="kpi-passed">0</h3></div>
+                    <div class="card p-5 border-l-4 border-red-400"><p class="text-[10px] font-bold text-red-400 uppercase tracking-widest mb-1">ออก (รวมสิทธิ์)</p><h3 class="text-3xl font-bold text-red-500" id="kpi-dropped-total">0</h3></div>
+                    <div class="card p-5 border-l-4 border-red-600"><p class="text-[10px] font-bold text-red-600 uppercase tracking-widest mb-1">ออก (คนจริง)</p><h3 class="text-3xl font-bold text-red-700" id="kpi-dropped-unique">0</h3></div>
+                    <div class="card p-5 border-l-4 border-indigo-500"><p class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">อัตราการผ่าน</p><h3 class="text-3xl font-bold text-indigo-600" id="kpi-rate">0%</h3></div>
+                </section>
+
+                <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="card p-6">
+                        <h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-pie text-emerald-500"></i> สัดส่วนสถานะ (Status)</h3>
+                        <div class="h-64"><canvas id="statusChart"></canvas></div>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2"><i class="fa-solid fa-arrow-trend-up text-indigo-500"></i> แนวโน้มรายเดือน (Monthly)</h3>
+                        <div class="h-64"><canvas id="trendChart"></canvas></div>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2"><i class="fa-regular fa-clock text-orange-500"></i> ระยะเวลาอบรมก่อนออก (Duration)</h3>
+                        <div class="h-64"><canvas id="durationChart"></canvas></div>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2"><i class="fa-solid fa-users-viewfinder text-blue-500"></i> จำนวนคนจริงแยกตามทีม (By Team)</h3>
+                        <div class="h-64"><canvas id="teamChart"></canvas></div>
+                    </div>
+                </section>
+
+                <section class="card p-6">
+                    <div class="flex justify-between items-center mb-6 border-b pb-2 border-slate-100">
+                        <h3 class="font-bold text-slate-700 flex items-center gap-2">
+                            <i class="fa-solid fa-briefcase text-purple-500"></i> ประสิทธิภาพการสรรหา (Recruiter)
+                        </h3>
+                    </div>
+                    <div class="h-64 w-full"><canvas id="recruiterChart"></canvas></div>
+                </section>
+
+                <section class="card overflow-hidden print-break">
+                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-700">รายชื่อพนักงาน (Detailed List)</h3>
+                        <span class="text-xs text-slate-500 bg-white px-2 py-1 rounded border border-slate-200">
+                            <i class="fa-solid fa-pen mr-1 text-blue-500"></i> แก้ไขสาเหตุได้
+                        </span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-500 text-xs font-bold uppercase tracking-wider">
+                                    <th class="py-4 px-6 border-b border-slate-200">วันที่เริ่ม</th>
+                                    <th class="py-4 px-6 border-b border-slate-200">ทีม</th>
+                                    <th class="py-4 px-6 border-b border-slate-200">ชื่อ-นามสกุล</th>
+                                    <th class="py-4 px-6 border-b border-slate-200 text-center">สถานะ</th>
+                                    <th class="py-4 px-6 border-b border-slate-200 text-center">ระยะเวลา</th>
+                                    <th class="py-4 px-6 border-b border-slate-200">ผู้สรรหา</th>
+                                    <th class="py-4 px-6 border-b border-slate-200 w-1/4">สาเหตุเพิ่มเติม (แก้ไขได้)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dataTableBody" class="divide-y divide-slate-100 text-sm text-slate-600 bg-white">
+                                </tbody>
+                        </table>
+                    </div>
+                    <div class="p-4 bg-slate-50 text-xs text-center text-slate-400 border-t border-slate-100" id="tableFooter">Loading...</div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Variables & Config ---
+        // ฝังลิงก์ Google Sheet ของคุณที่นี่
+        const EMBEDDED_SHEET_URL = "https://docs.google.com/spreadsheets/d/1ebYm__Gpefv0fbDHs31Hf0YZeyXy_by3iaHV8MsosHY/edit?usp=sharing";
+        const SHEET_ID = "1ebYm__Gpefv0fbDHs31Hf0YZeyXy_by3iaHV8MsosHY"; // Extracted ID for clarity
+
+        let allData = [];
+        let filteredData = [];
+        let dropReasons = {}; 
+        let googleSheetUrl = "";
+        const STORAGE_KEY_REASONS = 'dropReasons_v45';
+        const STORAGE_KEY_URL = 'googleSheetUrl_v45';
+        const charts = {};
+        const colors = { blue: '#3b82f6', green: '#10b981', red: '#ef4444', orange: '#f97316', teal: '#14b8a6', indigo: '#6366f1', gray: '#94a3b8' };
+
+        // --- 2. Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedReasons = localStorage.getItem(STORAGE_KEY_REASONS);
+            if(savedReasons) dropReasons = JSON.parse(savedReasons);
+
+            // Restore from Snapshot or Connect
+            if(window.snapshot) {
+                if(window.snapshot.reasons) dropReasons = window.snapshot.reasons;
+                if(window.snapshot.csv) Papa.parse(window.snapshot.csv, { header: true, complete: (res) => processData(res.data) });
+            } else {
+                // Auto Connect to the Embedded Sheet
+                connectToSheet(false);
+            }
+
+            document.getElementById('teamFilter').addEventListener('change', applyFilters);
+            document.getElementById('nameFilter').addEventListener('input', applyFilters);
+            document.getElementById('startDateFilter').addEventListener('change', applyFilters);
+            document.getElementById('endDateFilter').addEventListener('change', applyFilters);
+            document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+        });
+
+        // --- 3. JSONP Logic (Ultimate Solution) ---
+        function connectToSheet(showUI = true) {
+            if(showUI) showLoading(true);
+            
+            updateUrlDisplay(SHEET_ID);
+
+            // Create JSONP endpoint
+            const scriptId = 'gviz_loader';
+            const old = document.getElementById(scriptId);
+            if(old) old.remove();
+
+            // Callback function
+            window.googleSheetCallback = function(json) {
+                if(showUI) showLoading(false);
+                if(json && json.table && json.table.rows) {
+                    const parsed = parseGvizData(json);
+                    processData(parsed);
+                    if(showUI && typeof Swal !== 'undefined') {
+                        Swal.fire({ icon: 'success', title: 'สำเร็จ', text: `โหลดข้อมูล ${parsed.length} รายการ`, timer: 1500, showConfirmButton: false });
+                    }
+                }
+            };
+
+            // Inject Script (Use Sheet ID from variable)
+            const script = document.createElement('script');
+            script.id = scriptId;
+            // Using GID=0 (First Sheet) is safer than sheet name 'Sheet1' which might change
+            script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:googleSheetCallback&gid=0`;
+            script.onerror = function() {
+                if(showUI) {
+                    showLoading(false);
+                    alert("โหลดข้อมูลไม่สำเร็จ (ตรวจสอบสิทธิ์ Share)");
+                }
+            };
+            document.body.appendChild(script);
+        }
+
+        // Convert Gviz JSON to flat Array
+        function parseGvizData(json) {
+            const cols = json.table.cols.map(c => c ? c.label : '');
+            return json.table.rows.map(r => {
+                let row = {};
+                r.c.forEach((cell, i) => {
+                    const header = cols[i] || `col${i}`;
+                    const val = cell ? (cell.f || cell.v) : '';
+                    row[header] = val;
+                });
+                return row;
+            });
+        }
+
+        function updateUrlDisplay(id) {
+            const el = document.getElementById('urlBar');
+            const dis = document.getElementById('currentUrlDisplay');
+            const status = document.getElementById('connectionStatus');
+            
+            el.classList.remove('hidden');
+            dis.innerText = id.substring(0,15) + "...";
+            status.innerHTML = `<span class="status-dot status-online"></span> Online`;
+            document.getElementById('liveBadge').classList.remove('hidden');
+        }
+
+        function showLoading(show) { document.getElementById('loadingOverlay').classList.toggle('hidden', !show); }
+
+        function generateId(row) {
+            const name = row['ชื่อ'] || row['Name'] || '';
+            const surname = row['นามสกุล'] || row['Surname'] || '';
+            const date = row['Training_Start_Date'] || row['วันที่เริ่มอบรม'] || '';
+            return `${name.trim()}_${surname.trim()}_${date}`.replace(/\s+/g, '_');
+        }
+
+        function processData(rawData) {
+            allData = rawData.map((row, index) => {
+                const dateRaw = row['Training_Start_Date'] || row['วันที่เริ่มอบรม'] || row['Start Date'] || "";
+                let dateObj = new Date(dateRaw);
+                let monthLabel = 'N/A';
+                if(!isNaN(dateObj) && dateRaw) {
+                    const monthsThai = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+                    if(dateObj.getMonth() >= 0) monthLabel = monthsThai[dateObj.getMonth()];
+                }
+
+                const compositeId = generateId(row);
+                // Reason mapping
+                const reasonSource = row['สาเหตุเพิ่มเติม'] || row['สาเหตุเพิ่มเติม (แก้ไขได้)'] || row['Reason'] || row['Note'] || "";
+                
+                const team = row['Team'] || row['ทีม'] || "Unknown";
+                const name = `${row['ชื่อ'] || row['Name'] || ''} ${row['นามสกุล'] || row['Surname'] || ''}`.trim();
+                const status = row['Status'] || row['สถานะ'] || "Unknown";
+                const duration = row['ผลการอบรม3วัน'] || row['Duration'] || "-";
+                const recruiter = row['ผู้สรรหา'] || row['Recruiter'] || "ไม่ระบุ";
+
+                return {
+                    id: compositeId,
+                    team: team, name: name, status: status, duration: duration, recruiter: recruiter,
+                    reasonSource: reasonSource, dateRaw: dateRaw, cleanDate: dateRaw, month: monthLabel,
+                    originalRow: row
+                };
+            }).filter(d => d.team !== "Unknown" && d.status !== "Unknown");
+
+            // Populate Dropdown
+            const teams = [...new Set(allData.map(d => d.team))].sort();
+            const select = document.getElementById('teamFilter');
+            select.innerHTML = '<option value="all">ทั้งหมด (All Teams)</option>';
+            teams.forEach(t => select.innerHTML += `<option value="${t}">${t}</option>`);
+
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const team = document.getElementById('teamFilter').value;
+            const search = document.getElementById('nameFilter').value.toLowerCase();
+            const start = document.getElementById('startDateFilter').value;
+            const end = document.getElementById('endDateFilter').value;
+
+            filteredData = allData.filter(d => {
+                const matchTeam = team === 'all' || d.team === team;
+                const matchName = d.name.toLowerCase().includes(search);
+                let matchDate = true;
+                if(start && d.cleanDate) matchDate = matchDate && (d.cleanDate >= start);
+                if(end && d.cleanDate) matchDate = matchDate && (d.cleanDate <= end);
+                return matchTeam && matchName && matchDate;
+            });
+
+            updateKPIs();
+            renderCharts();
+            renderTable();
+        }
+
+        function saveReason(id, val) {
+            dropReasons[id] = val;
+            localStorage.setItem(STORAGE_KEY_REASONS, JSON.stringify(dropReasons));
+        }
+
+        function clearAllData() {
+            if(confirm("ล้างข้อมูลทั้งหมด?")) {
+                localStorage.removeItem(STORAGE_KEY_REASONS);
+                localStorage.removeItem(STORAGE_KEY_URL);
+                dropReasons = {};
+                location.reload();
+            }
+        }
+
+        function saveHTML() {
+            document.querySelectorAll('input[onchange^="saveReason"]').forEach(input => input.setAttribute('value', input.value));
+            const csvContent = Papa.unparse(allData.map(d => d.originalRow));
+            const clone = document.documentElement.cloneNode(true);
+            const scriptContent = `window.snapshot = { csv: ${JSON.stringify(csvContent)}, reasons: ${JSON.stringify(dropReasons)} };`;
+            const scriptEl = document.createElement('script');
+            scriptEl.textContent = scriptContent;
+            clone.querySelector('body').insertBefore(scriptEl, clone.querySelector('body').firstChild);
+            const blob = new Blob(["<!DOCTYPE html>\n" + clone.outerHTML], {type: 'text/html'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `Dashboard_Backup.html`;
+            a.click();
+        }
+
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            showLoading(true);
+            const reader = new FileReader();
+            if(file.name.endsWith('.csv')) {
+                reader.onload = (evt) => { Papa.parse(evt.target.result, {header:true, complete: (res) => { processData(res.data); showLoading(false); }}); };
+                reader.readAsText(file);
+            } else {
+                reader.onload = (evt) => {
+                    const workbook = XLSX.read(new Uint8Array(evt.target.result), {type: 'array'});
+                    const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {raw: false, dateNF:'yyyy-mm-dd'});
+                    processData(json); showLoading(false);
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        }
+
+        // --- Charts & Table Implementation ---
+        function updateKPIs() {
+            const total = filteredData.length;
+            const unique = new Set(filteredData.map(d => d.name)).size;
+            const passed = filteredData.filter(d => d.status.toLowerCase() === 'passed').length;
+            const droppedTotal = filteredData.filter(d => !d.status.toLowerCase().includes('passed')).length;
+            const droppedUnique = new Set(filteredData.filter(d => !d.status.toLowerCase().includes('passed')).map(d => d.name)).size;
+            const rate = total > 0 ? Math.round((passed/total)*100) : 0;
+
+            document.getElementById('kpi-total').innerText = total;
+            document.getElementById('kpi-unique').innerText = unique;
+            document.getElementById('kpi-passed').innerText = passed;
+            document.getElementById('kpi-dropped-total').innerText = droppedTotal;
+            document.getElementById('kpi-dropped-unique').innerText = droppedUnique;
+            document.getElementById('kpi-rate').innerText = rate + "%";
+        }
+
+        function renderCharts() {
+            const destroy = (id) => { if(charts[id]) charts[id].destroy(); }
+
+            destroy('statusChart');
+            const passed = filteredData.filter(d => d.status.toLowerCase() === 'passed').length;
+            charts['statusChart'] = new Chart(document.getElementById('statusChart'), {
+                type: 'doughnut',
+                data: { labels: ['Passed', 'Dropped'], datasets: [{ data: [passed, filteredData.length-passed], backgroundColor: [colors.green, colors.red], borderWidth: 0 }] },
+                options: { cutout: '70%', maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+            });
+
+            destroy('trendChart');
+            const months = ["ม.ค.", "ก.พ.", "มี.ค."];
+            const dTotal = months.map(m => filteredData.filter(d => d.month === m).length);
+            const dPass = months.map(m => filteredData.filter(d => d.month === m && d.status.toLowerCase() === 'passed').length);
+            charts['trendChart'] = new Chart(document.getElementById('trendChart'), {
+                type: 'line',
+                data: { labels: months, datasets: [{ label: 'Total', data: dTotal, borderColor: colors.blue }, { label: 'Passed', data: dPass, borderColor: colors.green }] },
+                options: { maintainAspectRatio: false }
+            });
+
+            destroy('durationChart');
+            const durMap = {};
+            filteredData.filter(d => !d.status.toLowerCase().includes('passed')).forEach(d => { const k = d.duration.trim()||"?"; durMap[k]=(durMap[k]||0)+1; });
+            charts['durationChart'] = new Chart(document.getElementById('durationChart'), {
+                type: 'pie',
+                data: { labels: Object.keys(durMap), datasets: [{ data: Object.values(durMap), backgroundColor: [colors.orange, colors.teal, colors.indigo, colors.gray] }] },
+                options: { maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+            });
+
+            destroy('teamChart');
+            const tMap = {};
+            filteredData.forEach(d => { if(!tMap[d.team]) tMap[d.team]=new Set(); tMap[d.team].add(d.name); });
+            charts['teamChart'] = new Chart(document.getElementById('teamChart'), {
+                type: 'bar',
+                data: { labels: Object.keys(tMap).sort(), datasets: [{ label: 'Unique', data: Object.keys(tMap).sort().map(k=>tMap[k].size), backgroundColor: colors.teal }] },
+                options: { maintainAspectRatio: false, scales: { x: { display: false } } }
+            });
+
+            destroy('recruiterChart');
+            const rMap = {};
+            filteredData.forEach(d => { if(d.recruiter!=='ไม่ระบุ') rMap[d.recruiter]=(rMap[d.recruiter]||0)+1; });
+            const rKeys = Object.keys(rMap).sort((a,b)=>rMap[b]-rMap[a]).slice(0,10);
+            charts['recruiterChart'] = new Chart(document.getElementById('recruiterChart'), {
+                type: 'bar',
+                data: { labels: rKeys, datasets: [{ label: 'Recruits', data: rKeys.map(k=>rMap[k]), backgroundColor: colors.indigo }] },
+                options: { indexAxis: 'y', maintainAspectRatio: false }
+            });
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('dataTableBody');
+            tbody.innerHTML = '';
+            filteredData.forEach(d => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 border-b border-slate-100";
+                const isPass = d.status.toLowerCase() === 'passed';
+                const badge = isPass ? `<span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">ผ่าน</span>` : `<span class="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold">ออก</span>`;
+                const saved = dropReasons[d.id];
+                const display = (saved !== undefined) ? saved : d.reasonSource;
+                
+                tr.innerHTML = `
+                    <td class="py-3 px-6 whitespace-nowrap text-xs font-mono text-slate-500">${d.dateRaw}</td>
+                    <td class="py-3 px-6 font-semibold text-slate-700">${d.team}</td>
+                    <td class="py-3 px-6">${d.name}</td>
+                    <td class="py-3 px-6 text-center">${badge}</td>
+                    <td class="py-3 px-6 text-center text-xs">${d.duration}</td>
+                    <td class="py-3 px-6 text-xs text-slate-500">${d.recruiter}</td>
+                    <td class="py-3 px-6"><input type="text" class="w-full bg-transparent border-b border-dashed border-slate-300 focus:border-emerald-500 outline-none text-xs py-1 transition" value="${display}" onchange="saveReason('${d.id}', this.value)" placeholder="${isPass ? '-' : 'ระบุสาเหตุ...'}"></td>
+                `;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('tableFooter').innerText = `แสดงผล ${filteredData.length} รายการ`;
+        }
+    </script>
+</body>
+</html>
