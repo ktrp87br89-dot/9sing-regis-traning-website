@@ -4,30 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>HR Training Portal</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         body { font-family: 'Sarabun', sans-serif; background-color: #0f172a; color: #e2e8f0; }
+        
+        /* Glassmorphism Effect */
         .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .glass-input { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); color: white; transition: all 0.3s; }
         .glass-input:focus { border-color: #38bdf8; background: rgba(0, 0, 0, 0.5); outline: none; }
+        
+        /* Navigation */
         .nav-active { color: #38bdf8; border-bottom: 2px solid #38bdf8; background: rgba(56, 189, 248, 0.1); }
+        
+        /* Loader */
         .loader { width: 48px; height: 48px; border: 5px solid #FFF; border-bottom-color: #38bdf8; border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite; }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .custom-checkbox { width: 18px; height: 18px; accent-color: #0ea5e9; cursor: pointer; }
+        
+        /* Custom Checkbox */
+        .custom-checkbox { width: 20px; height: 20px; accent-color: #0ea5e9; cursor: pointer; border-radius: 4px; }
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden bg-slate-900">
 
     <nav class="glass sticky top-0 z-50 flex justify-around text-xs font-medium uppercase tracking-wide shadow-lg">
-        <button onclick="switchTab('register')" id="nav-register" class="flex-1 py-4 text-slate-400 transition-all nav-active"><i class="fa-solid fa-user-plus text-xl block mb-1"></i> ลงทะเบียน</button>
-        <button onclick="switchTab('checkin')" id="nav-checkin" class="flex-1 py-4 text-slate-400 transition-all"><i class="fa-solid fa-qrcode text-xl block mb-1"></i> เช็คชื่อ</button>
-        <button onclick="switchTab('admin')" id="nav-admin" class="flex-1 py-4 text-slate-400 transition-all"><i class="fa-solid fa-user-shield text-xl block mb-1"></i> Admin</button>
+        <button onclick="switchTab('register')" id="nav-register" class="flex-1 py-4 text-slate-400 transition-all nav-active">
+            <i class="fa-solid fa-user-plus text-xl block mb-1"></i> ลงทะเบียน
+        </button>
+        <button onclick="switchTab('checkin')" id="nav-checkin" class="flex-1 py-4 text-slate-400 transition-all">
+            <i class="fa-solid fa-qrcode text-xl block mb-1"></i> เช็คชื่อ
+        </button>
+        <button onclick="switchTab('admin')" id="nav-admin" class="flex-1 py-4 text-slate-400 transition-all">
+            <i class="fa-solid fa-user-shield text-xl block mb-1"></i> Admin
+        </button>
     </nav>
 
-    <main class="flex-1 overflow-y-auto p-4 relative scroll-smooth pb-20">
+    <main class="flex-1 overflow-y-auto p-4 relative scroll-smooth pb-24">
+        
         <div id="loadingOverlay" class="hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center">
             <span class="loader mb-4"></span>
             <p class="text-cyan-400 font-bold animate-pulse">กำลังประมวลผล...</p>
@@ -36,16 +53,38 @@
         <section id="page-register" class="max-w-md mx-auto animate-fade-in">
             <div class="glass rounded-2xl p-6 shadow-2xl relative overflow-hidden mt-4">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-cyan-500/20 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
-                <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2"><span class="w-1.5 h-6 bg-cyan-400 rounded-full"></span> ลงทะเบียน</h2>
+                
+                <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                    <span class="w-1.5 h-6 bg-cyan-400 rounded-full"></span> ลงทะเบียนพนักงานใหม่
+                </h2>
+
                 <form id="regForm" onsubmit="handleRegister(event)" class="space-y-4">
                     <div class="grid grid-cols-3 gap-3">
-                        <div><label class="text-xs text-slate-400 ml-1">คำนำหน้า</label><select name="prefix" class="w-full p-3 rounded-xl glass-input text-sm"><option class="text-black">นาย</option><option class="text-black">นาง</option><option class="text-black">นางสาว</option></select></div>
-                        <div class="col-span-2"><label class="text-xs text-slate-400 ml-1">ชื่อ-นามสกุล</label><input type="text" name="name" required class="w-full p-3 rounded-xl glass-input text-sm" placeholder="ภาษาไทย"></div>
+                        <div>
+                            <label class="text-xs text-slate-400 ml-1">คำนำหน้า</label>
+                            <select name="prefix" class="w-full p-3 rounded-xl glass-input text-sm">
+                                <option class="text-black">นาย</option>
+                                <option class="text-black">นาง</option>
+                                <option class="text-black">นางสาว</option>
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="text-xs text-slate-400 ml-1">ชื่อ-นามสกุล</label>
+                            <input type="text" name="name" required class="w-full p-3 rounded-xl glass-input text-sm" placeholder="ภาษาไทย">
+                        </div>
                     </div>
+
                     <div class="grid grid-cols-2 gap-3">
-                        <div><label class="text-xs text-slate-400 ml-1">ชื่อเล่น</label><input type="text" name="nickname" required class="w-full p-3 rounded-xl glass-input text-sm"></div>
-                        <div><label class="text-xs text-slate-400 ml-1">เบอร์โทร</label><input type="tel" name="phone" required pattern="[0-9]{10}" class="w-full p-3 rounded-xl glass-input text-sm" placeholder="08xxxxxxxx"></div>
+                        <div>
+                            <label class="text-xs text-slate-400 ml-1">ชื่อเล่น</label>
+                            <input type="text" name="nickname" required class="w-full p-3 rounded-xl glass-input text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs text-slate-400 ml-1">เบอร์โทร</label>
+                            <input type="tel" name="phone" required pattern="[0-9]{10}" class="w-full p-3 rounded-xl glass-input text-sm" placeholder="08xxxxxxxx">
+                        </div>
                     </div>
+
                     <div>
                         <label class="text-xs text-slate-400 ml-1">แผนก</label>
                         <select name="dept" class="w-full p-3 rounded-xl glass-input text-sm">
@@ -54,64 +93,105 @@
                             <option value="Back Office" class="text-black">Back Office</option>
                         </select>
                     </div>
+
                     <div class="grid grid-cols-2 gap-3">
-                        <div><label class="text-xs text-slate-400 ml-1">ทีม</label><input type="text" name="team" class="w-full p-3 rounded-xl glass-input text-sm"></div>
-                        <div><label class="text-xs text-slate-400 ml-1">ผู้แนะนำ</label><input type="text" name="recruiter" class="w-full p-3 rounded-xl glass-input text-sm"></div>
+                        <div>
+                            <label class="text-xs text-slate-400 ml-1">ทีม</label>
+                            <input type="text" name="team" class="w-full p-3 rounded-xl glass-input text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs text-slate-400 ml-1">ผู้แนะนำ</label>
+                            <input type="text" name="recruiter" class="w-full p-3 rounded-xl glass-input text-sm">
+                        </div>
                     </div>
-                    <button type="submit" class="w-full mt-4 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg transition transform active:scale-95">ยืนยัน</button>
+
+                    <button type="submit" class="w-full mt-4 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg transition transform active:scale-95">
+                        ยืนยันการลงทะเบียน
+                    </button>
                 </form>
             </div>
         </section>
 
         <section id="page-checkin" class="hidden max-w-md mx-auto mt-4">
             <div class="glass rounded-2xl p-8 text-center shadow-2xl">
-                <div class="w-20 h-20 bg-slate-800 rounded-full mx-auto flex items-center justify-center mb-6 border border-slate-700 shadow-inner"><i class="fa-solid fa-fingerprint text-4xl text-cyan-400"></i></div>
+                <div class="w-20 h-20 bg-slate-800 rounded-full mx-auto flex items-center justify-center mb-6 border border-slate-700 shadow-inner">
+                    <i class="fa-solid fa-fingerprint text-4xl text-cyan-400"></i>
+                </div>
+                
                 <h2 class="text-xl font-bold text-white mb-2">เช็คชื่อเข้าอบรม</h2>
-                <div class="relative max-w-xs mx-auto mb-6"><input type="tel" id="checkinPhone" class="w-full pl-12 pr-4 py-3 rounded-xl glass-input text-lg tracking-widest text-center" placeholder="08xxxxxxxx"><i class="fa-solid fa-mobile-screen absolute left-4 top-4 text-slate-500 text-lg"></i></div>
-                <button onclick="checkStatus()" class="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold transition shadow-lg">ตรวจสอบ</button>
+                <div class="relative max-w-xs mx-auto mb-6">
+                    <input type="tel" id="checkinPhone" class="w-full pl-12 pr-4 py-3 rounded-xl glass-input text-lg tracking-widest text-center" placeholder="08xxxxxxxx">
+                    <i class="fa-solid fa-mobile-screen absolute left-4 top-4 text-slate-500 text-lg"></i>
+                </div>
+                
+                <button onclick="checkStatus()" class="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold transition shadow-lg">
+                    ตรวจสอบ
+                </button>
+
                 <div id="profileCard" class="hidden mt-8 text-left border-t border-slate-700 pt-6 animate-fade-up">
                     <div class="flex justify-between items-start mb-4">
-                        <div><h3 class="text-lg font-bold text-cyan-400" id="uiName">...</h3><p class="text-xs text-slate-400"><span id="uiNick">...</span> | <span id="uiDept">...</span></p></div>
+                        <div>
+                            <h3 class="text-lg font-bold text-cyan-400" id="uiName">...</h3>
+                            <p class="text-xs text-slate-400"><span id="uiNick">...</span> | <span id="uiDept">...</span></p>
+                        </div>
                         <span id="uiStatus" class="px-2 py-1 rounded text-[10px] font-bold uppercase bg-green-500/20 text-green-400 border border-green-500/30">Active</span>
                     </div>
+
                     <div class="grid grid-cols-3 gap-3">
-                        <div id="boxD1" class="glass p-2 rounded-xl text-center"><span class="text-[10px] text-slate-500 uppercase font-bold block mb-2">Day 1</span><button onclick="doCheckIn(1)" class="w-full h-auto py-2 rounded-lg bg-slate-800 text-slate-400 transition flex items-center justify-center"><i class="fa-solid fa-check"></i></button></div>
-                        <div id="boxD2" class="glass p-2 rounded-xl text-center"><span class="text-[10px] text-slate-500 uppercase font-bold block mb-2">Day 2</span><button onclick="doCheckIn(2)" class="w-full h-auto py-2 rounded-lg bg-slate-800 text-slate-400 transition flex items-center justify-center"><i class="fa-solid fa-check"></i></button></div>
-                        <div id="boxD3" class="glass p-2 rounded-xl text-center"><span class="text-[10px] text-slate-500 uppercase font-bold block mb-2">Day 3</span><button onclick="doCheckIn(3)" class="w-full h-auto py-2 rounded-lg bg-slate-800 text-slate-400 transition flex items-center justify-center"><i class="fa-solid fa-check"></i></button></div>
+                        <div id="boxD1" class="glass p-2 rounded-xl text-center">
+                            <span class="text-[10px] text-slate-500 uppercase font-bold block mb-2">Day 1</span>
+                            <button onclick="doCheckIn(1)" class="w-full h-auto py-2 rounded-lg bg-slate-800 text-slate-400 transition flex items-center justify-center"><i class="fa-solid fa-check"></i></button>
+                        </div>
+                        <div id="boxD2" class="glass p-2 rounded-xl text-center">
+                            <span class="text-[10px] text-slate-500 uppercase font-bold block mb-2">Day 2</span>
+                            <button onclick="doCheckIn(2)" class="w-full h-auto py-2 rounded-lg bg-slate-800 text-slate-400 transition flex items-center justify-center"><i class="fa-solid fa-check"></i></button>
+                        </div>
+                        <div id="boxD3" class="glass p-2 rounded-xl text-center">
+                            <span class="text-[10px] text-slate-500 uppercase font-bold block mb-2">Day 3</span>
+                            <button onclick="doCheckIn(3)" class="w-full h-auto py-2 rounded-lg bg-slate-800 text-slate-400 transition flex items-center justify-center"><i class="fa-solid fa-check"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="page-admin" class="hidden h-full flex flex-col mt-4">
+            
             <div id="adminLogin" class="max-w-xs mx-auto glass p-8 rounded-2xl text-center mt-10">
                 <i class="fa-solid fa-lock text-3xl text-red-400 mb-4"></i>
                 <h3 class="text-white font-bold mb-4">Admin Access</h3>
                 <input type="password" id="adminPass" class="w-full p-3 rounded-xl glass-input text-center mb-4" placeholder="Password">
                 <button onclick="adminAccess()" class="w-full py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold">Login</button>
             </div>
-            
+
             <div id="adminDashboard" class="hidden flex-1 flex flex-col">
                 <div class="flex justify-between items-center mb-4 px-2">
-                    <h2 class="text-white font-bold text-lg"><i class="fa-solid fa-users-gear mr-2 text-cyan-400"></i>รายชื่อ</h2>
+                    <h2 class="text-white font-bold text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-users-gear text-cyan-400"></i> รายชื่อ
+                    </h2>
                     <div class="flex gap-2">
-                        <button onclick="toggleSelectAll()" class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-check-double"></i> All</button>
-                        <button onclick="loadAdminData()" class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-rotate"></i></button>
+                        <button onclick="toggleSelectAll()" class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg transition">
+                            <i class="fa-solid fa-check-double"></i> All
+                        </button>
+                        <button onclick="loadAdminData()" class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg transition">
+                            <i class="fa-solid fa-rotate"></i>
+                        </button>
                     </div>
                 </div>
                 
-                <div class="flex-1 overflow-auto glass rounded-xl mb-24">
+                <div class="flex-1 overflow-auto glass rounded-xl mb-24 border border-slate-700">
                     <table class="w-full text-left border-collapse">
-                        <thead class="bg-slate-800 text-slate-400 text-[10px] font-bold uppercase sticky top-0 z-10">
+                        <thead class="bg-slate-800 text-slate-400 text-[10px] font-bold uppercase sticky top-0 z-10 shadow-md">
                             <tr>
                                 <th class="p-4 w-10 text-center">#</th>
-                                <th class="p-4">Name / Team</th>
-                                <th class="p-4 text-center hidden md:table-cell">Check-in</th>
-                                <th class="p-4 text-center">Status</th>
-                                <th class="p-4 text-center">Action</th>
+                                <th class="p-4">ข้อมูลพนักงาน</th>
+                                <th class="p-4 text-center hidden md:table-cell">การเข้าเรียน</th>
+                                <th class="p-4 text-center">สถานะ</th>
+                                <th class="p-4 text-center">จัดการ</th>
                             </tr>
                         </thead>
-                        <tbody id="adminTable" class="divide-y divide-slate-700 text-sm text-slate-300"></tbody>
+                        <tbody id="adminTable" class="divide-y divide-slate-700 text-sm text-slate-300">
+                            </tbody>
                     </table>
                 </div>
 
@@ -121,7 +201,7 @@
                     </div>
                     <div class="flex gap-2">
                         <button onclick="openReportModal()" class="bg-yellow-500 hover:bg-yellow-400 text-white px-3 py-2 rounded-xl text-sm font-bold shadow-lg flex items-center gap-1">
-                            <i class="fa-solid fa-file-invoice"></i> <span class="hidden sm:inline">รายงาน</span>
+                            <i class="fa-solid fa-file-invoice"></i> <span class="hidden sm:inline">รายงานอบรม</span>
                         </button>
                         <button onclick="openHRModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-2 rounded-xl text-sm font-bold shadow-lg flex items-center gap-1">
                             <i class="fa-solid fa-user-tie"></i> <span class="hidden sm:inline">ส่ง HR</span>
@@ -130,6 +210,7 @@
                 </div>
             </div>
         </section>
+
     </main>
 
     <div id="editModal" class="hidden fixed inset-0 z-[70] bg-black/80 backdrop-blur flex items-center justify-center p-4">
@@ -147,8 +228,17 @@
                     </select>
                     <input type="text" id="editTeamInput" class="hidden w-full mt-2 p-2 rounded-lg bg-slate-700 text-white border border-slate-500 text-sm" placeholder="ระบุชื่อทีม...">
                 </div>
-                <div><label class="text-xs text-slate-400">สถานะ</label><select id="editStatus" class="w-full mt-1 p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-sm"><option value="Active">Active</option><option value="Passed">Passed</option><option value="Resigned">Resigned</option><option value="New Job">New Job</option><option value="Back Office">Back Office</option><option value="Other">Other</option></select></div>
-                <div><label class="text-xs text-slate-400">หมายเหตุ</label><textarea id="editNote" rows="2" class="w-full mt-1 p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-sm"></textarea></div>
+                <div>
+                    <label class="text-xs text-slate-400">สถานะ</label>
+                    <select id="editStatus" class="w-full mt-1 p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-sm">
+                        <option value="Active">Active</option><option value="Passed">Passed</option><option value="Resigned">Resigned</option>
+                        <option value="New Job">New Job</option><option value="Back Office">Back Office</option><option value="Other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400">หมายเหตุ</label>
+                    <textarea id="editNote" rows="2" class="w-full mt-1 p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-sm"></textarea>
+                </div>
             </div>
             <div class="flex gap-3 mt-6">
                 <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 py-2 rounded-lg border border-slate-600 text-slate-400">ยกเลิก</button>
@@ -168,8 +258,13 @@
                     <div><label class="text-xs text-slate-400 block mb-1">วันที่รอบอบรม</label><input type="date" id="reportDate" class="w-full p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-xs"></div>
                     <div><label class="text-xs text-slate-400 block mb-1">อบรมครั้งที่</label><select id="reportDayType" class="w-full p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-xs"><option value="วันแรก">วันแรก</option><option value="วันที่สอง">วันที่สอง</option><option value="วันที่สาม">วันที่สาม</option></select></div>
                 </div>
-                <button onclick="addSelectionToReport()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl text-white font-bold shadow-lg hover:brightness-110 active:scale-95 transition"><i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการ</button>
-                <div><label class="text-xs text-slate-400 block mb-1">ข้อความรายงาน</label><textarea id="finalReportText" class="w-full h-48 p-3 rounded-xl bg-slate-800 text-white border border-slate-600 text-sm leading-relaxed" spellcheck="false"></textarea></div>
+                <button onclick="addSelectionToReport()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl text-white font-bold shadow-lg hover:brightness-110 active:scale-95 transition">
+                    <i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการที่เลือก
+                </button>
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">ข้อความรายงาน</label>
+                    <textarea id="finalReportText" class="w-full h-48 p-3 rounded-xl bg-slate-800 text-white border border-slate-600 text-sm leading-relaxed" spellcheck="false"></textarea>
+                </div>
             </div>
             <div class="flex gap-3 mt-4 pt-4 border-t border-slate-700">
                 <button onclick="copyToClipboard('finalReportText')" class="flex-1 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl text-white font-bold transition"><i class="fa-regular fa-copy mr-1"></i> คัดลอก</button>
@@ -187,19 +282,17 @@
             <div class="flex-1 overflow-y-auto space-y-4 pr-1">
                 <div class="space-y-3">
                     <div>
-                        <label class="text-xs text-slate-400 block mb-1">วันที่เริ่มอบรม (Training Date)</label>
+                        <label class="text-xs text-slate-400 block mb-1">วันที่เริ่มอบรม</label>
                         <input type="date" id="hrTrainingDate" class="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600 text-sm">
                     </div>
                     <div>
-                        <label class="text-xs text-cyan-400 font-bold block mb-1">วันที่เริ่มงานจริง (Actual Start Date)</label>
+                        <label class="text-xs text-cyan-400 font-bold block mb-1">วันที่เริ่มงานจริง</label>
                         <input type="date" id="hrWorkDate" class="w-full p-3 rounded-xl bg-slate-800 text-white border border-cyan-500/50 text-sm shadow-lg shadow-cyan-900/20">
                     </div>
                 </div>
-                
                 <button onclick="generateHRReport()" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl text-white font-bold shadow-lg hover:brightness-110 active:scale-95 transition mt-2">
                     <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> สร้างข้อความ
                 </button>
-
                 <div>
                     <label class="text-xs text-slate-400 block mb-1">ข้อความสำหรับส่ง</label>
                     <textarea id="hrReportText" class="w-full h-48 p-3 rounded-xl bg-slate-800 text-white border border-slate-600 text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
@@ -214,7 +307,7 @@
 
     <script>
         // **********************************************
-        // 🔴 ใส่ URL ที่ Deploy แล้ว ตรงนี้
+        // 🔴 ตั้งค่า URL Apps Script (Backend) ตรงนี้
         // **********************************************
         const API_URL = "https://script.google.com/macros/s/AKfycbyYYauRspNoRvkhUWKZh4c5Hp1TzhxWGu_T96TvPPMZ6p1DHJqh30Azzi_PrEcGn9dy/exec"; 
         // **********************************************
@@ -223,6 +316,7 @@
         let adminDataCache = [];
         let selectedRows = new Set(); 
 
+        // --- Core API ---
         async function fetchAPI(payload) {
             document.getElementById('loadingOverlay').classList.remove('hidden');
             try {
@@ -241,7 +335,7 @@
             document.getElementById(`nav-${tab}`).classList.add('nav-active', 'text-cyan-400');
         }
 
-        // --- Register & Checkin ---
+        // --- 1. Register ---
         async function handleRegister(e) {
             e.preventDefault();
             const formData = new FormData(e.target);
@@ -250,6 +344,7 @@
             else { Swal.fire('ผิดพลาด', res.message, 'error'); }
         }
 
+        // --- 2. Check-in ---
         async function checkStatus() {
             const phone = document.getElementById('checkinPhone').value;
             if (!phone) return Swal.fire('แจ้งเตือน', 'กรุณากรอกเบอร์โทร', 'warning');
@@ -264,8 +359,18 @@
 
         function updateCheckBtn(id, day, val) {
             const el = document.getElementById(id); const btn = el.querySelector('button');
-            if(val) { el.classList.add('border-green-500/30'); btn.className="w-full h-auto py-2 rounded-lg bg-green-500/20 text-green-400 cursor-default"; btn.innerHTML=`<span class="font-bold text-[10px] whitespace-normal leading-tight">${val}</span>`; btn.onclick=null; }
-            else { el.classList.remove('border-green-500/30'); btn.className="w-full h-auto py-2 rounded-lg bg-slate-800 hover:bg-cyan-600 text-slate-400 hover:text-white"; btn.innerHTML=`<i class="fa-solid fa-check"></i>`; btn.onclick=()=>doCheckIn(day); }
+            if(val) { 
+                el.classList.add('border-green-500/30'); 
+                btn.className="w-full h-auto py-2 rounded-lg bg-green-500/20 text-green-400 cursor-default"; 
+                btn.innerHTML=`<span class="font-bold text-[10px] whitespace-normal leading-tight">${val}</span>`; 
+                btn.onclick=null; 
+            }
+            else { 
+                el.classList.remove('border-green-500/30'); 
+                btn.className="w-full h-auto py-2 rounded-lg bg-slate-800 hover:bg-cyan-600 text-slate-400 hover:text-white"; 
+                btn.innerHTML=`<i class="fa-solid fa-check"></i>`; 
+                btn.onclick=()=>doCheckIn(day); 
+            }
         }
 
         async function doCheckIn(day) {
@@ -277,7 +382,7 @@
             }
         }
 
-        // --- Admin Section ---
+        // --- 3. Admin ---
         async function adminAccess() {
             const pass = document.getElementById('adminPass').value;
             const res = await fetchAPI({ action: 'get_admin', pass });
@@ -287,13 +392,11 @@
 
         async function loadAdminData() { if(adminPassCache) { const res = await fetchAPI({ action: 'get_admin', pass: adminPassCache }); if(res.status==='success') renderAdminTable(res.data); } }
 
-        // ฟังก์ชันแปลงวันที่ให้สวยงามตามโจทย์ (เพิ่มใหม่)
-        function formatPrettyDate(dateInput) {
-            if (!dateInput) return "-";
-            const date = new Date(dateInput);
-            
-            // กรณีข้อมูลไม่ใช่วันที่ที่ถูกต้อง ให้คืนค่าเดิมกลับไป
-            if (isNaN(date.getTime())) return dateInput; 
+        // --- New: Format Date Function ---
+        function formatPrettyDate(dateString) {
+            if (!dateString) return "-";
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString; // ถ้าแปลงไม่ได้ ให้โชว์ค่าเดิม
 
             const d = String(date.getDate()).padStart(2, '0');
             const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -303,11 +406,15 @@
             const min = String(date.getMinutes()).padStart(2, '0');
             const s = String(date.getSeconds()).padStart(2, '0');
 
-            // คืนค่าเป็น HTML string เพื่อความสวยงาม (แยกสีตัว T เล็กน้อย)
-            return `<span class="font-bold text-slate-700">${d}-${m}-${y}</span> <span class="text-cyan-600 font-bold">T${h}:${min}:${s}</span>`;
+            return `
+                <div class="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 w-fit mt-1">
+                    <i class="fa-regular fa-calendar text-slate-400"></i>
+                    <span class="font-bold text-slate-700 tracking-wide">${d}-${m}-${y}</span>
+                    <span class="font-bold text-cyan-600 tracking-wide">T${h}:${min}:${s}</span>
+                </div>
+            `;
         }
 
-        // แก้ไขฟังก์ชัน renderAdminTable (อัปเดตใหม่)
         function renderAdminTable(data) {
             adminDataCache = data;
             const tbody = document.getElementById('adminTable'); 
@@ -324,22 +431,18 @@
                 if(row.status==='Passed') badge="bg-green-500/10 text-green-400 border border-green-500/30"; 
                 if(['Resigned','New Job'].includes(row.status)) badge="bg-red-500/10 text-red-400 border border-red-500/30";
                 
-                // เรียกใช้ฟังก์ชันแปลงวันที่ตรงนี้
-                const prettyDate = formatPrettyDate(row.timestamp);
+                // แปลงวันที่
+                const dateDisplay = formatPrettyDate(row.timestamp);
 
                 tr.innerHTML = `
                     <td class="p-4 text-center align-middle">
                         <input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)">
                     </td>
                     <td class="p-4 align-middle">
-                        <div class="font-bold text-white text-base">${row.name}</div>
-                        <div class="text-xs text-slate-400 mt-1">${row.nickname} | ${row.dept}</div>
-                        <div class="text-xs text-cyan-400 font-bold mt-0.5">ทีม: ${row.team}</div>
-                        
-                        <div class="mt-2 inline-block bg-slate-800/80 px-2 py-1 rounded-md border border-slate-600/50 shadow-sm">
-                            <i class="fa-regular fa-clock mr-1 text-slate-400 text-xs"></i>
-                            <span class="text-xs font-mono tracking-wide">${prettyDate}</span>
-                        </div>
+                        <div class="font-bold text-white text-base mb-1">${row.name}</div>
+                        <div class="text-xs text-slate-400 mb-1">${row.nickname} | ${row.dept}</div>
+                        <div class="text-xs text-cyan-400 font-bold mb-2">ทีม: ${row.team}</div>
+                        ${dateDisplay}
                     </td>
                     <td class="p-4 text-center hidden md:table-cell align-middle">
                         <div class="flex justify-center gap-2">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div>
@@ -357,32 +460,9 @@
             updateActionBar();
         }
 
-                tr.innerHTML = `
-                    <td class="p-4 text-center">
-                        <input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)">
-                    </td>
-                    <td class="p-4">
-                        <div class="font-bold text-white">${row.name}</div>
-                        <div class="text-[10px] text-slate-400">${row.nickname} | ${row.dept}</div>
-                        <div class="text-[10px] text-cyan-400 font-bold mt-0.5">ทีม: ${row.team}</div>
-                        <div class="text-[10px] text-slate-500 mt-1"><i class="fa-regular fa-calendar mr-1"></i>${dateOnly}</div>
-                    </td>
-                    <td class="p-4 text-center hidden md:table-cell"><div class="flex justify-center gap-1 text-xs">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div></td>
-                    <td class="p-4 text-center"><span class="px-2 py-1 rounded text-[10px] uppercase font-bold ${badge}">${row.status}</span></td>
-                    <td class="p-4 text-center flex justify-center gap-2">
-                        <button onclick="openEditModal(${row.row}, '${row.status}', '${row.team}', '${row.note||''}')" class="text-cyan-400 bg-cyan-900/30 p-2 rounded-lg hover:bg-cyan-900/50"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteUser(${row.row})" class="text-red-400 bg-red-900/30 p-2 rounded-lg hover:bg-red-900/50"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-            updateActionBar();
-        }
-
         // --- Selection Logic ---
         function toggleRowSelection(checkbox) {
-            if (checkbox.checked) selectedRows.add(checkbox.value);
-            else selectedRows.delete(checkbox.value);
+            if (checkbox.checked) selectedRows.add(checkbox.value); else selectedRows.delete(checkbox.value);
             updateActionBar();
         }
         function toggleSelectAll() {
@@ -399,17 +479,17 @@
             if (count > 0) bar.classList.remove('translate-y-[150%]'); else bar.classList.add('translate-y-[150%]');
         }
 
-        // --- GENERAL HELPERS ---
+        // --- HELPERS ---
         function copyToClipboard(elementId) {
             let text = document.getElementById(elementId).value;
-            if(elementId === 'finalReportText') text += "ขอบคุณครับ";
+            if(elementId.includes('ReportText')) text += "ขอบคุณครับ";
             navigator.clipboard.writeText(text).then(() => {
                 Swal.fire({ icon: 'success', title: 'คัดลอกเรียบร้อย', toast: true, position: 'top-end', showConfirmButton: false, timer: 1500, background: '#1e293b', color: '#fff' });
             });
         }
         function sendLine(elementId) {
             let text = document.getElementById(elementId).value;
-            if(elementId === 'finalReportText') text += "ขอบคุณครับ";
+            if(elementId.includes('ReportText')) text += "ขอบคุณครับ";
             window.open(`https://line.me/R/msg/text/?${encodeURIComponent(text)}`, '_blank');
         }
         function formatDateThai(date) {
@@ -424,7 +504,7 @@
             return new Date(dateStr);
         }
 
-        // --- REPORT GENERATOR ---
+        // --- TRAINING REPORT ---
         function openReportModal() {
             document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
             const dateStr = formatDateThai(new Date());
@@ -460,10 +540,10 @@
             Swal.fire({ icon: 'success', title: 'เพิ่มลงรายงานแล้ว', showConfirmButton: false, timer: 1000, background: '#1e293b', color: '#fff' });
         }
 
-        // --- HR REPORT (NEW) ---
+        // --- HR REPORT ---
         function openHRModal() {
             document.getElementById('hrTrainingDate').value = new Date().toISOString().split('T')[0];
-            document.getElementById('hrWorkDate').value = ""; // ให้ User เลือกเอง
+            document.getElementById('hrWorkDate').value = "";
             document.getElementById('hrReportText').value = "";
             document.getElementById('hrModal').classList.remove('hidden');
         }
@@ -472,9 +552,7 @@
             const trainDateVal = document.getElementById('hrTrainingDate').value;
             const workDateVal = document.getElementById('hrWorkDate').value;
             
-            if(!trainDateVal || !workDateVal) {
-                return Swal.fire('แจ้งเตือน', 'กรุณาเลือกวันที่ทั้ง 2 ช่อง', 'warning');
-            }
+            if(!trainDateVal || !workDateVal) return Swal.fire('แจ้งเตือน', 'กรุณาเลือกวันที่ทั้ง 2 ช่อง', 'warning');
 
             const trainDateStr = formatDateThai(parseDateInput(trainDateVal));
             const workDateStr = formatDateThai(parseDateInput(workDateVal));
@@ -487,13 +565,13 @@
                 report += `${item.prefix || ''}${item.name}\n`;
                 report += `${item.nickname}  ${item.team}\n`;
                 report += `วันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${trainDateStr}\n`;
-                report += `วันที่ส่งแผนกเริ่มงาน ${workDateStr} ที่เริ่มงานจริง ลงแผนก\n\n`;
+                report += `วันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${workDateStr} ที่เริ่มงานจริง ลงแผนก\n\n`;
             });
 
             document.getElementById('hrReportText').value = report;
         }
 
-        // --- Edit & Delete (Logic เดิม) ---
+        // --- Edit & Delete ---
         function toggleTeamInput(select) {
             const input = document.getElementById('editTeamInput');
             if (select.value === 'OTHER') { input.classList.remove('hidden'); input.focus(); } else { input.classList.add('hidden'); }
@@ -524,5 +602,3 @@
     </script>
 </body>
 </html>
-
-
