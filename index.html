@@ -100,7 +100,8 @@
                     </div>
                 </div>
                 
-                <div class="flex-1 overflow-auto glass rounded-xl mb-24"> <table class="w-full text-left border-collapse">
+                <div class="flex-1 overflow-auto glass rounded-xl mb-24">
+                    <table class="w-full text-left border-collapse">
                         <thead class="bg-slate-800 text-slate-400 text-[10px] font-bold uppercase sticky top-0 z-10">
                             <tr>
                                 <th class="p-4 w-10 text-center">#</th>
@@ -120,7 +121,10 @@
                     </div>
                     <div class="flex gap-2">
                         <button onclick="openReportModal()" class="bg-yellow-500 hover:bg-yellow-400 text-white px-3 py-2 rounded-xl text-sm font-bold shadow-lg flex items-center gap-1">
-                            <i class="fa-solid fa-file-invoice"></i> <span class="hidden sm:inline">สร้างรายงาน</span>
+                            <i class="fa-solid fa-file-invoice"></i> <span class="hidden sm:inline">รายงาน</span>
+                        </button>
+                        <button onclick="openHRModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-2 rounded-xl text-sm font-bold shadow-lg flex items-center gap-1">
+                            <i class="fa-solid fa-user-tie"></i> <span class="hidden sm:inline">ส่ง HR</span>
                         </button>
                     </div>
                 </div>
@@ -156,44 +160,54 @@
     <div id="reportModal" class="hidden fixed inset-0 z-[80] bg-black/90 backdrop-blur flex items-center justify-center p-4">
         <div class="glass w-full max-w-md rounded-2xl p-6 border border-slate-600 flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-white font-bold text-lg"><i class="fa-solid fa-file-lines mr-2 text-yellow-500"></i>สร้างรายงานการอบรม</h3>
-                <button onclick="closeReportModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <h3 class="text-white font-bold text-lg"><i class="fa-solid fa-file-lines mr-2 text-yellow-500"></i>สร้างรายงานอบรม</h3>
+                <button onclick="document.getElementById('reportModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            
             <div class="flex-1 overflow-y-auto space-y-4 pr-1">
                 <div class="grid grid-cols-2 gap-3">
+                    <div><label class="text-xs text-slate-400 block mb-1">วันที่รอบอบรม</label><input type="date" id="reportDate" class="w-full p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-xs"></div>
+                    <div><label class="text-xs text-slate-400 block mb-1">อบรมครั้งที่</label><select id="reportDayType" class="w-full p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-xs"><option value="วันแรก">วันแรก</option><option value="วันที่สอง">วันที่สอง</option><option value="วันที่สาม">วันที่สาม</option></select></div>
+                </div>
+                <button onclick="addSelectionToReport()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl text-white font-bold shadow-lg hover:brightness-110 active:scale-95 transition"><i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการ</button>
+                <div><label class="text-xs text-slate-400 block mb-1">ข้อความรายงาน</label><textarea id="finalReportText" class="w-full h-48 p-3 rounded-xl bg-slate-800 text-white border border-slate-600 text-sm leading-relaxed" spellcheck="false"></textarea></div>
+            </div>
+            <div class="flex gap-3 mt-4 pt-4 border-t border-slate-700">
+                <button onclick="copyToClipboard('finalReportText')" class="flex-1 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl text-white font-bold transition"><i class="fa-regular fa-copy mr-1"></i> คัดลอก</button>
+                <button onclick="sendLine('finalReportText')" class="flex-1 py-3 bg-[#06C755] hover:bg-[#05b54d] rounded-xl text-white font-bold transition"><i class="fa-brands fa-line mr-1 text-lg"></i> ส่ง LINE</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="hrModal" class="hidden fixed inset-0 z-[80] bg-black/90 backdrop-blur flex items-center justify-center p-4">
+        <div class="glass w-full max-w-md rounded-2xl p-6 border border-slate-600 flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-white font-bold text-lg"><i class="fa-solid fa-user-tie mr-2 text-indigo-400"></i>ส่งรายชื่อให้ HR</h3>
+                <button onclick="document.getElementById('hrModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="flex-1 overflow-y-auto space-y-4 pr-1">
+                <div class="space-y-3">
                     <div>
-                        <label class="text-xs text-slate-400 block mb-1">วันที่รอบอบรม</label>
-                        <input type="date" id="reportDate" class="w-full p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-xs">
+                        <label class="text-xs text-slate-400 block mb-1">วันที่เริ่มอบรม (Training Date)</label>
+                        <input type="date" id="hrTrainingDate" class="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600 text-sm">
                     </div>
                     <div>
-                        <label class="text-xs text-slate-400 block mb-1">อบรมครั้งที่</label>
-                        <select id="reportDayType" class="w-full p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-xs">
-                            <option value="วันแรก">วันแรก</option>
-                            <option value="วันที่สอง">วันที่สอง</option>
-                            <option value="วันที่สาม">วันที่สาม</option>
-                        </select>
+                        <label class="text-xs text-cyan-400 font-bold block mb-1">วันที่เริ่มงานจริง (Actual Start Date)</label>
+                        <input type="date" id="hrWorkDate" class="w-full p-3 rounded-xl bg-slate-800 text-white border border-cyan-500/50 text-sm shadow-lg shadow-cyan-900/20">
                     </div>
                 </div>
-
-                <button onclick="addSelectionToReport()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl text-white font-bold shadow-lg hover:brightness-110 active:scale-95 transition">
-                    <i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการที่เลือกลงรายงาน
+                
+                <button onclick="generateHRReport()" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl text-white font-bold shadow-lg hover:brightness-110 active:scale-95 transition mt-2">
+                    <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> สร้างข้อความ
                 </button>
-                <p class="text-[10px] text-slate-400 text-center">เลือกคนในตาราง > กดปุ่มนี้ > ข้อมูลจะต่อท้ายด้านล่าง</p>
 
                 <div>
-                    <label class="text-xs text-slate-400 block mb-1">ข้อความรายงาน (แก้ไขได้)</label>
-                    <textarea id="finalReportText" class="w-full h-48 p-3 rounded-xl bg-slate-800 text-white border border-slate-600 text-sm leading-relaxed" spellcheck="false"></textarea>
+                    <label class="text-xs text-slate-400 block mb-1">ข้อความสำหรับส่ง</label>
+                    <textarea id="hrReportText" class="w-full h-48 p-3 rounded-xl bg-slate-800 text-white border border-slate-600 text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
                 </div>
             </div>
-
             <div class="flex gap-3 mt-4 pt-4 border-t border-slate-700">
-                <button onclick="copyReport()" class="flex-1 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl text-white font-bold transition">
-                    <i class="fa-regular fa-copy mr-1"></i> คัดลอก
-                </button>
-                <button onclick="sendLineReport()" class="flex-1 py-3 bg-[#06C755] hover:bg-[#05b54d] rounded-xl text-white font-bold transition">
-                    <i class="fa-brands fa-line mr-1 text-lg"></i> ส่ง LINE
-                </button>
+                <button onclick="copyToClipboard('hrReportText')" class="flex-1 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl text-white font-bold transition"><i class="fa-regular fa-copy mr-1"></i> คัดลอก</button>
+                <button onclick="sendLine('hrReportText')" class="flex-1 py-3 bg-[#06C755] hover:bg-[#05b54d] rounded-xl text-white font-bold transition"><i class="fa-brands fa-line mr-1 text-lg"></i> ส่ง LINE</button>
             </div>
         </div>
     </div>
@@ -325,39 +339,47 @@
             if (count > 0) bar.classList.remove('translate-y-[150%]'); else bar.classList.add('translate-y-[150%]');
         }
 
-        // --- REPORT GENERATOR (NEW) ---
-        function openReportModal() {
-            // Set default date to today
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('reportDate').value = today;
-            
-            // Initialize report text with Header
-            const dateStr = formatDateThai(new Date());
-            const header = `เรียน พี่ด้า\nและหัวหน้างานที่เกี่ยวข้อง\nขอนำส่งรายงานการอบรมพนักงานใหม่\nรอบอบรมวันที่ ${dateStr}\n\n`;
-            
-            // ถ้า Textarea ว่างอยู่ ให้ใส่ Header
-            const currentText = document.getElementById('finalReportText').value;
-            if(!currentText.trim()) {
-                document.getElementById('finalReportText').value = header;
-            }
-            
-            document.getElementById('reportModal').classList.remove('hidden');
+        // --- GENERAL HELPERS ---
+        function copyToClipboard(elementId) {
+            let text = document.getElementById(elementId).value;
+            if(elementId === 'finalReportText') text += "ขอบคุณครับ";
+            navigator.clipboard.writeText(text).then(() => {
+                Swal.fire({ icon: 'success', title: 'คัดลอกเรียบร้อย', toast: true, position: 'top-end', showConfirmButton: false, timer: 1500, background: '#1e293b', color: '#fff' });
+            });
+        }
+        function sendLine(elementId) {
+            let text = document.getElementById(elementId).value;
+            if(elementId === 'finalReportText') text += "ขอบคุณครับ";
+            window.open(`https://line.me/R/msg/text/?${encodeURIComponent(text)}`, '_blank');
+        }
+        function formatDateThai(date) {
+            const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            const day = date.getDate();
+            const month = months[date.getMonth()];
+            const year = date.getFullYear() + 543;
+            return `${day} ${month} ${year}`;
+        }
+        function parseDateInput(dateStr) {
+            if (!dateStr) return null;
+            return new Date(dateStr);
         }
 
-        function closeReportModal() {
-            document.getElementById('reportModal').classList.add('hidden');
+        // --- REPORT GENERATOR ---
+        function openReportModal() {
+            document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
+            const dateStr = formatDateThai(new Date());
+            const currentText = document.getElementById('finalReportText').value;
+            if(!currentText.trim()) {
+                document.getElementById('finalReportText').value = `เรียน พี่ด้า\nและหัวหน้างานที่เกี่ยวข้อง\nขอนำส่งรายงานการอบรมพนักงานใหม่\nรอบอบรมวันที่ ${dateStr}\n\n`;
+            }
+            document.getElementById('reportModal').classList.remove('hidden');
         }
 
         function addSelectionToReport() {
             const dayType = document.getElementById('reportDayType').value;
             const selectedItems = adminDataCache.filter(item => selectedRows.has(item.id.toString()));
+            if (selectedItems.length === 0) return Swal.fire('แจ้งเตือน', 'กรุณาเลือกรายชื่ออย่างน้อย 1 คน', 'warning');
             
-            if (selectedItems.length === 0) {
-                Swal.fire('แจ้งเตือน', 'กรุณาเลือกรายชื่ออย่างน้อย 1 คน', 'warning');
-                return;
-            }
-
-            // Group by Team
             const teams = {};
             selectedItems.forEach(item => {
                 const t = item.team || 'ไม่ระบุทีม';
@@ -365,53 +387,50 @@
                 teams[t].push(item.nickname);
             });
 
-            // สร้างข้อความส่วนเพิ่ม
             let sectionText = `อบรม${dayType} ทั้งหมด ${selectedItems.length} คน\n\n`;
-            
             for (const [teamName, nicks] of Object.entries(teams)) {
                 sectionText += `${teamName}    จำนวน ${nicks.length} คน ${nicks.join(' ')}\n`;
             }
-            sectionText += `\n`; // เว้นบรรทัดปิดท้าย
-
-            // ต่อข้อความลงใน Textarea
-            const textarea = document.getElementById('finalReportText');
-            textarea.value += sectionText;
-
-            // Clear Selection เพื่อเลือกชุดต่อไป
+            sectionText += `\n`; 
+            document.getElementById('finalReportText').value += sectionText;
+            
             selectedRows.clear();
             document.querySelectorAll('.custom-checkbox').forEach(cb => cb.checked = false);
             updateActionBar();
+            Swal.fire({ icon: 'success', title: 'เพิ่มลงรายงานแล้ว', showConfirmButton: false, timer: 1000, background: '#1e293b', color: '#fff' });
+        }
+
+        // --- HR REPORT (NEW) ---
+        function openHRModal() {
+            document.getElementById('hrTrainingDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('hrWorkDate').value = ""; // ให้ User เลือกเอง
+            document.getElementById('hrReportText').value = "";
+            document.getElementById('hrModal').classList.remove('hidden');
+        }
+
+        function generateHRReport() {
+            const trainDateVal = document.getElementById('hrTrainingDate').value;
+            const workDateVal = document.getElementById('hrWorkDate').value;
             
-            Swal.fire({
-                icon: 'success', 
-                title: 'เพิ่มลงรายงานแล้ว', 
-                text: 'สามารถเลือกคนกลุ่มต่อไป แล้วกดเพิ่มได้อีก',
-                showConfirmButton: false,
-                timer: 1500,
-                background: '#1e293b', color: '#fff'
+            if(!trainDateVal || !workDateVal) {
+                return Swal.fire('แจ้งเตือน', 'กรุณาเลือกวันที่ทั้ง 2 ช่อง', 'warning');
+            }
+
+            const trainDateStr = formatDateThai(parseDateInput(trainDateVal));
+            const workDateStr = formatDateThai(parseDateInput(workDateVal));
+
+            const selectedItems = adminDataCache.filter(item => selectedRows.has(item.id.toString()));
+            if (selectedItems.length === 0) return Swal.fire('แจ้งเตือน', 'กรุณาเลือกรายชื่อก่อน', 'warning');
+
+            let report = "";
+            selectedItems.forEach(item => {
+                report += `${item.prefix || ''}${item.name}\n`;
+                report += `${item.nickname}  ${item.team}\n`;
+                report += `วันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${trainDateStr}\n`;
+                report += `วันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${workDateStr} ที่เริ่มงานจริง ลงแผนก\n\n`;
             });
-        }
 
-        function copyReport() {
-            let text = document.getElementById('finalReportText').value;
-            text += "ขอบคุณครับ"; // Auto Footer
-            navigator.clipboard.writeText(text).then(() => {
-                Swal.fire({ icon: 'success', title: 'คัดลอกเรียบร้อย', toast: true, position: 'top-end', showConfirmButton: false, timer: 1500, background: '#1e293b', color: '#fff' });
-            });
-        }
-
-        function sendLineReport() {
-            let text = document.getElementById('finalReportText').value;
-            text += "ขอบคุณครับ";
-            window.open(`https://line.me/R/msg/text/?${encodeURIComponent(text)}`, '_blank');
-        }
-
-        function formatDateThai(date) {
-            const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
-            const day = date.getDate();
-            const month = months[date.getMonth()];
-            const year = date.getFullYear() + 543;
-            return `${day} ${month} ${year}`;
+            document.getElementById('hrReportText').value = report;
         }
 
         // --- Edit & Delete (Logic เดิม) ---
