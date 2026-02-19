@@ -287,15 +287,75 @@
 
         async function loadAdminData() { if(adminPassCache) { const res = await fetchAPI({ action: 'get_admin', pass: adminPassCache }); if(res.status==='success') renderAdminTable(res.data); } }
 
+        // ฟังก์ชันแปลงวันที่ให้สวยงามตามโจทย์ (เพิ่มใหม่)
+        function formatPrettyDate(dateInput) {
+            if (!dateInput) return "-";
+            const date = new Date(dateInput);
+            
+            // กรณีข้อมูลไม่ใช่วันที่ที่ถูกต้อง ให้คืนค่าเดิมกลับไป
+            if (isNaN(date.getTime())) return dateInput; 
+
+            const d = String(date.getDate()).padStart(2, '0');
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const y = date.getFullYear();
+            
+            const h = String(date.getHours()).padStart(2, '0');
+            const min = String(date.getMinutes()).padStart(2, '0');
+            const s = String(date.getSeconds()).padStart(2, '0');
+
+            // คืนค่าเป็น HTML string เพื่อความสวยงาม (แยกสีตัว T เล็กน้อย)
+            return `<span class="font-bold text-slate-700">${d}-${m}-${y}</span> <span class="text-cyan-600 font-bold">T${h}:${min}:${s}</span>`;
+        }
+
+        // แก้ไขฟังก์ชัน renderAdminTable (อัปเดตใหม่)
         function renderAdminTable(data) {
             adminDataCache = data;
-            const tbody = document.getElementById('adminTable'); tbody.innerHTML = '';
+            const tbody = document.getElementById('adminTable'); 
+            tbody.innerHTML = '';
+            
             data.forEach(row => {
-                const tr = document.createElement('tr'); tr.className = "hover:bg-white/5 transition border-b border-slate-700";
-                const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-green-400" title="${v}"></i>` : `<i class="fa-regular fa-circle text-slate-600"></i>`;
-                let badge = "bg-slate-700 text-slate-300";
-                if(row.status==='Active') badge="bg-blue-500/20 text-blue-400"; if(row.status==='Passed') badge="bg-green-500/20 text-green-400"; if(['Resigned','New Job'].includes(row.status)) badge="bg-red-500/20 text-red-400";
-                const dateOnly = row.timestamp ? row.timestamp.split(' ')[0] : '-';
+                const tr = document.createElement('tr'); 
+                tr.className = "hover:bg-white/5 transition border-b border-slate-700";
+                
+                const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-green-400 text-lg" title="${v}"></i>` : `<i class="fa-regular fa-circle text-slate-600 text-lg"></i>`;
+                
+                let badge = "bg-slate-700 text-slate-300 border border-slate-600";
+                if(row.status==='Active') badge="bg-blue-500/10 text-blue-400 border border-blue-500/30"; 
+                if(row.status==='Passed') badge="bg-green-500/10 text-green-400 border border-green-500/30"; 
+                if(['Resigned','New Job'].includes(row.status)) badge="bg-red-500/10 text-red-400 border border-red-500/30";
+                
+                // เรียกใช้ฟังก์ชันแปลงวันที่ตรงนี้
+                const prettyDate = formatPrettyDate(row.timestamp);
+
+                tr.innerHTML = `
+                    <td class="p-4 text-center align-middle">
+                        <input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)">
+                    </td>
+                    <td class="p-4 align-middle">
+                        <div class="font-bold text-white text-base">${row.name}</div>
+                        <div class="text-xs text-slate-400 mt-1">${row.nickname} | ${row.dept}</div>
+                        <div class="text-xs text-cyan-400 font-bold mt-0.5">ทีม: ${row.team}</div>
+                        
+                        <div class="mt-2 inline-block bg-slate-800/80 px-2 py-1 rounded-md border border-slate-600/50 shadow-sm">
+                            <i class="fa-regular fa-clock mr-1 text-slate-400 text-xs"></i>
+                            <span class="text-xs font-mono tracking-wide">${prettyDate}</span>
+                        </div>
+                    </td>
+                    <td class="p-4 text-center hidden md:table-cell align-middle">
+                        <div class="flex justify-center gap-2">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div>
+                    </td>
+                    <td class="p-4 text-center align-middle">
+                        <span class="px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider ${badge}">${row.status}</span>
+                    </td>
+                    <td class="p-4 text-center flex justify-center gap-2 align-middle">
+                        <button onclick="openEditModal(${row.row}, '${row.status}', '${row.team}', '${row.note||''}')" class="text-cyan-400 bg-cyan-900/30 p-2.5 rounded-xl hover:bg-cyan-900/50 transition shadow-lg"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteUser(${row.row})" class="text-red-400 bg-red-900/30 p-2.5 rounded-xl hover:bg-red-900/50 transition shadow-lg"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            updateActionBar();
+        }
 
                 tr.innerHTML = `
                     <td class="p-4 text-center">
@@ -464,4 +524,5 @@
     </script>
 </body>
 </html>
+
 
