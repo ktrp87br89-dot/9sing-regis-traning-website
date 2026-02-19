@@ -427,7 +427,7 @@
                 report += `${item.prefix || ''}${item.name}\n`;
                 report += `${item.nickname}  ${item.team}\n`;
                 report += `วันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${trainDateStr}\n`;
-                report += `วันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${workDateStr} ที่เริ่มงานจริง ลงแผนก\n\n`;
+                report += `วันที่ส่งแผนกเริ่มงาน ${workDateStr} ที่เริ่มงานจริง ลงแผนก\n\n`;
             });
 
             document.getElementById('hrReportText').value = report;
@@ -464,3 +464,4 @@
     </script>
 </body>
 </html>
+
