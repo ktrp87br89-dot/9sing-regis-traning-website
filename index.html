@@ -16,6 +16,7 @@
         .nav-active { color: #38bdf8; border-bottom: 2px solid #38bdf8; background: rgba(56, 189, 248, 0.1); }
         .loader { width: 48px; height: 48px; border: 5px solid #FFF; border-bottom-color: #38bdf8; border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite; }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .custom-checkbox { width: 18px; height: 18px; accent-color: #0ea5e9; cursor: pointer; }
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden bg-slate-900">
@@ -89,18 +90,39 @@
                 <input type="password" id="adminPass" class="w-full p-3 rounded-xl glass-input text-center mb-4" placeholder="Password">
                 <button onclick="adminAccess()" class="w-full py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold">Login</button>
             </div>
+            
             <div id="adminDashboard" class="hidden flex-1 flex flex-col">
                 <div class="flex justify-between items-center mb-4 px-2">
-                    <h2 class="text-white font-bold text-lg"><i class="fa-solid fa-list mr-2 text-cyan-400"></i>รายชื่อ</h2>
-                    <button onclick="loadAdminData()" class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-rotate"></i> Refresh</button>
+                    <h2 class="text-white font-bold text-lg"><i class="fa-solid fa-users-gear mr-2 text-cyan-400"></i>รายชื่อ</h2>
+                    <div class="flex gap-2">
+                        <button onclick="toggleSelectAll()" class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-check-double"></i> All</button>
+                        <button onclick="loadAdminData()" class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-rotate"></i></button>
+                    </div>
                 </div>
-                <div class="flex-1 overflow-auto glass rounded-xl">
-                    <table class="w-full text-left border-collapse">
-                        <thead class="bg-slate-800 text-slate-400 text-[10px] font-bold uppercase sticky top-0">
-                            <tr><th class="p-4">Name</th><th class="p-4 text-center">D1</th><th class="p-4 text-center">D2</th><th class="p-4 text-center">D3</th><th class="p-4 text-center">Status</th><th class="p-4 text-center">Action</th></tr>
+                
+                <div class="flex-1 overflow-auto glass rounded-xl mb-24"> <table class="w-full text-left border-collapse">
+                        <thead class="bg-slate-800 text-slate-400 text-[10px] font-bold uppercase sticky top-0 z-10">
+                            <tr>
+                                <th class="p-4 w-10 text-center">#</th>
+                                <th class="p-4">Name / Team</th>
+                                <th class="p-4 text-center hidden md:table-cell">Check-in</th>
+                                <th class="p-4 text-center">Status</th>
+                                <th class="p-4 text-center">Action</th>
+                            </tr>
                         </thead>
                         <tbody id="adminTable" class="divide-y divide-slate-700 text-sm text-slate-300"></tbody>
                     </table>
+                </div>
+
+                <div id="actionBar" class="fixed bottom-4 left-4 right-4 bg-slate-800/95 backdrop-blur-md border border-slate-600 rounded-2xl p-4 shadow-2xl transform translate-y-[150%] transition-transform duration-300 z-50 flex justify-between items-center">
+                    <div class="text-white text-xs">
+                        เลือก <span id="selectedCount" class="text-cyan-400 font-bold text-lg">0</span> คน
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="openReportModal()" class="bg-yellow-500 hover:bg-yellow-400 text-white px-3 py-2 rounded-xl text-sm font-bold shadow-lg flex items-center gap-1">
+                            <i class="fa-solid fa-file-invoice"></i> <span class="hidden sm:inline">สร้างรายงาน</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -110,48 +132,68 @@
         <div class="glass w-full max-w-sm rounded-2xl p-6 border border-slate-600 max-h-[90vh] overflow-y-auto">
             <h3 class="text-white font-bold text-lg mb-4">แก้ไขข้อมูล</h3>
             <input type="hidden" id="editRowId">
-            
             <div class="space-y-4">
                 <div>
                     <label class="text-xs text-slate-400">ทีม (Team)</label>
                     <select id="editTeamSelect" onchange="toggleTeamInput(this)" class="w-full mt-1 p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-sm">
-                        <option value="RETAIL 1">RETAIL 1</option>
-                        <option value="RETAIL 2">RETAIL 2</option>
-                        <option value="RETAIL 3">RETAIL 3</option>
-                        <option value="RETAIL 4">RETAIL 4</option>
-                        <option value="PA 1A">PA 1A</option>
-                        <option value="PA 1B">PA 1B</option>
-                        <option value="PA 1C">PA 1C</option>
-                        <option value="PA 1D">PA 1D</option>
-                        <option value="PA 2A">PA 2A</option>
-                        <option value="PA 2B">PA 2B</option>
-                        <option value="PA 2C">PA 2C</option>
-                        <option value="OTHER" class="text-yellow-400 font-bold">+ พิมพ์เอง (Other)</option>
+                        <option value="RETAIL 1">RETAIL 1</option><option value="RETAIL 2">RETAIL 2</option><option value="RETAIL 3">RETAIL 3</option><option value="RETAIL 4">RETAIL 4</option>
+                        <option value="PA 1A">PA 1A</option><option value="PA 1B">PA 1B</option><option value="PA 1C">PA 1C</option><option value="PA 1D">PA 1D</option>
+                        <option value="PA 2A">PA 2A</option><option value="PA 2B">PA 2B</option><option value="PA 2C">PA 2C</option>
+                        <option value="OTHER" class="text-yellow-400 font-bold">+ พิมพ์เอง</option>
                     </select>
                     <input type="text" id="editTeamInput" class="hidden w-full mt-2 p-2 rounded-lg bg-slate-700 text-white border border-slate-500 text-sm" placeholder="ระบุชื่อทีม...">
                 </div>
-
-                <div>
-                    <label class="text-xs text-slate-400">สถานะ</label>
-                    <select id="editStatus" class="w-full mt-1 p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-sm">
-                        <option value="Active">Active</option>
-                        <option value="Passed">Passed</option>
-                        <option value="Resigned">Resigned</option>
-                        <option value="New Job">New Job</option>
-                        <option value="Back Office">Back Office</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="text-xs text-slate-400">หมายเหตุ</label>
-                    <textarea id="editNote" rows="2" class="w-full mt-1 p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-sm"></textarea>
-                </div>
+                <div><label class="text-xs text-slate-400">สถานะ</label><select id="editStatus" class="w-full mt-1 p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-sm"><option value="Active">Active</option><option value="Passed">Passed</option><option value="Resigned">Resigned</option><option value="New Job">New Job</option><option value="Back Office">Back Office</option><option value="Other">Other</option></select></div>
+                <div><label class="text-xs text-slate-400">หมายเหตุ</label><textarea id="editNote" rows="2" class="w-full mt-1 p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-sm"></textarea></div>
             </div>
-
             <div class="flex gap-3 mt-6">
                 <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 py-2 rounded-lg border border-slate-600 text-slate-400">ยกเลิก</button>
                 <button onclick="saveAdminEdit()" class="flex-1 py-2 rounded-lg bg-cyan-600 text-white font-bold">บันทึก</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="reportModal" class="hidden fixed inset-0 z-[80] bg-black/90 backdrop-blur flex items-center justify-center p-4">
+        <div class="glass w-full max-w-md rounded-2xl p-6 border border-slate-600 flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-white font-bold text-lg"><i class="fa-solid fa-file-lines mr-2 text-yellow-500"></i>สร้างรายงานการอบรม</h3>
+                <button onclick="closeReportModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto space-y-4 pr-1">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1">วันที่รอบอบรม</label>
+                        <input type="date" id="reportDate" class="w-full p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-xs">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1">อบรมครั้งที่</label>
+                        <select id="reportDayType" class="w-full p-2 rounded-lg bg-slate-800 text-white border border-slate-600 text-xs">
+                            <option value="วันแรก">วันแรก</option>
+                            <option value="วันที่สอง">วันที่สอง</option>
+                            <option value="วันที่สาม">วันที่สาม</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button onclick="addSelectionToReport()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl text-white font-bold shadow-lg hover:brightness-110 active:scale-95 transition">
+                    <i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการที่เลือกลงรายงาน
+                </button>
+                <p class="text-[10px] text-slate-400 text-center">เลือกคนในตาราง > กดปุ่มนี้ > ข้อมูลจะต่อท้ายด้านล่าง</p>
+
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">ข้อความรายงาน (แก้ไขได้)</label>
+                    <textarea id="finalReportText" class="w-full h-48 p-3 rounded-xl bg-slate-800 text-white border border-slate-600 text-sm leading-relaxed" spellcheck="false"></textarea>
+                </div>
+            </div>
+
+            <div class="flex gap-3 mt-4 pt-4 border-t border-slate-700">
+                <button onclick="copyReport()" class="flex-1 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl text-white font-bold transition">
+                    <i class="fa-regular fa-copy mr-1"></i> คัดลอก
+                </button>
+                <button onclick="sendLineReport()" class="flex-1 py-3 bg-[#06C755] hover:bg-[#05b54d] rounded-xl text-white font-bold transition">
+                    <i class="fa-brands fa-line mr-1 text-lg"></i> ส่ง LINE
+                </button>
             </div>
         </div>
     </div>
@@ -160,9 +202,12 @@
         // **********************************************
         // 🔴 ใส่ URL ที่ Deploy แล้ว ตรงนี้
         // **********************************************
-        const API_URL = "https://script.google.com/macros/s/AKfycbymmpBI0gnGtcgDa861YGMUjdL3e3TkN3j6gc8kz5idH4pIuRhNzL36nLiRNMxgULmx/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbxoVwnNc664VCVG17_Eo8CofbnUuwydkhWo3U3aJtVdItnUtvBNNBNWiIw-XwGEbXRp/exec"; 
         // **********************************************
+        
         let adminPassCache = "";
+        let adminDataCache = [];
+        let selectedRows = new Set(); 
 
         async function fetchAPI(payload) {
             document.getElementById('loadingOverlay').classList.remove('hidden');
@@ -182,7 +227,7 @@
             document.getElementById(`nav-${tab}`).classList.add('nav-active', 'text-cyan-400');
         }
 
-        // Register & Checkin
+        // --- Register & Checkin ---
         async function handleRegister(e) {
             e.preventDefault();
             const formData = new FormData(e.target);
@@ -200,25 +245,13 @@
                 document.getElementById('uiName').innerText = d.name; document.getElementById('uiNick').innerText = d.nickname; document.getElementById('uiDept').innerText = d.dept; document.getElementById('uiStatus').innerText = d.status;
                 document.getElementById('profileCard').classList.remove('hidden');
                 ['1','2','3'].forEach(i => updateCheckBtn(`boxD${i}`, i, d[`d${i}`]));
-            } else {
-                Swal.fire('ไม่พบข้อมูล', '', 'error'); document.getElementById('profileCard').classList.add('hidden');
-            }
+            } else { Swal.fire('ไม่พบข้อมูล', '', 'error'); document.getElementById('profileCard').classList.add('hidden'); }
         }
 
         function updateCheckBtn(id, day, val) {
             const el = document.getElementById(id); const btn = el.querySelector('button');
-            if(val) { 
-                el.classList.add('border-green-500/30'); 
-                btn.className="w-full h-auto py-2 rounded-lg bg-green-500/20 text-green-400 cursor-default"; 
-                btn.innerHTML=`<span class="font-bold text-[10px] whitespace-normal leading-tight">${val}</span>`; 
-                btn.onclick=null; 
-            }
-            else { 
-                el.classList.remove('border-green-500/30'); 
-                btn.className="w-full h-auto py-2 rounded-lg bg-slate-800 hover:bg-cyan-600 text-slate-400 hover:text-white"; 
-                btn.innerHTML=`<i class="fa-solid fa-check"></i>`; 
-                btn.onclick=()=>doCheckIn(day); 
-            }
+            if(val) { el.classList.add('border-green-500/30'); btn.className="w-full h-auto py-2 rounded-lg bg-green-500/20 text-green-400 cursor-default"; btn.innerHTML=`<span class="font-bold text-[10px] whitespace-normal leading-tight">${val}</span>`; btn.onclick=null; }
+            else { el.classList.remove('border-green-500/30'); btn.className="w-full h-auto py-2 rounded-lg bg-slate-800 hover:bg-cyan-600 text-slate-400 hover:text-white"; btn.innerHTML=`<i class="fa-solid fa-check"></i>`; btn.onclick=()=>doCheckIn(day); }
         }
 
         async function doCheckIn(day) {
@@ -230,7 +263,7 @@
             }
         }
 
-        // Admin
+        // --- Admin Section ---
         async function adminAccess() {
             const pass = document.getElementById('adminPass').value;
             const res = await fetchAPI({ action: 'get_admin', pass });
@@ -241,17 +274,26 @@
         async function loadAdminData() { if(adminPassCache) { const res = await fetchAPI({ action: 'get_admin', pass: adminPassCache }); if(res.status==='success') renderAdminTable(res.data); } }
 
         function renderAdminTable(data) {
+            adminDataCache = data;
             const tbody = document.getElementById('adminTable'); tbody.innerHTML = '';
             data.forEach(row => {
                 const tr = document.createElement('tr'); tr.className = "hover:bg-white/5 transition border-b border-slate-700";
-                
                 const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-green-400" title="${v}"></i>` : `<i class="fa-regular fa-circle text-slate-600"></i>`;
                 let badge = "bg-slate-700 text-slate-300";
                 if(row.status==='Active') badge="bg-blue-500/20 text-blue-400"; if(row.status==='Passed') badge="bg-green-500/20 text-green-400"; if(['Resigned','New Job'].includes(row.status)) badge="bg-red-500/20 text-red-400";
-                
+                const dateOnly = row.timestamp ? row.timestamp.split(' ')[0] : '-';
+
                 tr.innerHTML = `
-                    <td class="p-4"><div class="font-bold text-white">${row.name}</div><div class="text-[10px] text-slate-400">${row.nickname} | ${row.dept}</div><div class="text-[10px] text-cyan-400">ทีม: ${row.team}</div></td>
-                    <td class="p-4 text-center">${icon(row.d1)}</td><td class="p-4 text-center">${icon(row.d2)}</td><td class="p-4 text-center">${icon(row.d3)}</td>
+                    <td class="p-4 text-center">
+                        <input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)">
+                    </td>
+                    <td class="p-4">
+                        <div class="font-bold text-white">${row.name}</div>
+                        <div class="text-[10px] text-slate-400">${row.nickname} | ${row.dept}</div>
+                        <div class="text-[10px] text-cyan-400 font-bold mt-0.5">ทีม: ${row.team}</div>
+                        <div class="text-[10px] text-slate-500 mt-1"><i class="fa-regular fa-calendar mr-1"></i>${dateOnly}</div>
+                    </td>
+                    <td class="p-4 text-center hidden md:table-cell"><div class="flex justify-center gap-1 text-xs">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div></td>
                     <td class="p-4 text-center"><span class="px-2 py-1 rounded text-[10px] uppercase font-bold ${badge}">${row.status}</span></td>
                     <td class="p-4 text-center flex justify-center gap-2">
                         <button onclick="openEditModal(${row.row}, '${row.status}', '${row.team}', '${row.note||''}')" class="text-cyan-400 bg-cyan-900/30 p-2 rounded-lg hover:bg-cyan-900/50"><i class="fa-solid fa-pen"></i></button>
@@ -260,71 +302,145 @@
                 `;
                 tbody.appendChild(tr);
             });
+            updateActionBar();
         }
 
-        // Logic จัดการ Dropdown และ Input ช่องทีม
+        // --- Selection Logic ---
+        function toggleRowSelection(checkbox) {
+            if (checkbox.checked) selectedRows.add(checkbox.value);
+            else selectedRows.delete(checkbox.value);
+            updateActionBar();
+        }
+        function toggleSelectAll() {
+            const allCheckboxes = document.querySelectorAll('.custom-checkbox');
+            const isAllSelected = selectedRows.size === allCheckboxes.length;
+            selectedRows.clear();
+            allCheckboxes.forEach(cb => { cb.checked = !isAllSelected; if (!isAllSelected) selectedRows.add(cb.value); });
+            updateActionBar();
+        }
+        function updateActionBar() {
+            const count = selectedRows.size;
+            document.getElementById('selectedCount').innerText = count;
+            const bar = document.getElementById('actionBar');
+            if (count > 0) bar.classList.remove('translate-y-[150%]'); else bar.classList.add('translate-y-[150%]');
+        }
+
+        // --- REPORT GENERATOR (NEW) ---
+        function openReportModal() {
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('reportDate').value = today;
+            
+            // Initialize report text with Header
+            const dateStr = formatDateThai(new Date());
+            const header = `เรียน พี่ด้า\nและหัวหน้างานที่เกี่ยวข้อง\nขอนำส่งรายงานการอบรมพนักงานใหม่\nรอบอบรมวันที่ ${dateStr}\n\n`;
+            
+            // ถ้า Textarea ว่างอยู่ ให้ใส่ Header
+            const currentText = document.getElementById('finalReportText').value;
+            if(!currentText.trim()) {
+                document.getElementById('finalReportText').value = header;
+            }
+            
+            document.getElementById('reportModal').classList.remove('hidden');
+        }
+
+        function closeReportModal() {
+            document.getElementById('reportModal').classList.add('hidden');
+        }
+
+        function addSelectionToReport() {
+            const dayType = document.getElementById('reportDayType').value;
+            const selectedItems = adminDataCache.filter(item => selectedRows.has(item.id.toString()));
+            
+            if (selectedItems.length === 0) {
+                Swal.fire('แจ้งเตือน', 'กรุณาเลือกรายชื่ออย่างน้อย 1 คน', 'warning');
+                return;
+            }
+
+            // Group by Team
+            const teams = {};
+            selectedItems.forEach(item => {
+                const t = item.team || 'ไม่ระบุทีม';
+                if (!teams[t]) teams[t] = [];
+                teams[t].push(item.nickname);
+            });
+
+            // สร้างข้อความส่วนเพิ่ม
+            let sectionText = `อบรม${dayType} ทั้งหมด ${selectedItems.length} คน\n\n`;
+            
+            for (const [teamName, nicks] of Object.entries(teams)) {
+                sectionText += `${teamName}    จำนวน ${nicks.length} คน ${nicks.join(' ')}\n`;
+            }
+            sectionText += `\n`; // เว้นบรรทัดปิดท้าย
+
+            // ต่อข้อความลงใน Textarea
+            const textarea = document.getElementById('finalReportText');
+            textarea.value += sectionText;
+
+            // Clear Selection เพื่อเลือกชุดต่อไป
+            selectedRows.clear();
+            document.querySelectorAll('.custom-checkbox').forEach(cb => cb.checked = false);
+            updateActionBar();
+            
+            Swal.fire({
+                icon: 'success', 
+                title: 'เพิ่มลงรายงานแล้ว', 
+                text: 'สามารถเลือกคนกลุ่มต่อไป แล้วกดเพิ่มได้อีก',
+                showConfirmButton: false,
+                timer: 1500,
+                background: '#1e293b', color: '#fff'
+            });
+        }
+
+        function copyReport() {
+            let text = document.getElementById('finalReportText').value;
+            text += "ขอบคุณครับ"; // Auto Footer
+            navigator.clipboard.writeText(text).then(() => {
+                Swal.fire({ icon: 'success', title: 'คัดลอกเรียบร้อย', toast: true, position: 'top-end', showConfirmButton: false, timer: 1500, background: '#1e293b', color: '#fff' });
+            });
+        }
+
+        function sendLineReport() {
+            let text = document.getElementById('finalReportText').value;
+            text += "ขอบคุณครับ";
+            window.open(`https://line.me/R/msg/text/?${encodeURIComponent(text)}`, '_blank');
+        }
+
+        function formatDateThai(date) {
+            const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            const day = date.getDate();
+            const month = months[date.getMonth()];
+            const year = date.getFullYear() + 543;
+            return `${day} ${month} ${year}`;
+        }
+
+        // --- Edit & Delete (Logic เดิม) ---
         function toggleTeamInput(select) {
             const input = document.getElementById('editTeamInput');
-            if (select.value === 'OTHER') {
-                input.classList.remove('hidden');
-                input.focus();
-            } else {
-                input.classList.add('hidden');
-            }
+            if (select.value === 'OTHER') { input.classList.remove('hidden'); input.focus(); } else { input.classList.add('hidden'); }
         }
-
-        // Admin Edit & Delete
         function openEditModal(row, status, team, note) {
             document.getElementById('editRowId').value = row;
             document.getElementById('editStatus').value = status;
             document.getElementById('editNote').value = note;
-
-            // Logic เลือก Team ให้ตรง
             const select = document.getElementById('editTeamSelect');
             const input = document.getElementById('editTeamInput');
-            
-            // ตรวจสอบว่าทีมที่มีอยู่ ตรงกับ Choice ไหนไหม
             const options = Array.from(select.options).map(o => o.value);
-            if (options.includes(team)) {
-                select.value = team;
-                input.classList.add('hidden');
-                input.value = "";
-            } else {
-                select.value = 'OTHER';
-                input.classList.remove('hidden');
-                input.value = team;
-            }
-
+            if (options.includes(team)) { select.value = team; input.classList.add('hidden'); input.value = ""; }
+            else { select.value = 'OTHER'; input.classList.remove('hidden'); input.value = team; }
             document.getElementById('editModal').classList.remove('hidden');
         }
-
         async function saveAdminEdit() {
             document.getElementById('editModal').classList.add('hidden');
-            
-            // ดึงค่า Team (ถ้าเลือก Other ให้เอาค่าจาก Input)
             const select = document.getElementById('editTeamSelect');
             const input = document.getElementById('editTeamInput');
             const finalTeam = select.value === 'OTHER' ? input.value : select.value;
-
-            const res = await fetchAPI({ 
-                action: 'admin_update', 
-                row: document.getElementById('editRowId').value, 
-                team: finalTeam,
-                status: document.getElementById('editStatus').value, 
-                note: document.getElementById('editNote').value 
-            });
+            const res = await fetchAPI({ action: 'admin_update', row: document.getElementById('editRowId').value, team: finalTeam, status: document.getElementById('editStatus').value, note: document.getElementById('editNote').value });
             if(res.status==='success') loadAdminData();
         }
-
         async function deleteUser(row) {
-            const cf = await Swal.fire({
-                title: 'ยืนยันการลบ?', text: "ข้อมูลจะหายไปถาวร ไม่สามารถกู้คืนได้",
-                icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', confirmButtonText: 'ลบทันที', cancelButtonText: 'ยกเลิก', background: '#1e293b', color: '#fff'
-            });
-            if (cf.isConfirmed) {
-                const res = await fetchAPI({ action: 'admin_delete', row: row });
-                if (res.status === 'success') { Swal.fire({icon:'success', title:'ลบเรียบร้อย', showConfirmButton:false, timer:1500, background: '#1e293b', color: '#fff'}); loadAdminData(); }
-            }
+            const cf = await Swal.fire({ title: 'ยืนยันการลบ?', text: "ข้อมูลจะหายไปถาวร", icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', background: '#1e293b', color: '#fff' });
+            if (cf.isConfirmed) { const res = await fetchAPI({ action: 'admin_delete', row: row }); if (res.status === 'success') { loadAdminData(); } }
         }
     </script>
 </body>
