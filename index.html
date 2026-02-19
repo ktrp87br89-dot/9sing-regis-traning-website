@@ -15,13 +15,12 @@
         body { font-family: 'Sarabun', sans-serif; background-color: #0f172a; color: #e2e8f0; }
         
         /* Glassmorphism */
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .glass-strong { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-        .glass-input { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); color: white; transition: all 0.3s; }
-        .glass-input:focus { border-color: #38bdf8; background: rgba(0, 0, 0, 0.5); outline: none; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
+        .glass-input { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.15); color: white; transition: all 0.3s; }
+        .glass-input:focus { border-color: #38bdf8; background: rgba(0, 0, 0, 0.5); outline: none; box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
         
         /* Navigation */
-        .nav-active { color: #38bdf8; border-bottom: 2px solid #38bdf8; background: rgba(56, 189, 248, 0.1); }
+        .nav-active { color: #38bdf8; border-bottom: 2px solid #38bdf8; background: linear-gradient(to top, rgba(56, 189, 248, 0.1), transparent); }
         
         /* Loader */
         .loader { width: 48px; height: 48px; border: 5px solid #FFF; border-bottom-color: #38bdf8; border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite; }
@@ -30,42 +29,52 @@
         /* Checkbox */
         .custom-checkbox { width: 20px; height: 20px; accent-color: #0ea5e9; cursor: pointer; border-radius: 4px; }
 
-        /* Digital Clock Font */
+        /* Clock Specific Styles */
         .font-digital { font-family: 'Chakra Petch', sans-serif; }
+        .text-glow { text-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
     </style>
 </head>
-<body class="flex flex-col h-screen overflow-hidden bg-slate-900" onload="startTime()">
+<body class="flex flex-col h-screen overflow-hidden bg-[#0B1120]" onload="startTime()">
 
-    <nav class="glass-strong sticky top-0 z-50 flex justify-around text-xs font-medium uppercase tracking-wide shadow-lg">
-        <button onclick="switchTab('register')" id="nav-register" class="flex-1 py-4 text-slate-400 transition-all nav-active">
+    <nav class="glass sticky top-0 z-50 flex justify-around text-xs font-medium uppercase tracking-wide shadow-2xl border-b border-white/5">
+        <button onclick="switchTab('register')" id="nav-register" class="flex-1 py-4 text-slate-400 transition-all nav-active hover:text-white">
             <i class="fa-solid fa-user-plus text-xl block mb-1"></i> ลงทะเบียน
         </button>
-        <button onclick="switchTab('checkin')" id="nav-checkin" class="flex-1 py-4 text-slate-400 transition-all">
+        <button onclick="switchTab('checkin')" id="nav-checkin" class="flex-1 py-4 text-slate-400 transition-all hover:text-white">
             <i class="fa-solid fa-qrcode text-xl block mb-1"></i> เช็คชื่อ
         </button>
-        <button onclick="switchTab('admin')" id="nav-admin" class="flex-1 py-4 text-slate-400 transition-all">
+        <button onclick="switchTab('admin')" id="nav-admin" class="flex-1 py-4 text-slate-400 transition-all hover:text-white">
             <i class="fa-solid fa-user-shield text-xl block mb-1"></i> Admin
         </button>
     </nav>
 
     <main class="flex-1 overflow-y-auto p-4 relative scroll-smooth pb-24">
         
-        <div class="max-w-md mx-auto mb-6 animate-fade-in">
-            <div class="glass rounded-2xl p-4 text-center border border-slate-700 shadow-lg relative overflow-hidden group">
-                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-1 bg-cyan-500/50 blur-[2px] rounded-b-full"></div>
+        <div class="max-w-md mx-auto mb-8 animate-fade-in mt-2">
+            <div class="glass rounded-3xl p-6 text-center relative overflow-hidden group">
                 
+                <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 bg-cyan-500/20 rounded-full blur-[60px] pointer-events-none"></div>
+                <div class="absolute bottom-0 right-0 w-32 h-32 bg-blue-600/10 rounded-full blur-[50px] pointer-events-none"></div>
+
                 <div class="relative z-10">
-                    <div id="clockDate" class="text-sm text-slate-300 font-medium mb-1 tracking-wide">
-                        กำลังโหลด...
+                    <div class="flex items-center justify-center gap-2 mb-1">
+                        <span id="clockDay" class="text-cyan-400 font-bold text-lg tracking-wide uppercase"></span>
+                        <span class="text-slate-500 text-xs">•</span>
+                        <span id="clockFullDate" class="text-slate-300 font-medium text-lg"></span>
                     </div>
-                    <div class="flex justify-center items-baseline gap-2">
-                        <i class="fa-regular fa-clock text-cyan-400 text-lg animate-pulse"></i>
-                        <div id="clockTime" class="text-3xl font-bold text-white font-digital tracking-widest text-shadow">
-                            00:00:00
+
+                    <div class="flex justify-center items-baseline -ml-4">
+                        <div id="clockTime" class="text-[3.5rem] leading-none font-bold font-digital text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-cyan-300 tracking-wider text-glow drop-shadow-lg">
+                            00:00
                         </div>
-                        <span class="text-xs text-slate-500 font-bold self-end mb-1">น.</span>
+                        <div class="flex flex-col items-start ml-2">
+                            <span id="clockSeconds" class="text-xl font-digital text-slate-400 font-semibold w-8">00</span>
+                            <span class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Time</span>
+                        </div>
                     </div>
                 </div>
+                
+                <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent"></div>
             </div>
         </div>
         <div id="loadingOverlay" class="hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center">
@@ -75,16 +84,17 @@
 
         <section id="page-register" class="max-w-md mx-auto animate-fade-in">
             <div class="glass rounded-2xl p-6 shadow-2xl relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
-                
-                <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                    <span class="w-1.5 h-6 bg-cyan-400 rounded-full"></span> ลงทะเบียนพนักงานใหม่
+                <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-3 border-b border-white/10 pb-4">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/30">
+                        <i class="fa-solid fa-user-plus text-sm"></i>
+                    </div>
+                    ลงทะเบียน
                 </h2>
 
                 <form id="regForm" onsubmit="handleRegister(event)" class="space-y-4">
                     <div class="grid grid-cols-3 gap-3">
                         <div>
-                            <label class="text-xs text-slate-400 ml-1">คำนำหน้า</label>
+                            <label class="text-[10px] uppercase text-slate-400 font-bold ml-1 mb-1 block">คำนำหน้า</label>
                             <select name="prefix" class="w-full p-3 rounded-xl glass-input text-sm">
                                 <option class="text-black">นาย</option>
                                 <option class="text-black">นาง</option>
@@ -92,24 +102,24 @@
                             </select>
                         </div>
                         <div class="col-span-2">
-                            <label class="text-xs text-slate-400 ml-1">ชื่อ-นามสกุล</label>
+                            <label class="text-[10px] uppercase text-slate-400 font-bold ml-1 mb-1 block">ชื่อ-นามสกุล</label>
                             <input type="text" name="name" required class="w-full p-3 rounded-xl glass-input text-sm" placeholder="ภาษาไทย">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="text-xs text-slate-400 ml-1">ชื่อเล่น</label>
+                            <label class="text-[10px] uppercase text-slate-400 font-bold ml-1 mb-1 block">ชื่อเล่น</label>
                             <input type="text" name="nickname" required class="w-full p-3 rounded-xl glass-input text-sm">
                         </div>
                         <div>
-                            <label class="text-xs text-slate-400 ml-1">เบอร์โทร</label>
+                            <label class="text-[10px] uppercase text-slate-400 font-bold ml-1 mb-1 block">เบอร์โทร</label>
                             <input type="tel" name="phone" required pattern="[0-9]{10}" class="w-full p-3 rounded-xl glass-input text-sm" placeholder="08xxxxxxxx">
                         </div>
                     </div>
 
                     <div>
-                        <label class="text-xs text-slate-400 ml-1">แผนก</label>
+                        <label class="text-[10px] uppercase text-slate-400 font-bold ml-1 mb-1 block">แผนก</label>
                         <select name="dept" class="w-full p-3 rounded-xl glass-input text-sm">
                             <option value="Telesales Product" class="text-black">Telesales Product</option>
                             <option value="Telesales Insurance" class="text-black">Telesales Insurance</option>
@@ -119,16 +129,16 @@
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="text-xs text-slate-400 ml-1">ทีม</label>
+                            <label class="text-[10px] uppercase text-slate-400 font-bold ml-1 mb-1 block">ทีม</label>
                             <input type="text" name="team" class="w-full p-3 rounded-xl glass-input text-sm">
                         </div>
                         <div>
-                            <label class="text-xs text-slate-400 ml-1">ผู้แนะนำ</label>
+                            <label class="text-[10px] uppercase text-slate-400 font-bold ml-1 mb-1 block">ผู้แนะนำ</label>
                             <input type="text" name="recruiter" class="w-full p-3 rounded-xl glass-input text-sm">
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full mt-4 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg transition transform active:scale-95">
+                    <button type="submit" class="w-full mt-6 py-3.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg shadow-cyan-500/20 transition transform active:scale-95">
                         ยืนยันการลงทะเบียน
                     </button>
                 </form>
@@ -136,26 +146,27 @@
         </section>
 
         <section id="page-checkin" class="hidden max-w-md mx-auto">
-            <div class="glass rounded-2xl p-8 text-center shadow-2xl">
-                <div class="w-20 h-20 bg-slate-800 rounded-full mx-auto flex items-center justify-center mb-6 border border-slate-700 shadow-inner">
-                    <i class="fa-solid fa-fingerprint text-4xl text-cyan-400"></i>
+            <div class="glass rounded-2xl p-8 text-center shadow-2xl border border-white/5">
+                <div class="w-24 h-24 bg-slate-800/50 rounded-full mx-auto flex items-center justify-center mb-6 border border-slate-700 shadow-inner relative group">
+                    <div class="absolute inset-0 bg-cyan-500/20 rounded-full blur-xl group-hover:blur-2xl transition"></div>
+                    <i class="fa-solid fa-fingerprint text-5xl text-cyan-400 relative z-10"></i>
                 </div>
                 
                 <h2 class="text-xl font-bold text-white mb-2">เช็คชื่อเข้าอบรม</h2>
                 <div class="relative max-w-xs mx-auto mb-6">
-                    <input type="tel" id="checkinPhone" class="w-full pl-12 pr-4 py-3 rounded-xl glass-input text-lg tracking-widest text-center" placeholder="08xxxxxxxx">
+                    <input type="tel" id="checkinPhone" class="w-full pl-12 pr-4 py-3.5 rounded-xl glass-input text-xl tracking-widest text-center font-digital" placeholder="08xxxxxxxx">
                     <i class="fa-solid fa-mobile-screen absolute left-4 top-4 text-slate-500 text-lg"></i>
                 </div>
                 
-                <button onclick="checkStatus()" class="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold transition shadow-lg">
+                <button onclick="checkStatus()" class="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold transition shadow-lg border border-slate-600">
                     ตรวจสอบ
                 </button>
 
-                <div id="profileCard" class="hidden mt-8 text-left border-t border-slate-700 pt-6 animate-fade-up">
+                <div id="profileCard" class="hidden mt-8 text-left border-t border-slate-700/50 pt-6 animate-fade-up bg-slate-800/30 rounded-xl p-4">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="text-lg font-bold text-cyan-400" id="uiName">...</h3>
-                            <p class="text-xs text-slate-400"><span id="uiNick">...</span> | <span id="uiDept">...</span></p>
+                            <p class="text-xs text-slate-400 mt-1"><span id="uiNick">...</span> | <span id="uiDept">...</span></p>
                         </div>
                         <span id="uiStatus" class="px-2 py-1 rounded text-[10px] font-bold uppercase bg-green-500/20 text-green-400 border border-green-500/30">Active</span>
                     </div>
@@ -180,11 +191,13 @@
 
         <section id="page-admin" class="hidden h-full flex flex-col">
             
-            <div id="adminLogin" class="max-w-xs mx-auto glass p-8 rounded-2xl text-center mt-4">
-                <i class="fa-solid fa-lock text-3xl text-red-400 mb-4"></i>
+            <div id="adminLogin" class="max-w-xs mx-auto glass p-8 rounded-2xl text-center mt-4 border border-red-500/20">
+                <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-lock text-2xl text-red-400"></i>
+                </div>
                 <h3 class="text-white font-bold mb-4">Admin Access</h3>
                 <input type="password" id="adminPass" class="w-full p-3 rounded-xl glass-input text-center mb-4" placeholder="Password">
-                <button onclick="adminAccess()" class="w-full py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold">Login</button>
+                <button onclick="adminAccess()" class="w-full py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold shadow-lg shadow-red-900/20">เข้าสู่ระบบ</button>
             </div>
 
             <div id="adminDashboard" class="hidden flex-1 flex flex-col">
@@ -193,18 +206,18 @@
                         <i class="fa-solid fa-users-gear text-cyan-400"></i> รายชื่อ
                     </h2>
                     <div class="flex gap-2">
-                        <button onclick="toggleSelectAll()" class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg transition">
+                        <button onclick="toggleSelectAll()" class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg transition border border-slate-600">
                             <i class="fa-solid fa-check-double"></i> All
                         </button>
-                        <button onclick="loadAdminData()" class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg transition">
+                        <button onclick="loadAdminData()" class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg transition border border-slate-600">
                             <i class="fa-solid fa-rotate"></i>
                         </button>
                     </div>
                 </div>
                 
-                <div class="flex-1 overflow-auto glass rounded-xl mb-24 border border-slate-700">
+                <div class="flex-1 overflow-auto glass rounded-xl mb-24 border border-slate-700/50">
                     <table class="w-full text-left border-collapse">
-                        <thead class="bg-slate-800 text-slate-400 text-[10px] font-bold uppercase sticky top-0 z-10 shadow-md">
+                        <thead class="bg-slate-800/80 backdrop-blur text-slate-400 text-[10px] font-bold uppercase sticky top-0 z-10 shadow-md">
                             <tr>
                                 <th class="p-4 w-10 text-center">#</th>
                                 <th class="p-4">ข้อมูลพนักงาน</th>
@@ -213,12 +226,12 @@
                                 <th class="p-4 text-center">จัดการ</th>
                             </tr>
                         </thead>
-                        <tbody id="adminTable" class="divide-y divide-slate-700 text-sm text-slate-300">
+                        <tbody id="adminTable" class="divide-y divide-slate-700/50 text-sm text-slate-300">
                             </tbody>
                     </table>
                 </div>
 
-                <div id="actionBar" class="fixed bottom-4 left-4 right-4 bg-slate-800/95 backdrop-blur-md border border-slate-600 rounded-2xl p-4 shadow-2xl transform translate-y-[150%] transition-transform duration-300 z-50 flex justify-between items-center">
+                <div id="actionBar" class="fixed bottom-4 left-4 right-4 bg-slate-800/90 backdrop-blur-xl border border-slate-600/50 rounded-2xl p-4 shadow-2xl transform translate-y-[150%] transition-transform duration-300 z-50 flex justify-between items-center">
                     <div class="text-white text-xs">
                         เลือก <span id="selectedCount" class="text-cyan-400 font-bold text-lg">0</span> คน
                     </div>
@@ -237,7 +250,7 @@
     </main>
 
     <div id="editModal" class="hidden fixed inset-0 z-[70] bg-black/80 backdrop-blur flex items-center justify-center p-4">
-        <div class="glass w-full max-w-sm rounded-2xl p-6 border border-slate-600 max-h-[90vh] overflow-y-auto">
+        <div class="glass w-full max-w-sm rounded-2xl p-6 border border-slate-600 max-h-[90vh] overflow-y-auto transform scale-100 transition-all">
             <h3 class="text-white font-bold text-lg mb-4">แก้ไขข้อมูล</h3>
             <input type="hidden" id="editRowId">
             <div class="space-y-4">
@@ -264,8 +277,8 @@
                 </div>
             </div>
             <div class="flex gap-3 mt-6">
-                <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 py-2 rounded-lg border border-slate-600 text-slate-400">ยกเลิก</button>
-                <button onclick="saveAdminEdit()" class="flex-1 py-2 rounded-lg bg-cyan-600 text-white font-bold">บันทึก</button>
+                <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 py-2 rounded-lg border border-slate-600 text-slate-400 hover:bg-slate-700">ยกเลิก</button>
+                <button onclick="saveAdminEdit()" class="flex-1 py-2 rounded-lg bg-cyan-600 text-white font-bold hover:bg-cyan-500">บันทึก</button>
             </div>
         </div>
     </div>
@@ -342,7 +355,7 @@
         // --- Clock Function (Real-time) ---
         function startTime() {
             const today = new Date();
-            const thaiDays = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
+            const thaiDays = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
             const thaiMonths = [
                 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
                 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
@@ -351,18 +364,19 @@
             let day = thaiDays[today.getDay()];
             let date = today.getDate();
             let month = thaiMonths[today.getMonth()];
-            let year = today.getFullYear() + 543; // ปี พ.ศ.
+            let year = today.getFullYear() + 543; 
             
             let h = String(today.getHours()).padStart(2, '0');
             let m = String(today.getMinutes()).padStart(2, '0');
             let s = String(today.getSeconds()).padStart(2, '0');
             
-            // Format: วัน พฤหัสบดี ที่ 19 กุมภาพันธ์ 2569
-            const dateStr = `วัน${day} ที่ ${date} ${month} ${year}`;
-            const timeStr = `${h}:${m}:${s}`;
+            // Format วันที่: วันพฤหัสบดี ที่ 19 กุมภาพันธ์ 2569
+            document.getElementById('clockDay').innerHTML = day;
+            document.getElementById('clockFullDate').innerHTML = `ที่ ${date} ${month} ${year}`;
             
-            document.getElementById('clockDate').innerHTML = dateStr;
-            document.getElementById('clockTime').innerHTML = timeStr;
+            // Format เวลา
+            document.getElementById('clockTime').innerHTML = `${h}:${m}`;
+            document.getElementById('clockSeconds').innerHTML = s;
             
             setTimeout(startTime, 1000);
         }
