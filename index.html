@@ -1,457 +1,296 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" class="antialiased">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HR Training Portal | Premium</title>
+    <title>นัดหมายสัมภาษณ์งาน | ๙ สิงห์ โบรกเกอร์</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&family=Prompt:wght@300;400;500;600&family=Chakra+Petch:wght@400;500;600&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { 
-                        sans: ['Sarabun', 'sans-serif'],
-                        header: ['Prompt', 'sans-serif'],
-                        digital: ['Chakra Petch', 'sans-serif']
-                    },
                     colors: {
-                        glass: "rgba(255, 255, 255, 0.03)",
-                        glassBorder: "rgba(255, 255, 255, 0.08)",
-                        accent: "#38bdf8"
+                        primary: '#4f46e5',
+                        secondary: '#0891b2',
                     },
-                    boxShadow: { glow: '0 0 20px rgba(56, 189, 248, 0.15)' }
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    }
                 }
             }
         }
     </script>
-
+    
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { 
-            background-color: #0f172a; 
-            background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
-            color: #e2e8f0; min-height: 100vh;
-        }
-        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
-        .glass-input { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; transition: all 0.3s ease; }
-        .glass-input:focus { border-color: #38bdf8; background: rgba(15, 23, 42, 0.9); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); outline: none; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
-        .animate-float { animation: float 6s ease-in-out infinite; }
-        .loader { width: 40px; height: 40px; border: 3px solid #FFF; border-bottom-color: #38bdf8; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
-        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .nav-btn.active { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border-bottom: 2px solid #38bdf8; }
-        .font-digital { font-family: 'Chakra Petch', sans-serif; }
-        .text-glow { text-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
-        .custom-checkbox { width: 20px; height: 20px; accent-color: #0ea5e9; cursor: pointer; border-radius: 4px; }
+        html { scroll-behavior: smooth; }
+        body { -webkit-font-smoothing: antialiased; }
+        input, select, button { transition: all 0.2s ease-in-out; }
     </style>
 </head>
-<body class="flex flex-col h-screen overflow-hidden text-slate-200" onload="startTime()">
+<body class="min-h-screen flex items-center justify-center py-10 px-4 sm:px-6 lg:px-8 bg-slate-50 relative overflow-x-hidden">
 
-    <header class="glass-panel sticky top-0 z-50 rounded-b-3xl mx-2 mt-2 px-6 py-4 shadow-glow mb-4">
-        <div class="flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-layer-group"></i></div>
-                <div>
-                    <h1 class="font-header font-bold text-sm text-white tracking-wide">HR PORTAL</h1>
-                    <p class="text-[10px] text-cyan-400 font-medium tracking-wider uppercase">Training System</p>
-                </div>
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-100/50 blur-[80px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-cyan-100/50 blur-[80px]"></div>
+    </div>
+
+    <div class="w-full max-w-3xl bg-white/95 backdrop-blur-xl rounded-3xl shadow-[0_20px_50px_rgba(8,_112,_184,_0.07)] border border-white p-6 sm:p-10 md:p-12 relative z-10">
+        
+        <div class="mb-10 text-center flex flex-col items-center">
+            <div class="w-24 h-24 sm:w-28 sm:h-28 bg-white rounded-2xl shadow-sm border border-slate-100 mb-5 flex items-center justify-center overflow-hidden p-2">
+                <img src="image_a99780.png" alt="๙ สิงห์ โบรกเกอร์" class="w-full h-full object-contain">
             </div>
-            <div class="text-right">
-                <div id="clockDate" class="text-[10px] text-slate-400 font-medium uppercase tracking-widest">...</div>
-                <div id="clockTime" class="font-digital text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-cyan-200 leading-none mt-0.5">00:00</div>
-            </div>
-        </div>
-        <div class="flex justify-center mt-4 border-t border-white/5 pt-2 gap-1">
-            <button onclick="switchTab('register')" id="nav-register" class="nav-btn active flex-1 py-2 rounded-lg text-xs font-header transition-all hover:bg-white/5 text-slate-400">ลงทะเบียน</button>
-            <button onclick="switchTab('checkin')" id="nav-checkin" class="nav-btn flex-1 py-2 rounded-lg text-xs font-header transition-all hover:bg-white/5 text-slate-400">เช็คชื่อ</button>
-            <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn flex-1 py-2 rounded-lg text-xs font-header transition-all hover:bg-white/5 text-slate-400">Admin</button>
-        </div>
-    </header>
-
-    <main class="flex-1 overflow-y-auto px-4 pb-24 scroll-smooth">
-        <div id="loadingOverlay" class="hidden fixed inset-0 z-[60] bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center">
-            <div class="loader mb-4"></div>
-            <p class="text-xs text-cyan-400 font-header tracking-widest animate-pulse">PROCESSING...</p>
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 tracking-tight mb-3">นัดหมายสัมภาษณ์งาน</h1>
+            <p class="text-sm sm:text-base text-slate-500 max-w-md mx-auto leading-relaxed px-2">
+                <span class="font-semibold text-slate-700">บริษัท ๙ สิงห์ โบรกเกอร์ จำกัด</span><br>
+                กรุณากรอกข้อมูลด้านล่างให้ครบถ้วน เพื่อล็อคคิวสัมภาษณ์กับทีมงานของเรา
+            </p>
         </div>
 
-        <section id="page-register" class="max-w-md mx-auto animate-fade-in">
-            <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none group-hover:bg-cyan-500/20 transition duration-700"></div>
-                <h2 class="text-lg font-header font-bold text-white mb-6 flex items-center gap-2"><span class="w-1 h-5 bg-cyan-400 rounded-full"></span> ลงทะเบียนพนักงานใหม่</h2>
-                <form id="regForm" onsubmit="handleRegister(event)" class="space-y-4 relative z-10">
-                    <div class="grid grid-cols-3 gap-3">
-                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">คำนำหน้า</label><select name="prefix" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm focus:ring-0"><option class="text-slate-900">นาย</option><option class="text-slate-900">นาง</option><option class="text-slate-900">นางสาว</option></select></div>
-                        <div class="col-span-2"><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ชื่อ-นามสกุล</label><input type="text" name="name" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm placeholder-slate-600" placeholder="ภาษาไทย"></div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ชื่อเล่น</label><input type="text" name="nickname" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
-                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">เบอร์โทร</label><input type="tel" name="phone" required pattern="[0-9]{10}" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm" placeholder="08xxxxxxxx"></div>
-                    </div>
-                    <div>
-                        <label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">แผนก</label>
-                        <select name="dept" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm">
-                            <option value="Telesales Product" class="text-slate-900">Telesales Product</option><option value="Telesales Insurance" class="text-slate-900">Telesales Insurance</option><option value="Back Office" class="text-slate-900">Back Office</option>
+        <form id="interviewForm" class="space-y-8 sm:space-y-10">
+            
+            <div class="space-y-5">
+                <h2 class="text-lg sm:text-xl font-semibold text-slate-700 border-b border-slate-100 pb-2">1. ข้อมูลผู้สมัคร</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-5">
+                    <div class="md:col-span-1">
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">คำนำหน้า</label>
+                        <select id="prefix" class="w-full px-4 py-3 sm:py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-800 outline-none">
+                            <option value="นาย">นาย</option>
+                            <option value="นาง">นาง</option>
+                            <option value="นางสาว">นางสาว</option>
                         </select>
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ทีม</label><input type="text" name="team" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
-                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ผู้แนะนำ</label><input type="text" name="recruiter" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
+                    <div class="md:col-span-3">
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">ชื่อ - นามสกุล</label>
+                        <input type="text" id="fullName" required placeholder="สมชาย ใจดี" class="w-full px-4 py-3 sm:py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-800 outline-none">
                     </div>
-                    <button type="submit" class="w-full mt-4 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-header font-medium rounded-xl shadow-lg shadow-cyan-900/20 transition-all transform active:scale-[0.98]">ยืนยันข้อมูล</button>
-                </form>
-            </div>
-        </section>
-
-        <section id="page-checkin" class="hidden max-w-md mx-auto pt-4">
-            <div class="glass-panel p-8 rounded-2xl text-center relative overflow-hidden">
-                <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50"></div>
-                <div class="w-20 h-20 bg-slate-800/50 rounded-2xl mx-auto flex items-center justify-center mb-6 border border-slate-700 shadow-inner rotate-3 hover:rotate-0 transition duration-500">
-                    <i class="fa-solid fa-fingerprint text-4xl text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]"></i>
                 </div>
-                <h2 class="text-xl font-header font-bold text-white mb-2">ลงชื่อเข้าอบรม</h2>
-                <p class="text-xs text-slate-400 mb-8 font-light">กรอกเบอร์โทรศัพท์เพื่อยืนยันตัวตน</p>
-                <div class="relative max-w-xs mx-auto mb-6 group">
-                    <input type="tel" id="checkinPhone" class="w-full pl-12 pr-4 py-3.5 rounded-xl glass-input text-lg tracking-[0.2em] text-center font-digital group-focus-within:border-cyan-500 transition-colors" placeholder="08XXXXXXXX">
-                    <i class="fa-solid fa-mobile-screen absolute left-4 top-4 text-slate-500 text-lg group-focus-within:text-cyan-400 transition-colors"></i>
-                </div>
-                <button onclick="checkStatus()" class="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-header font-medium transition border border-slate-600 hover:border-slate-500">ตรวจสอบสถานะ</button>
-
-                <div id="profileCard" class="hidden mt-8 text-left bg-slate-800/40 rounded-xl p-5 border border-slate-700/50 animate-float">
-                    <div class="flex justify-between items-start mb-4 pb-4 border-b border-white/5">
-                        <div><h3 class="text-lg font-header font-bold text-white" id="uiName">...</h3><p class="text-xs text-slate-400 mt-1 font-mono"><span id="uiNick">...</span> | <span id="uiDept" class="text-cyan-400">...</span></p></div>
-                        <span id="uiStatus" class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 tracking-wider">Active</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">เบอร์โทรศัพท์ติดต่อ</label>
+                        <input type="tel" id="phone" required placeholder="08x-xxx-xxxx" class="w-full px-4 py-3 sm:py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-800 outline-none">
                     </div>
-                    <div class="grid grid-cols-3 gap-3">
-                        <div id="boxD1" class="bg-slate-900/50 p-2 rounded-lg text-center border border-white/5"><span class="text-[10px] text-slate-500 uppercase font-bold block mb-2 tracking-wider">Day 1</span><button onclick="doCheckIn(1)" class="w-full py-1.5 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-cyan-600 transition"><i class="fa-solid fa-check"></i></button></div>
-                        <div id="boxD2" class="bg-slate-900/50 p-2 rounded-lg text-center border border-white/5"><span class="text-[10px] text-slate-500 uppercase font-bold block mb-2 tracking-wider">Day 2</span><button onclick="doCheckIn(2)" class="w-full py-1.5 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-cyan-600 transition"><i class="fa-solid fa-check"></i></button></div>
-                        <div id="boxD3" class="bg-slate-900/50 p-2 rounded-lg text-center border border-white/5"><span class="text-[10px] text-slate-500 uppercase font-bold block mb-2 tracking-wider">Day 3</span><button onclick="doCheckIn(3)" class="w-full py-1.5 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-cyan-600 transition"><i class="fa-solid fa-check"></i></button></div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">ทีม Recruiter ที่ดูแลคุณ</label>
+                        <select id="recruiter" required class="w-full px-4 py-3 sm:py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-800 outline-none">
+                            <option value="" disabled selected>-- เลือกทีมงาน --</option>
+                            <option value="Sky">คุณสกาย (Sky)</option>
+                            <option value="Pond">คุณปอนด์ (Pond)</option>
+                            <option value="Smile">คุณสมายด์ (Smile)</option>
+                        </select>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <section id="page-admin" class="hidden h-full flex flex-col">
-            <div id="adminLogin" class="max-w-xs mx-auto glass-panel p-8 rounded-2xl text-center mt-10 border border-red-500/20">
-                <div class="w-14 h-14 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20"><i class="fa-solid fa-shield-cat text-2xl text-red-400"></i></div>
-                <h3 class="text-white font-header font-bold mb-6">Restricted Area</h3>
-                <input type="password" id="adminPass" class="w-full px-4 py-3 rounded-xl glass-input text-center mb-4 text-sm" placeholder="Admin Password">
-                <button onclick="adminAccess()" class="w-full py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold text-sm transition shadow-lg shadow-red-900/30">เข้าสู่ระบบ</button>
-            </div>
-
-            <div id="adminDashboard" class="hidden flex-1 flex flex-col">
-                <div class="flex justify-between items-center mb-4 px-1">
-                    <h2 class="text-white font-header font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-database text-cyan-400"></i> ฐานข้อมูล</h2>
-                    <div class="flex gap-2">
-                        <button onclick="toggleSelectAll()" class="text-[10px] bg-slate-800 border border-slate-600 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg transition">Select All</button>
-                        <button onclick="loadAdminData()" class="text-[10px] bg-slate-800 border border-slate-600 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-rotate"></i></button>
-                    </div>
-                </div>
-                
-                <div class="flex-1 overflow-auto glass-panel rounded-xl mb-20 border-0">
-                    <table class="w-full text-left border-collapse">
-                        <thead class="bg-slate-900/50 backdrop-blur text-slate-400 text-[10px] font-bold uppercase sticky top-0 z-10 shadow-md">
-                            <tr>
-                                <th class="p-3 w-10 text-center">#</th>
-                                <th class="p-3">ข้อมูล & การเข้าเรียน</th>
-                                <th class="p-3 text-center w-24">สถานะ</th>
-                                <th class="p-3 text-center w-20">จัดการ</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminTable" class="divide-y divide-slate-700/50 text-sm text-slate-300">
-                            </tbody>
-                    </table>
-                </div>
-
-                <div id="actionBar" class="fixed bottom-6 left-4 right-4 glass-panel rounded-2xl p-3 shadow-2xl transform translate-y-[150%] transition-transform duration-300 z-50 flex justify-between items-center border-t border-white/10 bg-slate-900/90">
-                    <div class="text-white text-xs pl-2"><span class="text-slate-400">Selected:</span> <span id="selectedCount" class="text-cyan-400 font-digital text-lg font-bold ml-1">0</span></div>
-                    <div class="flex gap-2">
-                        <button onclick="openReportModal()" class="bg-amber-500 hover:bg-amber-400 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-2 transition"><i class="fa-solid fa-file-invoice"></i> รายงาน</button>
-                        <button onclick="openHRModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-2 transition"><i class="fa-solid fa-paper-plane"></i> ส่ง HR</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <div id="editModal" class="hidden fixed inset-0 z-[70] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-sm rounded-2xl p-6 border border-slate-600">
-            <h3 class="text-white font-header font-bold text-lg mb-4 border-b border-white/10 pb-2">แก้ไขข้อมูล</h3>
-            <input type="hidden" id="editRowId">
-            <div class="space-y-4">
+            <div class="space-y-5">
+                <h2 class="text-lg sm:text-xl font-semibold text-slate-700 border-b border-slate-100 pb-2">2. ตำแหน่งและวันเวลา</h2>
                 <div>
-                    <label class="text-[10px] text-slate-400 font-bold block mb-1">ทีม (Team)</label>
-                    <select id="editTeamSelect" onchange="toggleTeamInput(this)" class="w-full p-2.5 rounded-lg glass-input text-sm border-slate-600">
-                        <option value="RETAIL 1">RETAIL 1</option><option value="RETAIL 2">RETAIL 2</option><option value="RETAIL 3">RETAIL 3</option><option value="RETAIL 4">RETAIL 4</option>
-                        <option value="PA 1A">PA 1A</option><option value="PA 1B">PA 1B</option><option value="PA 1C">PA 1C</option><option value="PA 1D">PA 1D</option>
-                        <option value="PA 2A">PA 2A</option><option value="PA 2B">PA 2B</option><option value="PA 2C">PA 2C</option><option value="OTHER" class="text-yellow-400 font-bold">+ พิมพ์เอง</option>
+                    <label class="block text-sm font-medium text-slate-600 mb-1.5">ตำแหน่งที่สมัคร</label>
+                    <select id="position" required class="w-full px-4 py-3 sm:py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-800 outline-none">
+                        <option value="" disabled selected>-- กรุณาเลือกตำแหน่ง --</option>
+                        <option value="Telesales (ฝ่ายขายทางโทรศัพท์) – ผลิตภัณฑ์ประกันอุบัติเหตุ (PA)">Telesales (PA) - ประกันอุบัติเหตุ</option>
+                        <option value="Telesales (Motor Insurance) / เจ้าหน้าที่ฝ่ายขายทางโทรศัพท์ (ประกันภัยรถยนต์)">Telesales (Motor) - ประกันภัยรถยนต์</option>
+                        <option value="Telesales (สินค้า Retail/สินค้าอุปโภคบริโภค)">Telesales (Retail) - สินค้าอุปโภคบริโภค</option>
+                        <option value="Back Office (เจ้าหน้าที่ประจำสำนักงานใหญ่ - รัชดาภิเษก 20)">Back Office - สนญ. รัชดาฯ 20</option>
+                        <option value="Back Office (เจ้าหน้าที่ประจำสำนักงานใหญ่ - สาขา หนองคาย)">Back Office - สาขา หนองคาย</option>
+                        <option value="อื่นๆ">อื่นๆ (โปรดระบุ)</option>
                     </select>
-                    <input type="text" id="editTeamInput" class="hidden w-full mt-2 p-2.5 rounded-lg glass-input text-sm" placeholder="ระบุชื่อทีม...">
+                    <input type="text" id="otherPosition" placeholder="พิมพ์ตำแหน่งที่ต้องการสมัคร..." class="hidden w-full mt-3 px-4 py-3 sm:py-3.5 bg-indigo-50/50 border border-indigo-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-slate-800 placeholder-slate-400">
                 </div>
-                <div><label class="text-[10px] text-slate-400 font-bold block mb-1">สถานะ</label><select id="editStatus" class="w-full p-2.5 rounded-lg glass-input text-sm border-slate-600"><option value="Active">Active</option><option value="Passed">Passed</option><option value="Resigned">Resigned</option><option value="New Job">New Job</option><option value="Back Office">Back Office</option><option value="Other">Other</option></select></div>
-                <div><label class="text-[10px] text-slate-400 font-bold block mb-1">หมายเหตุ</label><textarea id="editNote" rows="2" class="w-full p-2.5 rounded-lg glass-input text-sm border-slate-600"></textarea></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">วันที่สะดวกสัมภาษณ์</label>
+                        <input type="date" id="date" required class="w-full px-4 py-3 sm:py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-800 outline-none cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">เวลาที่สะดวก</label>
+                        <select id="time" required class="w-full px-4 py-3 sm:py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-800 outline-none">
+                            <option value="" disabled selected>-- เลือกเวลา --</option>
+                            <option value="09:00 - 10:00">09:00 - 10:00 น.</option>
+                            <option value="10:30 - 11:30">10:30 - 11:30 น.</option>
+                            <option value="13:30 - 14:30">13:30 - 14:30 น.</option>
+                            <option value="15:00 - 16:00">15:00 - 16:00 น.</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="flex gap-3 mt-6 pt-4 border-t border-white/10">
-                <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 py-2 rounded-lg border border-slate-600 text-slate-400 text-sm hover:bg-slate-700">ยกเลิก</button>
-                <button onclick="saveAdminEdit()" class="flex-1 py-2 rounded-lg bg-cyan-600 text-white font-bold text-sm hover:bg-cyan-500 shadow-lg">บันทึก</button>
-            </div>
-        </div>
-    </div>
 
-    <div id="reportModal" class="hidden fixed inset-0 z-[80] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-md rounded-2xl p-6 border border-slate-600 flex flex-col max-h-[90vh]">
-            <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
-                <h3 class="text-white font-header font-bold text-lg"><i class="fa-solid fa-file-lines mr-2 text-amber-400"></i>รายงานอบรม</h3>
-                <button onclick="document.getElementById('reportModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="flex-1 overflow-y-auto space-y-4 pr-1">
-                <div class="grid grid-cols-2 gap-3">
-                    <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">วันที่รอบอบรม</label><input type="date" id="reportDate" class="w-full p-2 rounded-lg glass-input text-xs"></div>
-                    <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">ครั้งที่</label><select id="reportDayType" class="w-full p-2 rounded-lg glass-input text-xs"><option value="วันแรก">วันแรก</option><option value="วันที่สอง">วันที่สอง</option><option value="วันที่สาม">วันที่สาม</option></select></div>
+            <div class="space-y-5">
+                <h2 class="text-lg sm:text-xl font-semibold text-slate-700 border-b border-slate-100 pb-2">3. เอกสารประกอบ</h2>
+                <div>
+                    <label class="block text-sm font-medium text-slate-600 mb-1.5">แนบ Resume (PDF)</label>
+                    <label class="flex flex-col items-center justify-center w-full h-32 sm:h-40 border-2 border-dashed border-slate-300 rounded-2xl cursor-pointer bg-slate-50 hover:bg-indigo-50 hover:border-indigo-300 transition-colors relative overflow-hidden">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6 pointer-events-none">
+                            <svg class="w-8 h-8 sm:w-10 sm:h-10 mb-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                            <p class="text-sm text-slate-600"><span class="font-semibold text-primary">คลิกอัปโหลด</span> หรือลากไฟล์มาวาง</p>
+                            <p id="fileNameDisplay" class="text-xs text-slate-400 mt-1">ไฟล์ PDF ขนาดไม่เกิน 5MB</p>
+                        </div>
+                        <input type="file" id="resumeFile" class="hidden" accept=".pdf" />
+                    </label>
                 </div>
-                <button onclick="addSelectionToReport()" class="w-full py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl text-white font-bold text-xs shadow hover:brightness-110"><i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการ</button>
-                <textarea id="finalReportText" class="w-full h-40 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
             </div>
-            <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('finalReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('finalReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs hover:brightness-110"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
-        </div>
-    </div>
 
-    <div id="hrModal" class="hidden fixed inset-0 z-[80] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-md rounded-2xl p-6 border border-slate-600 flex flex-col max-h-[90vh]">
-            <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3"><h3 class="text-white font-header font-bold text-lg"><i class="fa-solid fa-user-tie mr-2 text-indigo-400"></i>ส่งรายชื่อ HR</h3><button onclick="document.getElementById('hrModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button></div>
-            <div class="flex-1 overflow-y-auto space-y-4 pr-1">
-                <div class="space-y-3">
-                    <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">วันเริ่มอบรม</label><input type="date" id="hrTrainingDate" class="w-full p-2.5 rounded-xl glass-input text-sm"></div>
-                    <div><label class="text-[10px] text-cyan-400 font-bold mb-1 block">วันเริ่มงานจริง</label><input type="date" id="hrWorkDate" class="w-full p-2.5 rounded-xl glass-input text-sm border-cyan-500/30"></div>
-                </div>
-                <button onclick="generateHRReport()" class="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl text-white font-bold text-xs shadow hover:brightness-110 mt-2"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> สร้างข้อความ</button>
-                <textarea id="hrReportText" class="w-full h-40 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
+            <div class="pt-4">
+                <button type="submit" class="w-full bg-primary hover:bg-indigo-700 text-white font-semibold text-base sm:text-lg py-3.5 sm:py-4 px-8 rounded-xl shadow-lg shadow-indigo-200 transform hover:-translate-y-0.5 transition-all duration-200">
+                    ยืนยันการนัดหมาย
+                </button>
             </div>
-            <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('hrReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('hrReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs hover:brightness-110"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
-        </div>
+        </form>
     </div>
 
     <script>
-        // **********************************************
-        // 🔴 ใส่ URL WEB APP (Apps Script) ตรงนี้
-        // **********************************************
-        const API_URL = "https://script.google.com/macros/s/AKfycbyYYauRspNoRvkhUWKZh4c5Hp1TzhxWGu_T96TvPPMZ6p1DHJqh30Azzi_PrEcGn9dy/exec"; 
-        // **********************************************
-        
-        let adminPassCache = "";
-        let adminDataCache = [];
-        let selectedRows = new Set(); 
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwDxUEEUjZlZEVAW7VoOkcZYsZ9LzEUN9WzjXVilmAMi1iwR-O4StsZ70fBctgfAEZ60w/exec';
 
-        function startTime() {
-            const today = new Date();
-            const thaiDays = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
-            const thaiMonths = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
-            document.getElementById('clockDate').innerText = `${thaiDays[today.getDay()]}ที่ ${today.getDate()} ${thaiMonths[today.getMonth()]} ${today.getFullYear() + 543}`;
-            document.getElementById('clockTime').innerText = `${String(today.getHours()).padStart(2,'0')}:${String(today.getMinutes()).padStart(2,'0')}`;
-            setTimeout(startTime, 1000);
-        }
+        // 1. จัดการการเลือกตำแหน่ง "อื่นๆ"
+        const positionSelect = document.getElementById('position');
+        const otherPositionInput = document.getElementById('otherPosition');
 
-        async function fetchAPI(payload) {
-            document.getElementById('loadingOverlay').classList.remove('hidden');
-            try { const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) }); return await response.json(); } 
-            catch (error) { return { status: 'error', message: 'Connection Error' }; }
-            finally { document.getElementById('loadingOverlay').classList.add('hidden'); }
-        }
-
-        function switchTab(tab) {
-            ['register', 'checkin', 'admin'].forEach(t => { document.getElementById(`page-${t}`).classList.add('hidden'); document.getElementById(`nav-${t}`).classList.remove('active', 'text-cyan-400', 'bg-white/5'); });
-            document.getElementById(`page-${tab}`).classList.remove('hidden'); document.getElementById(`nav-${tab}`).classList.add('active', 'text-cyan-400', 'bg-white/5');
-        }
-
-        async function handleRegister(e) {
-            e.preventDefault();
-            const res = await fetchAPI({ action: 'register', ...Object.fromEntries(new FormData(e.target)) });
-            if (res.status === 'success') { Swal.fire({ icon: 'success', title: 'ลงทะเบียนสำเร็จ', confirmButtonColor: '#38bdf8', background: '#1e293b', color: '#fff' }); e.target.reset(); switchTab('checkin'); }
-            else { Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: res.message, background: '#1e293b', color: '#fff' }); }
-        }
-
-        async function checkStatus() {
-            const phone = document.getElementById('checkinPhone').value;
-            if (!phone) return Swal.fire({ icon: 'warning', text: 'กรุณากรอกเบอร์โทร', background: '#1e293b', color: '#fff' });
-            const res = await fetchAPI({ action: 'login', phone });
-            if (res.status === 'success') {
-                const d = res.data;
-                document.getElementById('uiName').innerText = d.name; document.getElementById('uiNick').innerText = d.nickname; document.getElementById('uiDept').innerText = d.dept; document.getElementById('uiStatus').innerText = d.status;
-                document.getElementById('profileCard').classList.remove('hidden');
-                ['1','2','3'].forEach(i => updateCheckBtn(`boxD${i}`, i, d[`d${i}`]));
-            } else { Swal.fire({ icon: 'error', text: 'ไม่พบข้อมูล', background: '#1e293b', color: '#fff' }); document.getElementById('profileCard').classList.add('hidden'); }
-        }
-
-        function updateCheckBtn(id, day, val) {
-            const btn = document.querySelector(`#${id} button`); const box = document.getElementById(id);
-            if(val) { box.classList.add('border-emerald-500/30', 'bg-emerald-500/5'); btn.className="w-full py-1.5 rounded bg-emerald-500/20 text-emerald-400 cursor-default font-digital text-sm"; btn.innerHTML= val; btn.onclick=null; } 
-            else { box.classList.remove('border-emerald-500/30', 'bg-emerald-500/5'); btn.className="w-full py-1.5 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-cyan-600 transition"; btn.innerHTML=`<i class="fa-solid fa-check"></i>`; btn.onclick=()=>doCheckIn(day); }
-        }
-
-        async function doCheckIn(day) {
-            const phone = document.getElementById('checkinPhone').value;
-            const cf = await Swal.fire({ title: `เช็คชื่อวันที่ ${day}?`, showCancelButton: true, confirmButtonText: 'ยืนยัน', confirmButtonColor: '#0ea5e9', cancelButtonColor: '#475569', background: '#1e293b', color: '#fff' });
-            if (cf.isConfirmed) {
-                const res = await fetchAPI({ action: 'checkin', phone, day });
-                if (res.status === 'success') { checkStatus(); Swal.fire({ icon: 'success', title: 'สำเร็จ', timer: 1500, showConfirmButton: false, background: '#1e293b', color: '#fff' }); }
+        positionSelect.addEventListener('change', function() {
+            if (this.value === 'อื่นๆ') {
+                otherPositionInput.classList.remove('hidden');
+                otherPositionInput.required = true;
+                setTimeout(() => otherPositionInput.focus(), 50);
+            } else {
+                otherPositionInput.classList.add('hidden');
+                otherPositionInput.required = false;
+                otherPositionInput.value = '';
             }
-        }
+        });
 
-        async function adminAccess() {
-            const pass = document.getElementById('adminPass').value;
-            const res = await fetchAPI({ action: 'get_admin', pass });
-            if (res.status === 'success') { adminPassCache = pass; document.getElementById('adminLogin').classList.add('hidden'); document.getElementById('adminDashboard').classList.remove('hidden'); renderAdminTable(res.data); }
-            else { Swal.fire({ icon: 'error', text: 'รหัสผ่านผิด', background: '#1e293b', color: '#fff' }); }
-        }
-        async function loadAdminData() { if(adminPassCache) { const res = await fetchAPI({ action: 'get_admin', pass: adminPassCache }); if(res.status==='success') renderAdminTable(res.data); } }
+        // 2. จัดการการอัปโหลดไฟล์ (โชว์ชื่อไฟล์ & เตรียมแปลงร่างเป็น Base64)
+        const resumeInput = document.getElementById('resumeFile');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        let base64File = null;
+        let selectedFileName = "";
+        let selectedMimeType = "";
 
-        function formatPrettyDate(dateString) {
-            if (!dateString) return "-";
-            const date = new Date(dateString);
-            if (isNaN(date.getTime())) return dateString; 
-            const d = String(date.getDate()).padStart(2, '0'); const m = String(date.getMonth() + 1).padStart(2, '0'); const y = date.getFullYear();
-            const h = String(date.getHours()).padStart(2, '0'); const min = String(date.getMinutes()).padStart(2, '0');
-            return `<div class="inline-flex items-center gap-2 bg-slate-800/80 px-2 py-1 rounded border border-white/5 mt-1 shadow-inner"><i class="fa-regular fa-clock text-[10px] text-slate-500"></i><span class="text-slate-300 font-mono tracking-wider text-[10px]">${d}-${m}-${y}</span><span class="text-cyan-400 font-digital font-bold text-[11px]">${h}:${min}</span></div>`;
-        }
-
-        function renderAdminTable(data) {
-            adminDataCache = data;
-            const tbody = document.getElementById('adminTable'); 
-            tbody.innerHTML = '';
-            
-            data.forEach(row => {
-                const tr = document.createElement('tr'); 
-                tr.className = "hover:bg-white/5 transition border-b border-slate-700/50";
-                
-                // คำนวณจำนวนวันที่มา
-                let attendedDays = 0;
-                if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
-
-                const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-emerald-400 text-sm" title="${v}"></i>` : `<i class="fa-regular fa-circle text-slate-600 text-sm"></i>`;
-                
-                let badge = "bg-slate-800 text-slate-400 border border-slate-600";
-                let statusHTML = row.status;
-
-                // ลอจิกตรวจสอบการออกระหว่างเทรน
-                if(row.status === 'Active') { badge = "bg-blue-500/10 text-blue-400 border border-blue-500/30"; } 
-                else if(row.status === 'Passed') { badge = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"; } 
-                else if(['Resigned','New Job'].includes(row.status)) { 
-                    badge = "bg-red-500/10 text-red-400 border border-red-500/30"; 
-                    if (attendedDays > 0 && attendedDays < 3) {
-                        statusHTML += `<div class="text-[8px] text-red-300 mt-1 pt-1 border-t border-red-500/30 leading-none">ออกระหว่างเทรน</div>`;
-                    }
+        resumeInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // เช็คขนาดไฟล์ไม่ให้เกิน 5MB (5 * 1024 * 1024 bytes)
+                if (file.size > 5242880) {
+                    Swal.fire('ไฟล์มีขนาดใหญ่เกินไป', 'กรุณาอัปโหลดไฟล์ PDF ที่มีขนาดไม่เกิน 5MB', 'warning');
+                    this.value = '';
+                    base64File = null;
+                    fileNameDisplay.innerText = "ไฟล์ PDF ขนาดไม่เกิน 5MB";
+                    return;
                 }
+                
+                // โชว์ชื่อไฟล์บนหน้าเว็บให้ผู้สมัครเห็น
+                fileNameDisplay.innerHTML = `<span class="text-indigo-600 font-medium">${file.name}</span>`;
+                selectedFileName = file.name;
+                selectedMimeType = file.type;
+                
+                // ใช้ FileReader ในการแปลงไฟล์เป็น Base64 String
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // ดึงเฉพาะข้อมูลส่วนเนื้อหามาเก็บไว้
+                    base64File = e.target.result.split(',')[1];
+                };
+                reader.readAsDataURL(file);
+            } else {
+                fileNameDisplay.innerText = "ไฟล์ PDF ขนาดไม่เกิน 5MB";
+                base64File = null;
+            }
+        });
 
-                tr.innerHTML = `
-                    <td class="p-3 text-center align-top pt-5"><input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)"></td>
-                    <td class="p-3 align-top">
-                        <div class="font-bold text-white text-sm mb-0.5">${row.name}</div>
-                        <div class="text-[10px] text-slate-400 mb-1">${row.nickname} | ${row.dept}</div>
-                        <div class="text-[10px] text-cyan-400 font-bold mb-1">TEAM: ${row.team}</div>
-                        ${formatPrettyDate(row.timestamp)}
-                        
-                        <div class="mt-3 flex items-center gap-3 bg-slate-900/50 px-3 py-1.5 rounded-lg border border-white/5 w-fit shadow-inner">
-                            <span class="text-[10px] text-slate-300 font-bold uppercase tracking-wide">
-                                เข้าอบรม <span class="text-lg mx-1 ${attendedDays===3 ? 'text-emerald-400' : 'text-amber-400'} leading-none font-digital">${attendedDays}</span>/ 3 วัน
-                            </span>
-                            <div class="flex gap-1.5 border-l border-white/10 pl-3">
-                                ${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}
-                            </div>
-                        </div>
-                    </td>
-                    <td class="p-3 text-center align-top pt-5">
-                        <div class="inline-block px-2.5 py-1.5 rounded-lg text-[10px] uppercase font-bold tracking-wider ${badge} min-w-[75px]">
-                            ${statusHTML}
-                        </div>
-                        ${row.note ? `<div class="text-[9px] text-slate-400 mt-2 max-w-[80px] truncate mx-auto" title="${row.note}"><i class="fa-solid fa-comment-dots mr-1"></i> ${row.note}</div>` : ''}
-                    </td>
-                    <td class="p-3 text-center align-top pt-5">
-                        <div class="flex justify-center gap-1.5">
-                            <button onclick="openEditModal(${row.row}, '${row.status}', '${row.team}', '${row.note||''}')" class="text-cyan-400 bg-cyan-500/10 w-8 h-8 rounded-lg hover:bg-cyan-500/20 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteUser(${row.row})" class="text-red-400 bg-red-500/10 w-8 h-8 rounded-lg hover:bg-red-500/20 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
+        // 3. จัดการเมื่อกดปุ่มยืนยัน
+        document.getElementById('interviewForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            
+            Swal.fire({
+                title: 'กำลังบันทึกข้อมูล...',
+                text: 'กรุณารอสักครู่ ระบบกำลังจัดส่งข้อมูลและอัปโหลดเอกสาร (อาจใช้เวลาประมาณ 10-15 วินาที)',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
             });
-            updateActionBar();
-        }
+            
+            let finalPosition = positionSelect.value;
+            if (finalPosition === 'อื่นๆ') {
+                finalPosition = otherPositionInput.value;
+            }
 
-        // --- Selectors & Actions ---
-        function toggleRowSelection(cb) { if (cb.checked) selectedRows.add(cb.value); else selectedRows.delete(cb.value); updateActionBar(); }
-        function toggleSelectAll() { const cbs = document.querySelectorAll('.custom-checkbox'); const all = selectedRows.size === cbs.length; selectedRows.clear(); cbs.forEach(cb => { cb.checked = !all; if (!all) selectedRows.add(cb.value); }); updateActionBar(); }
-        function updateActionBar() { 
-            const count = selectedRows.size; document.getElementById('selectedCount').innerText = count; 
-            const bar = document.getElementById('actionBar');
-            if (count > 0) bar.classList.remove('translate-y-[150%]'); else bar.classList.add('translate-y-[150%]');
-        }
+            // รวบรวมข้อมูลทั้งหมด (เพิ่มข้อมูลไฟล์เข้าไปด้วย)
+            const data = {
+                prefix: document.getElementById('prefix').value,
+                name: document.getElementById('fullName').value,
+                phone: document.getElementById('phone').value,
+                position: finalPosition,
+                recruiter: document.getElementById('recruiter').value,
+                date: document.getElementById('date').value,
+                time: document.getElementById('time').value,
+                // ข้อมูลไฟล์แนบ
+                fileData: base64File,
+                fileName: selectedFileName,
+                mimeType: selectedMimeType
+            };
 
-        // --- HELPERS ---
-        function copyToClipboard(id) { let t = document.getElementById(id).value; if(id.includes('Report')) t += "ขอบคุณครับ"; navigator.clipboard.writeText(t).then(() => Swal.fire({ icon: 'success', title: 'คัดลอกแล้ว', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000, background: '#1e293b', color: '#fff' })); }
-        function sendLine(id) { let t = document.getElementById(id).value; if(id.includes('Report')) t += "ขอบคุณครับ"; window.open(`https://line.me/R/msg/text/?${encodeURIComponent(t)}`, '_blank'); }
-        function formatDateThai(date) { const m = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; return `${date.getDate()} ${m[date.getMonth()]} ${date.getFullYear()+543}`; }
-        
-        // --- Reports ---
-        function openReportModal() {
-            document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
-            const d = formatDateThai(new Date());
-            const txt = document.getElementById('finalReportText');
-            if(!txt.value.trim()) txt.value = `เรียน พี่ด้า\nและหัวหน้างานที่เกี่ยวข้อง\nขอนำส่งรายงานการอบรมพนักงานใหม่\nรอบอบรมวันที่ ${d}\n\n`;
-            document.getElementById('reportModal').classList.remove('hidden');
-        }
-        function addSelectionToReport() {
-            const type = document.getElementById('reportDayType').value;
-            const items = adminDataCache.filter(i => selectedRows.has(i.id.toString()));
-            if (!items.length) return;
-            const teams = {}; items.forEach(i => { const t = i.team || 'No Team'; if (!teams[t]) teams[t] = []; teams[t].push(i.nickname); });
-            let txt = `อบรม${type} ทั้งหมด ${items.length} คน\n\n`;
-            for (const [t, n] of Object.entries(teams)) txt += `${t}    จำนวน ${n.length} คน ${n.join(' ')}\n`;
-            document.getElementById('finalReportText').value += txt + `\n`;
-            selectedRows.clear(); document.querySelectorAll('.custom-checkbox').forEach(c => c.checked = false); updateActionBar();
-        }
+            fetch(scriptURL, { 
+                method: 'POST', 
+                body: JSON.stringify(data),
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+            })
+            .then(response => response.json())
+            .then(result => {
+                if(result.status === 'success') {
+                    let recruiterNameTH = "";
+                    if (data.recruiter === "Sky") recruiterNameTH = "คุณสกาย";
+                    if (data.recruiter === "Pond") recruiterNameTH = "คุณปอนด์";
+                    if (data.recruiter === "Smile") recruiterNameTH = "คุณสมายด์";
+                    
+                    const successMessage = `
+                        <div style="text-align: left; font-size: 0.95rem; line-height: 1.6; color: #475569; font-family: 'Prompt', sans-serif;">
+                            <p><strong>เรียน คุณ ${data.prefix}${data.name},</strong></p>
+                            <p>ทางทีมสรรหาบุคลากรของ <strong>บริษัท ๙ สิงห์ โบรกเกอร์ จำกัด</strong> มีความยินดีที่จะแจ้งให้ทราบว่า ท่านผ่านการคัดเลือกเบื้องต้น และเราขอเชิญท่านเข้ารับการสัมภาษณ์งานในตำแหน่ง <strong>${data.position}</strong></p>
+                            
+                            <hr style="margin: 20px 0; border-top: 1px dashed #cbd5e1;">
+                            
+                            <p style="color: #334155; margin-bottom: 10px;"><strong>📍 รายละเอียดการสัมภาษณ์:</strong></p>
+                            <ul style="list-style: none; padding-left: 0; margin-bottom: 20px; color: #1e293b;">
+                                <li style="margin-bottom: 5px;">📅 <strong>วันที่:</strong> ${data.date}</li>
+                                <li style="margin-bottom: 5px;">⏰ <strong>เวลา:</strong> ${data.time}</li>
+                                <li style="margin-bottom: 5px;">🏢 <strong>รูปแบบ:</strong> รอการติดต่อกลับเพื่อแจ้งรายละเอียด</li>
+                                <li style="margin-bottom: 5px;">🧑‍💼 <strong>ผู้ดูแล:</strong> ${recruiterNameTH} (ทีมสรรหาบุคลากร)</li>
+                            </ul>
+                            
+                            <p style="font-size: 0.85rem; color: #64748b; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                กรุณารอรับการติดต่อจากทีมงาน เพื่อยืนยันช่องทางการสัมภาษณ์อย่างเป็นทางการ หากมีข้อสงสัยเพิ่มเติม สามารถติดต่อฝ่าย HR ได้โดยตรง
+                            </p>
+                        </div>
+                    `;
 
-        // --- HR Report ---
-        function openHRModal() { document.getElementById('hrTrainingDate').value = new Date().toISOString().split('T')[0]; document.getElementById('hrWorkDate').value = ""; document.getElementById('hrReportText').value = ""; document.getElementById('hrModal').classList.remove('hidden'); }
-        function generateHRReport() {
-            const tDate = document.getElementById('hrTrainingDate').value;
-            const wDate = document.getElementById('hrWorkDate').value;
-            if(!tDate || !wDate) return Swal.fire({icon:'warning', title:'เลือกวันที่ให้ครบ', toast:true, position:'top', showConfirmButton:false, timer:1500});
-            const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate));
-            const items = adminDataCache.filter(i => selectedRows.has(i.id.toString()));
-            let txt = "";
-            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${tStr}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
-            document.getElementById('hrReportText').value = txt;
-        }
-
-        // --- Actions ---
-        function toggleTeamInput(s) { const i = document.getElementById('editTeamInput'); if (s.value === 'OTHER') { i.classList.remove('hidden'); i.focus(); } else { i.classList.add('hidden'); } }
-        function openEditModal(row, st, tm, nt) {
-            document.getElementById('editRowId').value = row; document.getElementById('editStatus').value = st; document.getElementById('editNote').value = nt;
-            const s = document.getElementById('editTeamSelect'); const i = document.getElementById('editTeamInput');
-            const opts = Array.from(s.options).map(o => o.value);
-            if (opts.includes(tm)) { s.value = tm; i.classList.add('hidden'); i.value = ""; } 
-            else { s.value = 'OTHER'; i.classList.remove('hidden'); i.value = tm; }
-            document.getElementById('editModal').classList.remove('hidden');
-        }
-        async function saveAdminEdit() {
-            document.getElementById('editModal').classList.add('hidden');
-            const s = document.getElementById('editTeamSelect'); const i = document.getElementById('editTeamInput');
-            const tm = s.value === 'OTHER' ? i.value : s.value;
-            await fetchAPI({ action: 'admin_update', row: document.getElementById('editRowId').value, team: tm, status: document.getElementById('editStatus').value, note: document.getElementById('editNote').value });
-            loadAdminData();
-        }
-        async function deleteUser(row) {
-            const c = await Swal.fire({ title: 'ลบข้อมูล?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', background: '#1e293b', color: '#fff' });
-            if (c.isConfirmed) { await fetchAPI({ action: 'admin_delete', row }); loadAdminData(); }
-        }
+                    Swal.fire({
+                        title: '<span style="color: #1e293b; font-family: \'Prompt\', sans-serif;">บันทึกข้อมูลสำเร็จ!</span>',
+                        html: successMessage,
+                        icon: 'success',
+                        confirmButtonText: 'รับทราบและปิดหน้าต่าง',
+                        confirmButtonColor: '#4f46e5',
+                        width: '600px',
+                        padding: '2em',
+                        backdrop: `rgba(15, 23, 42, 0.6)` 
+                    }).then(() => {
+                        document.getElementById('interviewForm').reset();
+                        otherPositionInput.classList.add('hidden');
+                        // ล้างชื่อไฟล์ที่โชว์อยู่ให้กลับเป็นค่าเริ่มต้น
+                        fileNameDisplay.innerText = "ไฟล์ PDF ขนาดไม่เกิน 5MB";
+                        base64File = null;
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                } else {
+                    Swal.fire('เกิดข้อผิดพลาด!', 'ไม่สามารถบันทึกข้อมูลได้: ' + result.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                Swal.fire('ขัดข้องทางเครือข่าย', 'ไม่สามารถเชื่อมต่อระบบหลังบ้านได้', 'error');
+            });
+        });
     </script>
 </body>
 </html>
