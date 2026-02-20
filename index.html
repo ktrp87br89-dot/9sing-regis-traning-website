@@ -25,9 +25,7 @@
                         glassBorder: "rgba(255, 255, 255, 0.08)",
                         accent: "#38bdf8"
                     },
-                    boxShadow: {
-                        'glow': '0 0 20px rgba(56, 189, 248, 0.15)',
-                    }
+                    boxShadow: { glow: '0 0 20px rgba(56, 189, 248, 0.15)' }
                 }
             }
         }
@@ -36,54 +34,24 @@
     <style>
         body { 
             background-color: #0f172a; 
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
-                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
-            color: #e2e8f0; 
-            min-height: 100vh;
+            background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            color: #e2e8f0; min-height: 100vh;
         }
-        
-        /* Premium Glass Effect */
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-        }
-
-        .glass-input {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-            transition: all 0.3s ease;
-        }
-        .glass-input:focus {
-            border-color: #38bdf8;
-            background: rgba(15, 23, 42, 0.9);
-            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
-            outline: none;
-        }
-
-        /* Custom Scrollbar */
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
+        .glass-input { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; transition: all 0.3s ease; }
+        .glass-input:focus { border-color: #38bdf8; background: rgba(15, 23, 42, 0.9); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); outline: none; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
-
-        /* Animations */
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
         .animate-float { animation: float 6s ease-in-out infinite; }
-        
         .loader { width: 40px; height: 40px; border: 3px solid #FFF; border-bottom-color: #38bdf8; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        .nav-btn.active {
-            background: rgba(56, 189, 248, 0.1);
-            color: #38bdf8;
-            border-bottom: 2px solid #38bdf8;
-        }
+        .nav-btn.active { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border-bottom: 2px solid #38bdf8; }
+        .font-digital { font-family: 'Chakra Petch', sans-serif; }
+        .text-glow { text-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
+        .custom-checkbox { width: 20px; height: 20px; accent-color: #0ea5e9; cursor: pointer; border-radius: 4px; }
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden text-slate-200" onload="startTime()">
@@ -91,40 +59,25 @@
     <header class="glass-panel sticky top-0 z-50 rounded-b-3xl mx-2 mt-2 px-6 py-4 shadow-glow mb-4">
         <div class="flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg">
-                    <i class="fa-solid fa-layer-group"></i>
-                </div>
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-layer-group"></i></div>
                 <div>
                     <h1 class="font-header font-bold text-sm text-white tracking-wide">HR PORTAL</h1>
                     <p class="text-[10px] text-cyan-400 font-medium tracking-wider uppercase">Training System</p>
                 </div>
             </div>
-
             <div class="text-right">
-                <div id="clockDate" class="text-[10px] text-slate-400 font-medium uppercase tracking-widest">
-                    ...
-                </div>
-                <div id="clockTime" class="font-digital text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-cyan-200 leading-none mt-0.5">
-                    00:00
-                </div>
+                <div id="clockDate" class="text-[10px] text-slate-400 font-medium uppercase tracking-widest">...</div>
+                <div id="clockTime" class="font-digital text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-cyan-200 leading-none mt-0.5">00:00</div>
             </div>
         </div>
-
         <div class="flex justify-center mt-4 border-t border-white/5 pt-2 gap-1">
-            <button onclick="switchTab('register')" id="nav-register" class="nav-btn active flex-1 py-2 rounded-lg text-xs font-header transition-all hover:bg-white/5 text-slate-400">
-                ลงทะเบียน
-            </button>
-            <button onclick="switchTab('checkin')" id="nav-checkin" class="nav-btn flex-1 py-2 rounded-lg text-xs font-header transition-all hover:bg-white/5 text-slate-400">
-                เช็คชื่อ
-            </button>
-            <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn flex-1 py-2 rounded-lg text-xs font-header transition-all hover:bg-white/5 text-slate-400">
-                Admin
-            </button>
+            <button onclick="switchTab('register')" id="nav-register" class="nav-btn active flex-1 py-2 rounded-lg text-xs font-header transition-all hover:bg-white/5 text-slate-400">ลงทะเบียน</button>
+            <button onclick="switchTab('checkin')" id="nav-checkin" class="nav-btn flex-1 py-2 rounded-lg text-xs font-header transition-all hover:bg-white/5 text-slate-400">เช็คชื่อ</button>
+            <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn flex-1 py-2 rounded-lg text-xs font-header transition-all hover:bg-white/5 text-slate-400">Admin</button>
         </div>
     </header>
 
     <main class="flex-1 overflow-y-auto px-4 pb-24 scroll-smooth">
-        
         <div id="loadingOverlay" class="hidden fixed inset-0 z-[60] bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center">
             <div class="loader mb-4"></div>
             <p class="text-xs text-cyan-400 font-header tracking-widest animate-pulse">PROCESSING...</p>
@@ -133,61 +86,27 @@
         <section id="page-register" class="max-w-md mx-auto animate-fade-in">
             <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group">
                 <div class="absolute top-0 right-0 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none group-hover:bg-cyan-500/20 transition duration-700"></div>
-
-                <h2 class="text-lg font-header font-bold text-white mb-6 flex items-center gap-2">
-                    <span class="w-1 h-5 bg-cyan-400 rounded-full"></span> ลงทะเบียนพนักงานใหม่
-                </h2>
-
+                <h2 class="text-lg font-header font-bold text-white mb-6 flex items-center gap-2"><span class="w-1 h-5 bg-cyan-400 rounded-full"></span> ลงทะเบียนพนักงานใหม่</h2>
                 <form id="regForm" onsubmit="handleRegister(event)" class="space-y-4 relative z-10">
                     <div class="grid grid-cols-3 gap-3">
-                        <div>
-                            <label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">คำนำหน้า</label>
-                            <select name="prefix" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm focus:ring-0">
-                                <option class="text-slate-900">นาย</option>
-                                <option class="text-slate-900">นาง</option>
-                                <option class="text-slate-900">นางสาว</option>
-                            </select>
-                        </div>
-                        <div class="col-span-2">
-                            <label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ชื่อ-นามสกุล</label>
-                            <input type="text" name="name" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm placeholder-slate-600" placeholder="ภาษาไทย">
-                        </div>
+                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">คำนำหน้า</label><select name="prefix" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm focus:ring-0"><option class="text-slate-900">นาย</option><option class="text-slate-900">นาง</option><option class="text-slate-900">นางสาว</option></select></div>
+                        <div class="col-span-2"><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ชื่อ-นามสกุล</label><input type="text" name="name" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm placeholder-slate-600" placeholder="ภาษาไทย"></div>
                     </div>
-
                     <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ชื่อเล่น</label>
-                            <input type="text" name="nickname" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm">
-                        </div>
-                        <div>
-                            <label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">เบอร์โทร</label>
-                            <input type="tel" name="phone" required pattern="[0-9]{10}" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm" placeholder="08xxxxxxxx">
-                        </div>
+                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ชื่อเล่น</label><input type="text" name="nickname" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
+                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">เบอร์โทร</label><input type="tel" name="phone" required pattern="[0-9]{10}" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm" placeholder="08xxxxxxxx"></div>
                     </div>
-
                     <div>
                         <label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">แผนก</label>
                         <select name="dept" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm">
-                            <option value="Telesales Product" class="text-slate-900">Telesales Product</option>
-                            <option value="Telesales Insurance" class="text-slate-900">Telesales Insurance</option>
-                            <option value="Back Office" class="text-slate-900">Back Office</option>
+                            <option value="Telesales Product" class="text-slate-900">Telesales Product</option><option value="Telesales Insurance" class="text-slate-900">Telesales Insurance</option><option value="Back Office" class="text-slate-900">Back Office</option>
                         </select>
                     </div>
-
                     <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ทีม</label>
-                            <input type="text" name="team" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm">
-                        </div>
-                        <div>
-                            <label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ผู้แนะนำ</label>
-                            <input type="text" name="recruiter" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm">
-                        </div>
+                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ทีม</label><input type="text" name="team" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
+                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ผู้แนะนำ</label><input type="text" name="recruiter" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
                     </div>
-
-                    <button type="submit" class="w-full mt-4 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-header font-medium rounded-xl shadow-lg shadow-cyan-900/20 transition-all transform active:scale-[0.98]">
-                        ยืนยันข้อมูล
-                    </button>
+                    <button type="submit" class="w-full mt-4 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-header font-medium rounded-xl shadow-lg shadow-cyan-900/20 transition-all transform active:scale-[0.98]">ยืนยันข้อมูล</button>
                 </form>
             </div>
         </section>
@@ -195,56 +114,34 @@
         <section id="page-checkin" class="hidden max-w-md mx-auto pt-4">
             <div class="glass-panel p-8 rounded-2xl text-center relative overflow-hidden">
                 <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50"></div>
-                
                 <div class="w-20 h-20 bg-slate-800/50 rounded-2xl mx-auto flex items-center justify-center mb-6 border border-slate-700 shadow-inner rotate-3 hover:rotate-0 transition duration-500">
                     <i class="fa-solid fa-fingerprint text-4xl text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]"></i>
                 </div>
-                
                 <h2 class="text-xl font-header font-bold text-white mb-2">ลงชื่อเข้าอบรม</h2>
                 <p class="text-xs text-slate-400 mb-8 font-light">กรอกเบอร์โทรศัพท์เพื่อยืนยันตัวตน</p>
-                
                 <div class="relative max-w-xs mx-auto mb-6 group">
                     <input type="tel" id="checkinPhone" class="w-full pl-12 pr-4 py-3.5 rounded-xl glass-input text-lg tracking-[0.2em] text-center font-digital group-focus-within:border-cyan-500 transition-colors" placeholder="08XXXXXXXX">
                     <i class="fa-solid fa-mobile-screen absolute left-4 top-4 text-slate-500 text-lg group-focus-within:text-cyan-400 transition-colors"></i>
                 </div>
-                
-                <button onclick="checkStatus()" class="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-header font-medium transition border border-slate-600 hover:border-slate-500">
-                    ตรวจสอบสถานะ
-                </button>
+                <button onclick="checkStatus()" class="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-header font-medium transition border border-slate-600 hover:border-slate-500">ตรวจสอบสถานะ</button>
 
                 <div id="profileCard" class="hidden mt-8 text-left bg-slate-800/40 rounded-xl p-5 border border-slate-700/50 animate-float">
                     <div class="flex justify-between items-start mb-4 pb-4 border-b border-white/5">
-                        <div>
-                            <h3 class="text-lg font-header font-bold text-white" id="uiName">...</h3>
-                            <p class="text-xs text-slate-400 mt-1 font-mono"><span id="uiNick">...</span> | <span id="uiDept" class="text-cyan-400">...</span></p>
-                        </div>
+                        <div><h3 class="text-lg font-header font-bold text-white" id="uiName">...</h3><p class="text-xs text-slate-400 mt-1 font-mono"><span id="uiNick">...</span> | <span id="uiDept" class="text-cyan-400">...</span></p></div>
                         <span id="uiStatus" class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 tracking-wider">Active</span>
                     </div>
-
                     <div class="grid grid-cols-3 gap-3">
-                        <div id="boxD1" class="bg-slate-900/50 p-2 rounded-lg text-center border border-white/5">
-                            <span class="text-[10px] text-slate-500 uppercase font-bold block mb-2 tracking-wider">Day 1</span>
-                            <button onclick="doCheckIn(1)" class="w-full py-1.5 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-cyan-600 transition"><i class="fa-solid fa-check"></i></button>
-                        </div>
-                        <div id="boxD2" class="bg-slate-900/50 p-2 rounded-lg text-center border border-white/5">
-                            <span class="text-[10px] text-slate-500 uppercase font-bold block mb-2 tracking-wider">Day 2</span>
-                            <button onclick="doCheckIn(2)" class="w-full py-1.5 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-cyan-600 transition"><i class="fa-solid fa-check"></i></button>
-                        </div>
-                        <div id="boxD3" class="bg-slate-900/50 p-2 rounded-lg text-center border border-white/5">
-                            <span class="text-[10px] text-slate-500 uppercase font-bold block mb-2 tracking-wider">Day 3</span>
-                            <button onclick="doCheckIn(3)" class="w-full py-1.5 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-cyan-600 transition"><i class="fa-solid fa-check"></i></button>
-                        </div>
+                        <div id="boxD1" class="bg-slate-900/50 p-2 rounded-lg text-center border border-white/5"><span class="text-[10px] text-slate-500 uppercase font-bold block mb-2 tracking-wider">Day 1</span><button onclick="doCheckIn(1)" class="w-full py-1.5 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-cyan-600 transition"><i class="fa-solid fa-check"></i></button></div>
+                        <div id="boxD2" class="bg-slate-900/50 p-2 rounded-lg text-center border border-white/5"><span class="text-[10px] text-slate-500 uppercase font-bold block mb-2 tracking-wider">Day 2</span><button onclick="doCheckIn(2)" class="w-full py-1.5 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-cyan-600 transition"><i class="fa-solid fa-check"></i></button></div>
+                        <div id="boxD3" class="bg-slate-900/50 p-2 rounded-lg text-center border border-white/5"><span class="text-[10px] text-slate-500 uppercase font-bold block mb-2 tracking-wider">Day 3</span><button onclick="doCheckIn(3)" class="w-full py-1.5 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-cyan-600 transition"><i class="fa-solid fa-check"></i></button></div>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="page-admin" class="hidden h-full flex flex-col">
-            
-            <div id="adminLogin" class="max-w-xs mx-auto glass-panel p-8 rounded-2xl text-center mt-10">
-                <div class="w-14 h-14 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
-                    <i class="fa-solid fa-shield-cat text-2xl text-red-400"></i>
-                </div>
+            <div id="adminLogin" class="max-w-xs mx-auto glass-panel p-8 rounded-2xl text-center mt-10 border border-red-500/20">
+                <div class="w-14 h-14 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20"><i class="fa-solid fa-shield-cat text-2xl text-red-400"></i></div>
                 <h3 class="text-white font-header font-bold mb-6">Restricted Area</h3>
                 <input type="password" id="adminPass" class="w-full px-4 py-3 rounded-xl glass-input text-center mb-4 text-sm" placeholder="Admin Password">
                 <button onclick="adminAccess()" class="w-full py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold text-sm transition shadow-lg shadow-red-900/30">เข้าสู่ระบบ</button>
@@ -252,28 +149,21 @@
 
             <div id="adminDashboard" class="hidden flex-1 flex flex-col">
                 <div class="flex justify-between items-center mb-4 px-1">
-                    <h2 class="text-white font-header font-bold text-lg flex items-center gap-2">
-                        <i class="fa-solid fa-database text-cyan-400"></i> ฐานข้อมูล
-                    </h2>
+                    <h2 class="text-white font-header font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-database text-cyan-400"></i> ฐานข้อมูล</h2>
                     <div class="flex gap-2">
-                        <button onclick="toggleSelectAll()" class="text-[10px] bg-slate-800 border border-slate-600 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg transition">
-                            Select All
-                        </button>
-                        <button onclick="loadAdminData()" class="text-[10px] bg-slate-800 border border-slate-600 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg transition">
-                            <i class="fa-solid fa-rotate"></i>
-                        </button>
+                        <button onclick="toggleSelectAll()" class="text-[10px] bg-slate-800 border border-slate-600 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg transition">Select All</button>
+                        <button onclick="loadAdminData()" class="text-[10px] bg-slate-800 border border-slate-600 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-rotate"></i></button>
                     </div>
                 </div>
                 
                 <div class="flex-1 overflow-auto glass-panel rounded-xl mb-20 border-0">
                     <table class="w-full text-left border-collapse">
-                        <thead class="bg-slate-900/50 backdrop-blur text-slate-400 text-[10px] font-bold uppercase sticky top-0 z-10">
+                        <thead class="bg-slate-900/50 backdrop-blur text-slate-400 text-[10px] font-bold uppercase sticky top-0 z-10 shadow-md">
                             <tr>
-                                <th class="p-4 w-10 text-center">#</th>
-                                <th class="p-4">รายละเอียด</th>
-                                <th class="p-4 text-center hidden md:table-cell">Check-in</th>
-                                <th class="p-4 text-center">สถานะ</th>
-                                <th class="p-4 text-center">Actions</th>
+                                <th class="p-3 w-10 text-center">#</th>
+                                <th class="p-3">ข้อมูล & การเข้าเรียน</th>
+                                <th class="p-3 text-center w-24">สถานะ</th>
+                                <th class="p-3 text-center w-20">จัดการ</th>
                             </tr>
                         </thead>
                         <tbody id="adminTable" class="divide-y divide-slate-700/50 text-sm text-slate-300">
@@ -282,17 +172,10 @@
                 </div>
 
                 <div id="actionBar" class="fixed bottom-6 left-4 right-4 glass-panel rounded-2xl p-3 shadow-2xl transform translate-y-[150%] transition-transform duration-300 z-50 flex justify-between items-center border-t border-white/10 bg-slate-900/90">
-                    <div class="text-white text-xs pl-2">
-                        <span class="text-slate-400">Selected:</span> 
-                        <span id="selectedCount" class="text-cyan-400 font-digital text-lg font-bold ml-1">0</span>
-                    </div>
+                    <div class="text-white text-xs pl-2"><span class="text-slate-400">Selected:</span> <span id="selectedCount" class="text-cyan-400 font-digital text-lg font-bold ml-1">0</span></div>
                     <div class="flex gap-2">
-                        <button onclick="openReportModal()" class="bg-amber-500 hover:bg-amber-400 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-2 transition">
-                            <i class="fa-solid fa-file-invoice"></i> รายงาน
-                        </button>
-                        <button onclick="openHRModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-2 transition">
-                            <i class="fa-solid fa-paper-plane"></i> ส่ง HR
-                        </button>
+                        <button onclick="openReportModal()" class="bg-amber-500 hover:bg-amber-400 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-2 transition"><i class="fa-solid fa-file-invoice"></i> รายงาน</button>
+                        <button onclick="openHRModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-2 transition"><i class="fa-solid fa-paper-plane"></i> ส่ง HR</button>
                     </div>
                 </div>
             </div>
@@ -309,22 +192,12 @@
                     <select id="editTeamSelect" onchange="toggleTeamInput(this)" class="w-full p-2.5 rounded-lg glass-input text-sm border-slate-600">
                         <option value="RETAIL 1">RETAIL 1</option><option value="RETAIL 2">RETAIL 2</option><option value="RETAIL 3">RETAIL 3</option><option value="RETAIL 4">RETAIL 4</option>
                         <option value="PA 1A">PA 1A</option><option value="PA 1B">PA 1B</option><option value="PA 1C">PA 1C</option><option value="PA 1D">PA 1D</option>
-                        <option value="PA 2A">PA 2A</option><option value="PA 2B">PA 2B</option><option value="PA 2C">PA 2C</option>
-                        <option value="OTHER" class="text-yellow-400 font-bold">+ พิมพ์เอง</option>
+                        <option value="PA 2A">PA 2A</option><option value="PA 2B">PA 2B</option><option value="PA 2C">PA 2C</option><option value="OTHER" class="text-yellow-400 font-bold">+ พิมพ์เอง</option>
                     </select>
                     <input type="text" id="editTeamInput" class="hidden w-full mt-2 p-2.5 rounded-lg glass-input text-sm" placeholder="ระบุชื่อทีม...">
                 </div>
-                <div>
-                    <label class="text-[10px] text-slate-400 font-bold block mb-1">สถานะ</label>
-                    <select id="editStatus" class="w-full p-2.5 rounded-lg glass-input text-sm border-slate-600">
-                        <option value="Active">Active</option><option value="Passed">Passed</option><option value="Resigned">Resigned</option>
-                        <option value="New Job">New Job</option><option value="Back Office">Back Office</option><option value="Other">Other</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="text-[10px] text-slate-400 font-bold block mb-1">หมายเหตุ</label>
-                    <textarea id="editNote" rows="2" class="w-full p-2.5 rounded-lg glass-input text-sm border-slate-600"></textarea>
-                </div>
+                <div><label class="text-[10px] text-slate-400 font-bold block mb-1">สถานะ</label><select id="editStatus" class="w-full p-2.5 rounded-lg glass-input text-sm border-slate-600"><option value="Active">Active</option><option value="Passed">Passed</option><option value="Resigned">Resigned</option><option value="New Job">New Job</option><option value="Back Office">Back Office</option><option value="Other">Other</option></select></div>
+                <div><label class="text-[10px] text-slate-400 font-bold block mb-1">หมายเหตุ</label><textarea id="editNote" rows="2" class="w-full p-2.5 rounded-lg glass-input text-sm border-slate-600"></textarea></div>
             </div>
             <div class="flex gap-3 mt-6 pt-4 border-t border-white/10">
                 <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 py-2 rounded-lg border border-slate-600 text-slate-400 text-sm hover:bg-slate-700">ยกเลิก</button>
@@ -344,38 +217,25 @@
                     <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">วันที่รอบอบรม</label><input type="date" id="reportDate" class="w-full p-2 rounded-lg glass-input text-xs"></div>
                     <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">ครั้งที่</label><select id="reportDayType" class="w-full p-2 rounded-lg glass-input text-xs"><option value="วันแรก">วันแรก</option><option value="วันที่สอง">วันที่สอง</option><option value="วันที่สาม">วันที่สาม</option></select></div>
                 </div>
-                <button onclick="addSelectionToReport()" class="w-full py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl text-white font-bold text-xs shadow hover:brightness-110">
-                    <i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการ
-                </button>
+                <button onclick="addSelectionToReport()" class="w-full py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl text-white font-bold text-xs shadow hover:brightness-110"><i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการ</button>
                 <textarea id="finalReportText" class="w-full h-40 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
             </div>
-            <div class="flex gap-3 mt-4">
-                <button onclick="copyToClipboard('finalReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
-                <button onclick="sendLine('finalReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs hover:brightness-110"><i class="fa-brands fa-line mr-1"></i> Line</button>
-            </div>
+            <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('finalReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('finalReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs hover:brightness-110"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
         </div>
     </div>
 
     <div id="hrModal" class="hidden fixed inset-0 z-[80] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-md rounded-2xl p-6 border border-slate-600 flex flex-col max-h-[90vh]">
-            <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
-                <h3 class="text-white font-header font-bold text-lg"><i class="fa-solid fa-user-tie mr-2 text-indigo-400"></i>ส่งรายชื่อ HR</h3>
-                <button onclick="document.getElementById('hrModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-            </div>
+            <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3"><h3 class="text-white font-header font-bold text-lg"><i class="fa-solid fa-user-tie mr-2 text-indigo-400"></i>ส่งรายชื่อ HR</h3><button onclick="document.getElementById('hrModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button></div>
             <div class="flex-1 overflow-y-auto space-y-4 pr-1">
                 <div class="space-y-3">
                     <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">วันเริ่มอบรม</label><input type="date" id="hrTrainingDate" class="w-full p-2.5 rounded-xl glass-input text-sm"></div>
                     <div><label class="text-[10px] text-cyan-400 font-bold mb-1 block">วันเริ่มงานจริง</label><input type="date" id="hrWorkDate" class="w-full p-2.5 rounded-xl glass-input text-sm border-cyan-500/30"></div>
                 </div>
-                <button onclick="generateHRReport()" class="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl text-white font-bold text-xs shadow hover:brightness-110 mt-2">
-                    <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> สร้างข้อความ
-                </button>
+                <button onclick="generateHRReport()" class="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl text-white font-bold text-xs shadow hover:brightness-110 mt-2"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> สร้างข้อความ</button>
                 <textarea id="hrReportText" class="w-full h-40 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
             </div>
-            <div class="flex gap-3 mt-4">
-                <button onclick="copyToClipboard('hrReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
-                <button onclick="sendLine('hrReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs hover:brightness-110"><i class="fa-brands fa-line mr-1"></i> Line</button>
-            </div>
+            <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('hrReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('hrReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs hover:brightness-110"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
         </div>
     </div>
 
@@ -390,47 +250,27 @@
         let adminDataCache = [];
         let selectedRows = new Set(); 
 
-        // --- Clock Function (New Design) ---
         function startTime() {
             const today = new Date();
             const thaiDays = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
             const thaiMonths = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
-
-            const day = thaiDays[today.getDay()];
-            const date = today.getDate();
-            const month = thaiMonths[today.getMonth()];
-            const year = today.getFullYear() + 543;
-            
-            const h = String(today.getHours()).padStart(2, '0');
-            const m = String(today.getMinutes()).padStart(2, '0');
-            
-            // Render Text
-            document.getElementById('clockDate').innerText = `${day}ที่ ${date} ${month} ${year}`;
-            document.getElementById('clockTime').innerText = `${h}:${m}`;
-            
+            document.getElementById('clockDate').innerText = `${thaiDays[today.getDay()]}ที่ ${today.getDate()} ${thaiMonths[today.getMonth()]} ${today.getFullYear() + 543}`;
+            document.getElementById('clockTime').innerText = `${String(today.getHours()).padStart(2,'0')}:${String(today.getMinutes()).padStart(2,'0')}`;
             setTimeout(startTime, 1000);
         }
 
-        // --- API & Core ---
         async function fetchAPI(payload) {
             document.getElementById('loadingOverlay').classList.remove('hidden');
-            try {
-                const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
-                return await response.json();
-            } catch (error) { return { status: 'error', message: 'Connection Error' }; }
+            try { const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) }); return await response.json(); } 
+            catch (error) { return { status: 'error', message: 'Connection Error' }; }
             finally { document.getElementById('loadingOverlay').classList.add('hidden'); }
         }
 
         function switchTab(tab) {
-            ['register', 'checkin', 'admin'].forEach(t => {
-                document.getElementById(`page-${t}`).classList.add('hidden');
-                document.getElementById(`nav-${t}`).classList.remove('active', 'text-cyan-400', 'bg-white/5');
-            });
-            document.getElementById(`page-${tab}`).classList.remove('hidden');
-            document.getElementById(`nav-${tab}`).classList.add('active', 'text-cyan-400', 'bg-white/5');
+            ['register', 'checkin', 'admin'].forEach(t => { document.getElementById(`page-${t}`).classList.add('hidden'); document.getElementById(`nav-${t}`).classList.remove('active', 'text-cyan-400', 'bg-white/5'); });
+            document.getElementById(`page-${tab}`).classList.remove('hidden'); document.getElementById(`nav-${tab}`).classList.add('active', 'text-cyan-400', 'bg-white/5');
         }
 
-        // --- Features: Register / Checkin ---
         async function handleRegister(e) {
             e.preventDefault();
             const res = await fetchAPI({ action: 'register', ...Object.fromEntries(new FormData(e.target)) });
@@ -451,19 +291,9 @@
         }
 
         function updateCheckBtn(id, day, val) {
-            const btn = document.querySelector(`#${id} button`);
-            const box = document.getElementById(id);
-            if(val) { 
-                box.classList.add('border-emerald-500/30', 'bg-emerald-500/5');
-                btn.className="w-full py-1.5 rounded bg-emerald-500/20 text-emerald-400 cursor-default font-digital text-sm"; 
-                btn.innerHTML= val; 
-                btn.onclick=null; 
-            } else { 
-                box.classList.remove('border-emerald-500/30', 'bg-emerald-500/5');
-                btn.className="w-full py-1.5 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-cyan-600 transition"; 
-                btn.innerHTML=`<i class="fa-solid fa-check"></i>`; 
-                btn.onclick=()=>doCheckIn(day); 
-            }
+            const btn = document.querySelector(`#${id} button`); const box = document.getElementById(id);
+            if(val) { box.classList.add('border-emerald-500/30', 'bg-emerald-500/5'); btn.className="w-full py-1.5 rounded bg-emerald-500/20 text-emerald-400 cursor-default font-digital text-sm"; btn.innerHTML= val; btn.onclick=null; } 
+            else { box.classList.remove('border-emerald-500/30', 'bg-emerald-500/5'); btn.className="w-full py-1.5 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-cyan-600 transition"; btn.innerHTML=`<i class="fa-solid fa-check"></i>`; btn.onclick=()=>doCheckIn(day); }
         }
 
         async function doCheckIn(day) {
@@ -475,7 +305,6 @@
             }
         }
 
-        // --- Admin ---
         async function adminAccess() {
             const pass = document.getElementById('adminPass').value;
             const res = await fetchAPI({ action: 'get_admin', pass });
@@ -488,42 +317,66 @@
             if (!dateString) return "-";
             const date = new Date(dateString);
             if (isNaN(date.getTime())) return dateString; 
-            const d = String(date.getDate()).padStart(2, '0');
-            const m = String(date.getMonth() + 1).padStart(2, '0');
-            const y = date.getFullYear();
-            const h = String(date.getHours()).padStart(2, '0');
-            const min = String(date.getMinutes()).padStart(2, '0');
-            return `<div class="inline-flex items-center gap-2 bg-slate-800/50 px-2 py-1 rounded border border-white/5 mt-1"><span class="text-slate-300 font-mono tracking-wide text-xs">${d}-${m}-${y}</span><span class="text-cyan-400 font-mono font-bold text-xs">${h}:${min}</span></div>`;
+            const d = String(date.getDate()).padStart(2, '0'); const m = String(date.getMonth() + 1).padStart(2, '0'); const y = date.getFullYear();
+            const h = String(date.getHours()).padStart(2, '0'); const min = String(date.getMinutes()).padStart(2, '0');
+            return `<div class="inline-flex items-center gap-2 bg-slate-800/80 px-2 py-1 rounded border border-white/5 mt-1 shadow-inner"><i class="fa-regular fa-clock text-[10px] text-slate-500"></i><span class="text-slate-300 font-mono tracking-wider text-[10px]">${d}-${m}-${y}</span><span class="text-cyan-400 font-digital font-bold text-[11px]">${h}:${min}</span></div>`;
         }
 
         function renderAdminTable(data) {
             adminDataCache = data;
             const tbody = document.getElementById('adminTable'); 
             tbody.innerHTML = '';
+            
             data.forEach(row => {
                 const tr = document.createElement('tr'); 
                 tr.className = "hover:bg-white/5 transition border-b border-slate-700/50";
                 
-                const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-emerald-400 text-base" title="${v}"></i>` : `<i class="fa-regular fa-circle text-slate-600 text-base"></i>`;
+                // คำนวณจำนวนวันที่มา
+                let attendedDays = 0;
+                if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
+
+                const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-emerald-400 text-sm" title="${v}"></i>` : `<i class="fa-regular fa-circle text-slate-600 text-sm"></i>`;
+                
                 let badge = "bg-slate-800 text-slate-400 border border-slate-600";
-                if(row.status==='Active') badge="bg-blue-500/10 text-blue-400 border border-blue-500/30"; 
-                if(row.status==='Passed') badge="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"; 
-                if(['Resigned','New Job'].includes(row.status)) badge="bg-red-500/10 text-red-400 border border-red-500/30";
+                let statusHTML = row.status;
+
+                // ลอจิกตรวจสอบการออกระหว่างเทรน
+                if(row.status === 'Active') { badge = "bg-blue-500/10 text-blue-400 border border-blue-500/30"; } 
+                else if(row.status === 'Passed') { badge = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"; } 
+                else if(['Resigned','New Job'].includes(row.status)) { 
+                    badge = "bg-red-500/10 text-red-400 border border-red-500/30"; 
+                    if (attendedDays > 0 && attendedDays < 3) {
+                        statusHTML += `<div class="text-[8px] text-red-300 mt-1 pt-1 border-t border-red-500/30 leading-none">ออกระหว่างเทรน</div>`;
+                    }
+                }
 
                 tr.innerHTML = `
-                    <td class="p-4 text-center align-middle"><input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)"></td>
-                    <td class="p-4 align-middle">
+                    <td class="p-3 text-center align-top pt-5"><input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)"></td>
+                    <td class="p-3 align-top">
                         <div class="font-bold text-white text-sm mb-0.5">${row.name}</div>
-                        <div class="text-[10px] text-slate-400">${row.nickname} | ${row.dept}</div>
-                        <div class="text-[10px] text-cyan-400 font-bold mt-1">TEAM: ${row.team}</div>
+                        <div class="text-[10px] text-slate-400 mb-1">${row.nickname} | ${row.dept}</div>
+                        <div class="text-[10px] text-cyan-400 font-bold mb-1">TEAM: ${row.team}</div>
                         ${formatPrettyDate(row.timestamp)}
+                        
+                        <div class="mt-3 flex items-center gap-3 bg-slate-900/50 px-3 py-1.5 rounded-lg border border-white/5 w-fit shadow-inner">
+                            <span class="text-[10px] text-slate-300 font-bold uppercase tracking-wide">
+                                เข้าอบรม <span class="text-lg mx-1 ${attendedDays===3 ? 'text-emerald-400' : 'text-amber-400'} leading-none font-digital">${attendedDays}</span>/ 3 วัน
+                            </span>
+                            <div class="flex gap-1.5 border-l border-white/10 pl-3">
+                                ${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}
+                            </div>
+                        </div>
                     </td>
-                    <td class="p-4 text-center hidden md:table-cell align-middle"><div class="flex justify-center gap-2">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div></td>
-                    <td class="p-4 text-center align-middle"><span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider ${badge}">${row.status}</span></td>
-                    <td class="p-4 text-center align-middle">
-                        <div class="flex justify-center gap-2">
-                            <button onclick="openEditModal(${row.row}, '${row.status}', '${row.team}', '${row.note||''}')" class="text-cyan-400 bg-cyan-500/10 p-2 rounded hover:bg-cyan-500/20 transition"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteUser(${row.row})" class="text-red-400 bg-red-500/10 p-2 rounded hover:bg-red-500/20 transition"><i class="fa-solid fa-trash"></i></button>
+                    <td class="p-3 text-center align-top pt-5">
+                        <div class="inline-block px-2.5 py-1.5 rounded-lg text-[10px] uppercase font-bold tracking-wider ${badge} min-w-[75px]">
+                            ${statusHTML}
+                        </div>
+                        ${row.note ? `<div class="text-[9px] text-slate-400 mt-2 max-w-[80px] truncate mx-auto" title="${row.note}"><i class="fa-solid fa-comment-dots mr-1"></i> ${row.note}</div>` : ''}
+                    </td>
+                    <td class="p-3 text-center align-top pt-5">
+                        <div class="flex justify-center gap-1.5">
+                            <button onclick="openEditModal(${row.row}, '${row.status}', '${row.team}', '${row.note||''}')" class="text-cyan-400 bg-cyan-500/10 w-8 h-8 rounded-lg hover:bg-cyan-500/20 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteUser(${row.row})" class="text-red-400 bg-red-500/10 w-8 h-8 rounded-lg hover:bg-red-500/20 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </td>
                 `;
@@ -532,7 +385,7 @@
             updateActionBar();
         }
 
-        // --- Selection & Action Bar ---
+        // --- Selectors & Actions ---
         function toggleRowSelection(cb) { if (cb.checked) selectedRows.add(cb.value); else selectedRows.delete(cb.value); updateActionBar(); }
         function toggleSelectAll() { const cbs = document.querySelectorAll('.custom-checkbox'); const all = selectedRows.size === cbs.length; selectedRows.clear(); cbs.forEach(cb => { cb.checked = !all; if (!all) selectedRows.add(cb.value); }); updateActionBar(); }
         function updateActionBar() { 
@@ -541,7 +394,7 @@
             if (count > 0) bar.classList.remove('translate-y-[150%]'); else bar.classList.add('translate-y-[150%]');
         }
 
-        // --- Helpers ---
+        // --- HELPERS ---
         function copyToClipboard(id) { let t = document.getElementById(id).value; if(id.includes('Report')) t += "ขอบคุณครับ"; navigator.clipboard.writeText(t).then(() => Swal.fire({ icon: 'success', title: 'คัดลอกแล้ว', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000, background: '#1e293b', color: '#fff' })); }
         function sendLine(id) { let t = document.getElementById(id).value; if(id.includes('Report')) t += "ขอบคุณครับ"; window.open(`https://line.me/R/msg/text/?${encodeURIComponent(t)}`, '_blank'); }
         function formatDateThai(date) { const m = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; return `${date.getDate()} ${m[date.getMonth()]} ${date.getFullYear()+543}`; }
@@ -574,16 +427,14 @@
             const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate));
             const items = adminDataCache.filter(i => selectedRows.has(i.id.toString()));
             let txt = "";
-            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${tStr}\nวันที่เริ่มงาน ${wStr} ที่ส่งตัวเริ่มงาน ลงแผนก\n\n`; });
+            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${tStr}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
             document.getElementById('hrReportText').value = txt;
         }
 
         // --- Actions ---
         function toggleTeamInput(s) { const i = document.getElementById('editTeamInput'); if (s.value === 'OTHER') { i.classList.remove('hidden'); i.focus(); } else { i.classList.add('hidden'); } }
         function openEditModal(row, st, tm, nt) {
-            document.getElementById('editRowId').value = row;
-            document.getElementById('editStatus').value = st;
-            document.getElementById('editNote').value = nt;
+            document.getElementById('editRowId').value = row; document.getElementById('editStatus').value = st; document.getElementById('editNote').value = nt;
             const s = document.getElementById('editTeamSelect'); const i = document.getElementById('editTeamInput');
             const opts = Array.from(s.options).map(o => o.value);
             if (opts.includes(tm)) { s.value = tm; i.classList.add('hidden'); i.value = ""; } 
@@ -604,4 +455,3 @@
     </script>
 </body>
 </html>
-
