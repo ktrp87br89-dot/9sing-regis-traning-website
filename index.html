@@ -447,7 +447,7 @@
             const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate));
             const items = adminDataCache.filter(i => selectedRows.has(i.id.toString()));
             let txt = "";
-            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${tStr}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
+            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${tStr}\nวันที่ของวันเริ่มงาน ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
             document.getElementById('hrReportText').value = txt;
         }
 
@@ -475,3 +475,4 @@
     </script>
 </body>
 </html>
+
