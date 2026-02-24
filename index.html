@@ -159,7 +159,7 @@
                 <div id="filterPanel" class="hidden glass-panel p-4 rounded-xl mb-4 border-t-2 border-cyan-500/50 animate-fade-in shadow-xl">
                     <div class="grid grid-cols-2 gap-3 mb-3">
                         <div>
-                            <label class="text-[10px] text-cyan-400 font-bold mb-1.5 block uppercase tracking-wide">ตั้งแต่วันที่เริ่มเทรน</label>
+                            <label class="text-[10px] text-cyan-400 font-bold mb-1.5 block uppercase tracking-wide">ตั้งแต่วันที่</label>
                             <input type="date" id="filterStart" class="w-full p-2.5 rounded-lg glass-input text-xs font-mono" onchange="applyAdminFilters()">
                         </div>
                         <div>
@@ -208,11 +208,14 @@
                     </table>
                 </div>
 
-                <div id="actionBar" class="fixed bottom-6 left-4 right-4 glass-panel rounded-2xl p-3 shadow-2xl transform translate-y-[150%] transition-transform duration-300 z-50 flex justify-between items-center border-t border-white/10 bg-slate-900/95">
-                    <div class="text-white text-xs pl-2"><span class="text-slate-400">Selected:</span> <span id="selectedCount" class="text-cyan-400 font-digital text-lg font-bold ml-1">0</span></div>
-                    <div class="flex gap-2">
-                        <button onclick="openReportModal()" class="bg-amber-500 hover:bg-amber-400 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-2 transition"><i class="fa-solid fa-file-invoice"></i> รายงาน</button>
-                        <button onclick="openHRModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-2 transition"><i class="fa-solid fa-paper-plane"></i> ส่ง HR</button>
+                <div id="actionBar" class="fixed bottom-4 left-4 right-4 glass-panel rounded-2xl p-3 shadow-2xl transform translate-y-[150%] transition-transform duration-300 z-50 flex justify-between items-center border-t border-white/10 bg-slate-900/95 overflow-x-auto whitespace-nowrap scrollbar-hide">
+                    <div class="text-white text-xs pl-2 mr-4 inline-block align-middle">
+                        <span class="text-slate-400">Selected:</span> <span id="selectedCount" class="text-cyan-400 font-digital text-lg font-bold ml-1">0</span>
+                    </div>
+                    <div class="flex gap-2 inline-block align-middle pb-1">
+                        <button onclick="openReportModal()" class="bg-amber-500 hover:bg-amber-400 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-1.5 transition"><i class="fa-solid fa-file-invoice"></i> รายงาน</button>
+                        <button onclick="openHRModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-1.5 transition"><i class="fa-solid fa-paper-plane"></i> ส่ง HR</button>
+                        <button onclick="openPaymentModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-1.5 transition"><i class="fa-solid fa-money-check-dollar"></i> สรุปทำจ่าย</button>
                     </div>
                 </div>
             </div>
@@ -276,6 +279,46 @@
         </div>
     </div>
 
+    <div id="paymentModal" class="hidden fixed inset-0 z-[90] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-2xl rounded-2xl p-6 border border-slate-600 flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
+                <h3 class="text-white font-header font-bold text-lg"><i class="fa-solid fa-money-check-dollar mr-2 text-emerald-400"></i>สรุปทำจ่ายค่าอบรม</h3>
+                <button onclick="document.getElementById('paymentModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto space-y-4 pr-1">
+                <div>
+                    <label class="text-[10px] text-slate-400 font-bold mb-1 block">ระบุวันที่อบรม (เช่น 19-21 ม.ค. 69 หรือ 19,20,22 ม.ค. 69)</label>
+                    <input type="text" id="payTrainingDate" class="w-full p-2.5 rounded-xl glass-input text-sm" placeholder="พิมพ์ช่วงวันที่อบรม...">
+                </div>
+                
+                <div>
+                    <label class="text-[10px] text-cyan-400 font-bold mb-1 block">รายชื่อที่เลือก (กำหนดประสบการณ์)</label>
+                    <div class="bg-slate-800/50 rounded-xl border border-slate-600 overflow-hidden">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-900/80 text-[10px] text-slate-400 uppercase">
+                                <tr>
+                                    <th class="p-2 pl-4">ทีม</th>
+                                    <th class="p-2">ชื่อ-สกุล (ชื่อเล่น)</th>
+                                    <th class="p-2 text-center w-24">ประสบการณ์</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentUserList" class="divide-y divide-slate-700/50">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-slate-700">
+                <button onclick="copyPaymentToSheet()" class="w-full py-3 bg-[#10b981] hover:bg-[#059669] rounded-xl text-white font-bold text-sm shadow hover:brightness-110 flex justify-center items-center gap-2 transition">
+                    <i class="fa-solid fa-table"></i> คัดลอกลง Google Sheet / Excel
+                </button>
+                <p class="text-[10px] text-slate-400 text-center mt-2">กดปุ่มนี้แล้วไปกด วาง (Ctrl+V) ลงใน Sheet ได้เลย (แบ่งคอลัมน์ให้อัตโนมัติ)</p>
+            </div>
+        </div>
+    </div>
+
     <script>
         // **********************************************
         // 🔴 ใส่ URL WEB APP (Apps Script) ตรงนี้
@@ -284,10 +327,9 @@
         // **********************************************
         
         let adminPassCache = "";
-        let adminAllData = []; // เก็บข้อมูล Master ทั้งหมด
+        let adminAllData = []; 
         let selectedRows = new Set(); 
 
-        // --- Clock ---
         function startTime() {
             const today = new Date();
             const thaiDays = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
@@ -297,7 +339,6 @@
             setTimeout(startTime, 1000);
         }
 
-        // --- Core API ---
         async function fetchAPI(payload) {
             document.getElementById('loadingOverlay').classList.remove('hidden');
             try { const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) }); return await response.json(); } 
@@ -310,7 +351,6 @@
             document.getElementById(`page-${tab}`).classList.remove('hidden'); document.getElementById(`nav-${tab}`).classList.add('active', 'text-cyan-400');
         }
 
-        // --- Register & Checkin ---
         async function handleRegister(e) {
             e.preventDefault();
             const res = await fetchAPI({ action: 'register', ...Object.fromEntries(new FormData(e.target)) });
@@ -345,7 +385,6 @@
             }
         }
 
-        // --- Admin Data & Date Parsing ---
         async function adminAccess() {
             const pass = document.getElementById('adminPass').value;
             const res = await fetchAPI({ action: 'get_admin', pass });
@@ -374,20 +413,17 @@
             return `<div class="inline-flex items-center gap-2 bg-slate-800/80 px-2 py-1 rounded border border-white/5 mt-1 shadow-inner"><i class="fa-regular fa-clock text-[10px] text-slate-500"></i><span class="text-slate-300 font-mono tracking-wider text-[10px]">${d}-${m}-${y}</span><span class="text-cyan-400 font-digital font-bold text-[11px]">${h}:${min}</span></div>`;
         }
 
-        // --- Smart Filters ---
+        // --- Filters ---
         function toggleFilterPanel() { document.getElementById('filterPanel').classList.toggle('hidden'); }
         function clearFilters() {
             document.getElementById('filterStart').value = ''; document.getElementById('filterEnd').value = '';
             document.getElementById('filterName').value = ''; document.getElementById('filterTeam').value = '';
-            document.getElementById('filterStatus').value = 'all';
-            applyAdminFilters();
+            document.getElementById('filterStatus').value = 'all'; applyAdminFilters();
         }
 
         function applyAdminFilters() {
-            const fStart = document.getElementById('filterStart').value;
-            const fEnd = document.getElementById('filterEnd').value;
-            const fName = document.getElementById('filterName').value.toLowerCase();
-            const fTeam = document.getElementById('filterTeam').value.toLowerCase();
+            const fStart = document.getElementById('filterStart').value; const fEnd = document.getElementById('filterEnd').value;
+            const fName = document.getElementById('filterName').value.toLowerCase(); const fTeam = document.getElementById('filterTeam').value.toLowerCase();
             const fStatus = document.getElementById('filterStatus').value;
 
             const filtered = adminAllData.filter(row => {
@@ -418,36 +454,24 @@
             renderAdminTable(filtered);
         }
 
-        // --- Render Table ---
         function renderAdminTable(data) {
-            const tbody = document.getElementById('adminTable'); 
-            tbody.innerHTML = '';
-            
+            const tbody = document.getElementById('adminTable'); tbody.innerHTML = '';
             data.forEach(row => {
                 const tr = document.createElement('tr'); 
-                
                 let attendedDays = 0;
                 if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
-
-                // ตรวจสอบออกกลางคัน
                 const isDropout = (attendedDays > 0 && attendedDays < 3) && ['Resigned', 'New Job'].includes(row.status);
 
                 tr.className = isDropout ? "transition border-b border-red-500/30 bg-red-900/10 hover:bg-red-900/20" : "hover:bg-white/5 transition border-b border-slate-700/50";
-                
                 const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-emerald-400 text-sm" title="${v}"></i>` : `<i class="fa-regular fa-circle text-slate-600 text-sm"></i>`;
-                
                 let badge = "bg-slate-800 text-slate-400 border border-slate-600";
                 if(row.status==='Active') badge="bg-blue-500/10 text-blue-400 border border-blue-500/30"; 
                 if(row.status==='Passed') badge="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"; 
                 if(['Resigned','New Job'].includes(row.status)) badge="bg-red-500/10 text-red-400 border border-red-500/30";
 
                 let dayColor = attendedDays === 3 ? 'text-emerald-400' : (isDropout ? 'text-red-400' : 'text-amber-400');
-
-                // ไฮไลท์ชื่อสีแดงถ้าออกกลางคัน
                 let nameDisplay = `<div class="font-bold text-white text-sm mb-0.5">${row.name}</div>`;
-                if (isDropout) {
-                    nameDisplay = `<div class="font-bold text-red-400 text-sm mb-0.5 flex items-center gap-1.5 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]"><i class="fa-solid fa-circle-exclamation text-red-500 animate-pulse"></i>${row.name}</div>`;
-                }
+                if (isDropout) nameDisplay = `<div class="font-bold text-red-400 text-sm mb-0.5 flex items-center gap-1.5 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]"><i class="fa-solid fa-circle-exclamation text-red-500 animate-pulse"></i>${row.name}</div>`;
 
                 tr.innerHTML = `
                     <td class="p-3 text-center align-top pt-5"><input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)"></td>
@@ -456,7 +480,6 @@
                         <div class="text-[10px] text-slate-400 mb-1">${row.nickname} | ${row.dept}</div>
                         <div class="text-[10px] text-cyan-400 font-bold mb-1">TEAM: ${row.team}</div>
                         ${formatPrettyDate(row.timestamp)}
-                        
                         <div class="mt-3 flex items-center gap-3 bg-slate-900/50 px-3 py-1.5 rounded-lg border border-white/5 w-fit shadow-inner">
                             <span class="text-[10px] text-slate-300 font-bold uppercase tracking-wide">เข้าเรียน <span class="text-lg mx-1 ${dayColor} leading-none font-digital drop-shadow-md">${attendedDays}</span>/ 3 วัน</span>
                             <div class="flex gap-1.5 border-l border-white/10 pl-3">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div>
@@ -480,7 +503,7 @@
             updateActionBar();
         }
 
-        // --- Selection & Action Bar ---
+        // --- Selections ---
         function toggleRowSelection(cb) { if (cb.checked) selectedRows.add(cb.value); else selectedRows.delete(cb.value); updateActionBar(); }
         function toggleSelectAll() { const cbs = document.querySelectorAll('.custom-checkbox'); const all = selectedRows.size === cbs.length; selectedRows.clear(); cbs.forEach(cb => { cb.checked = !all; if (!all) selectedRows.add(cb.value); }); updateActionBar(); }
         function updateActionBar() { 
@@ -489,16 +512,16 @@
             if (count > 0) bar.classList.remove('translate-y-[150%]'); else bar.classList.add('translate-y-[150%]');
         }
 
-        // --- HELPERS ---
+        // --- Utilities ---
         function copyToClipboard(id) { let t = document.getElementById(id).value; if(id.includes('Report')) t += "ขอบคุณครับ"; navigator.clipboard.writeText(t).then(() => Swal.fire({ icon: 'success', title: 'คัดลอกแล้ว', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000, background: '#1e293b', color: '#fff' })); }
         function sendLine(id) { let t = document.getElementById(id).value; if(id.includes('Report')) t += "ขอบคุณครับ"; window.open(`https://line.me/R/msg/text/?${encodeURIComponent(t)}`, '_blank'); }
         function formatDateThai(date) { const m = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; return `${date.getDate()} ${m[date.getMonth()]} ${date.getFullYear()+543}`; }
-        
-        // --- Reports ---
+        function parseDateInput(dateStr) { if (!dateStr) return null; return new Date(dateStr); }
+
+        // --- 1. Training Report ---
         function openReportModal() {
             document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
-            const d = formatDateThai(new Date());
-            const txt = document.getElementById('finalReportText');
+            const d = formatDateThai(new Date()); const txt = document.getElementById('finalReportText');
             if(!txt.value.trim()) txt.value = `เรียน พี่ด้า\nและหัวหน้างานที่เกี่ยวข้อง\nขอนำส่งรายงานการอบรมพนักงานใหม่\nรอบอบรมวันที่ ${d}\n\n`;
             document.getElementById('reportModal').classList.remove('hidden');
         }
@@ -513,20 +536,93 @@
             selectedRows.clear(); document.querySelectorAll('.custom-checkbox').forEach(c => c.checked = false); updateActionBar();
         }
 
-        // --- HR Report ---
+        // --- 2. HR Report ---
         function openHRModal() { document.getElementById('hrTrainingDate').value = new Date().toISOString().split('T')[0]; document.getElementById('hrWorkDate').value = ""; document.getElementById('hrReportText').value = ""; document.getElementById('hrModal').classList.remove('hidden'); }
         function generateHRReport() {
-            const tDate = document.getElementById('hrTrainingDate').value;
-            const wDate = document.getElementById('hrWorkDate').value;
+            const tDate = document.getElementById('hrTrainingDate').value; const wDate = document.getElementById('hrWorkDate').value;
             if(!tDate || !wDate) return Swal.fire({icon:'warning', title:'เลือกวันที่ให้ครบ', toast:true, position:'top', showConfirmButton:false, timer:1500});
             const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate));
             const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
+            if (!items.length) return;
             let txt = "";
-            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่ลงทะเบียนวันแรกของวันเริ่มอบรม ${tStr}\nวันที่เริ่มงาน ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
+            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${tStr}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
             document.getElementById('hrReportText').value = txt;
         }
 
-        // --- Actions ---
+        // --- 3. Payment Report (NEW) ---
+        function openPaymentModal() {
+            const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
+            if (!items.length) return Swal.fire({icon:'warning', text:'กรุณาเลือกรายชื่อ', background:'#1e293b', color:'#fff'});
+
+            // เรียงชื่อตามทีม (A-Z)
+            items.sort((a, b) => (a.team || '').localeCompare(b.team || ''));
+
+            const tbody = document.getElementById('paymentUserList');
+            tbody.innerHTML = '';
+            
+            items.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-2 pl-4 text-xs font-bold text-cyan-400">${item.team || '-'}</td>
+                    <td class="p-2 text-xs text-white">${item.prefix||''}${item.name} (${item.nickname})</td>
+                    <td class="p-2 text-center">
+                        <select class="exp-select w-full bg-slate-700 border border-slate-600 rounded text-white text-[10px] p-1 focus:ring-1 focus:ring-cyan-500 outline-none" data-id="${item.id}">
+                            <option value="ไม่มี">ไม่มี</option>
+                            <option value="มี">มี</option>
+                        </select>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('payTrainingDate').value = "";
+            document.getElementById('paymentModal').classList.remove('hidden');
+        }
+
+        function copyPaymentToSheet() {
+            const trainDateRange = document.getElementById('payTrainingDate').value || '-';
+            const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
+            items.sort((a, b) => (a.team || '').localeCompare(b.team || '')); // เรียงทีมอีกครั้งให้ชัวร์
+
+            // ดึงค่าประสบการณ์ที่เลือกไว้
+            const expSelects = document.querySelectorAll('.exp-select');
+            const expMap = {};
+            expSelects.forEach(sel => { expMap[sel.getAttribute('data-id')] = sel.value; });
+
+            // สร้าง Header แบบ TSV (Tab Separated)
+            let tsv = "ลำดับ\tทีม\tคำนำหน้า\tชื่อ-นามสกุล\tชื่อเล่น\tวันที่อบรม\tวันที่ 1\tวันที่ 2\tวันที่ 3\tประสบการณ์\n";
+
+            // Loop ข้อมูลใส่ตาราง
+            items.forEach((item, index) => {
+                const no = index + 1;
+                const team = item.team || '-';
+                const prefix = item.prefix || '';
+                const name = item.name || '';
+                const nick = item.nickname || '';
+                // กำหนด 1 = เข้าเรียน, ปล่อยว่าง = ไม่มา
+                const d1 = item.d1 ? "1" : ""; 
+                const d2 = item.d2 ? "1" : "";
+                const d3 = item.d3 ? "1" : "";
+                const exp = expMap[item.id] || "ไม่มี";
+
+                tsv += `${no}\t${team}\t${prefix}\t${name}\t${nick}\t${trainDateRange}\t${d1}\t${d2}\t${d3}\t${exp}\n`;
+            });
+
+            // คัดลอกลง Clipboard
+            navigator.clipboard.writeText(tsv).then(() => {
+                Swal.fire({ 
+                    icon: 'success', 
+                    title: 'คัดลอกข้อมูลแล้ว', 
+                    text: 'นำไปกด วาง (Ctrl+V) ใน Google Sheet หรือ Excel ได้เลย', 
+                    confirmButtonColor: '#10b981', 
+                    background: '#1e293b', 
+                    color: '#fff' 
+                });
+                document.getElementById('paymentModal').classList.add('hidden');
+            });
+        }
+
+        // --- Edit & Delete ---
         function toggleTeamInput(s) { const i = document.getElementById('editTeamInput'); if (s.value === 'OTHER') { i.classList.remove('hidden'); i.focus(); } else { i.classList.add('hidden'); } }
         function openEditModal(row, st, tm, nt) {
             document.getElementById('editRowId').value = row; document.getElementById('editStatus').value = st; document.getElementById('editNote').value = nt;
