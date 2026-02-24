@@ -287,14 +287,21 @@
             </div>
             
             <div class="flex-1 overflow-y-auto space-y-4 pr-1">
-                <div>
-                    <label class="text-[10px] text-slate-400 font-bold mb-1 block">ระบุวันที่อบรม (เช่น 19-21 ม.ค. 69 หรือ 19,20,22 ม.ค. 69)</label>
-                    <input type="text" id="payTrainingDate" class="w-full p-2.5 rounded-xl glass-input text-sm" placeholder="พิมพ์ช่วงวันที่อบรม...">
+                
+                <div class="bg-slate-800/40 p-3 rounded-xl border border-slate-600/50">
+                    <label class="text-[10px] text-cyan-400 font-bold mb-2 block uppercase tracking-wide">1. เลือกวันที่เข้าอบรม (เพื่อสร้างรูปแบบอัตโนมัติ)</label>
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <input type="date" id="payDate1" class="w-full p-2 rounded-lg glass-input text-[10px] font-mono" onchange="generateTrainingDateStr()">
+                        <input type="date" id="payDate2" class="w-full p-2 rounded-lg glass-input text-[10px] font-mono" onchange="generateTrainingDateStr()">
+                        <input type="date" id="payDate3" class="w-full p-2 rounded-lg glass-input text-[10px] font-mono" onchange="generateTrainingDateStr()">
+                    </div>
+                    <label class="text-[10px] text-slate-400 font-bold mb-1 block">วันที่อบรม (แก้ไขข้อความได้ตามต้องการ)</label>
+                    <input type="text" id="payTrainingDate" class="w-full p-2.5 rounded-xl glass-input text-sm text-cyan-300 font-bold" placeholder="เช่น 19และ20และ22 ม.ค. 69">
                 </div>
                 
                 <div>
-                    <label class="text-[10px] text-cyan-400 font-bold mb-1 block">รายชื่อที่เลือก (กำหนดประสบการณ์)</label>
-                    <div class="bg-slate-800/50 rounded-xl border border-slate-600 overflow-hidden">
+                    <label class="text-[10px] text-cyan-400 font-bold mb-1 block uppercase tracking-wide">2. กำหนดประสบการณ์ (รายชื่อที่เลือก)</label>
+                    <div class="bg-slate-800/50 rounded-xl border border-slate-600 overflow-hidden shadow-inner">
                         <table class="w-full text-left text-sm">
                             <thead class="bg-slate-900/80 text-[10px] text-slate-400 uppercase">
                                 <tr>
@@ -311,10 +318,10 @@
             </div>
 
             <div class="mt-4 pt-4 border-t border-slate-700">
-                <button onclick="copyPaymentToSheet()" class="w-full py-3 bg-[#10b981] hover:bg-[#059669] rounded-xl text-white font-bold text-sm shadow hover:brightness-110 flex justify-center items-center gap-2 transition">
+                <button onclick="copyPaymentToSheet()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 rounded-xl text-white font-bold text-sm shadow-lg shadow-emerald-900/30 flex justify-center items-center gap-2 transition transform active:scale-[0.98]">
                     <i class="fa-solid fa-table"></i> คัดลอกลง Google Sheet / Excel
                 </button>
-                <p class="text-[10px] text-slate-400 text-center mt-2">กดปุ่มนี้แล้วไปกด วาง (Ctrl+V) ลงใน Sheet ได้เลย (แบ่งคอลัมน์ให้อัตโนมัติ)</p>
+                <p class="text-[10px] text-slate-400 text-center mt-2 font-light">กดปุ่มนี้แล้วไปกด วาง (Ctrl+V) ลงใน Sheet ได้เลย ข้อมูลจะลงคอลัมน์ให้อัตโนมัติ</p>
             </div>
         </div>
     </div>
@@ -502,7 +509,6 @@
             updateActionBar();
         }
 
-        // --- Selections ---
         function toggleRowSelection(cb) { if (cb.checked) selectedRows.add(cb.value); else selectedRows.delete(cb.value); updateActionBar(); }
         function toggleSelectAll() { const cbs = document.querySelectorAll('.custom-checkbox'); const all = selectedRows.size === cbs.length; selectedRows.clear(); cbs.forEach(cb => { cb.checked = !all; if (!all) selectedRows.add(cb.value); }); updateActionBar(); }
         function updateActionBar() { 
@@ -544,7 +550,34 @@
             document.getElementById('hrReportText').value = txt;
         }
 
-        // --- 🔴 PAYMENT REPORT (NEW) ---
+        // --- 🔴 SMART DATE PICKER FORMATTER ---
+        function generateTrainingDateStr() {
+            const d1 = document.getElementById('payDate1').value;
+            const d2 = document.getElementById('payDate2').value;
+            const d3 = document.getElementById('payDate3').value;
+            
+            const dates = [d1, d2, d3].filter(v => v);
+            if (dates.length === 0) {
+                document.getElementById('payTrainingDate').value = "";
+                return;
+            }
+
+            const dateObjs = dates.map(d => new Date(d)).sort((a,b) => a - b);
+            const shortMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+            const lastDate = dateObjs[dateObjs.length - 1];
+            const isSameMonthYear = dateObjs.every(d => d.getMonth() === lastDate.getMonth() && d.getFullYear() === lastDate.getFullYear());
+
+            let result = "";
+            if (isSameMonthYear) {
+                const days = dateObjs.map(d => d.getDate()).join('และ');
+                result = `${days} ${shortMonths[lastDate.getMonth()]} ${(lastDate.getFullYear() + 543).toString().slice(-2)}`;
+            } else {
+                result = dateObjs.map(d => `${d.getDate()} ${shortMonths[d.getMonth()]} ${(d.getFullYear() + 543).toString().slice(-2)}`).join(' และ ');
+            }
+            document.getElementById('payTrainingDate').value = result;
+        }
+
+        // --- 🔴 PAYMENT REPORT (อัปเดตการเรียงคอลัมน์) ---
         function openPaymentModal() {
             const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
             if (!items.length) return Swal.fire({icon:'warning', text:'กรุณาเลือกรายชื่อ', background:'#1e293b', color:'#fff'});
@@ -569,6 +602,9 @@
                 tbody.appendChild(tr);
             });
 
+            document.getElementById('payDate1').value = "";
+            document.getElementById('payDate2').value = "";
+            document.getElementById('payDate3').value = "";
             document.getElementById('payTrainingDate').value = "";
             document.getElementById('paymentModal').classList.remove('hidden');
         }
@@ -582,7 +618,7 @@
             const expMap = {};
             expSelects.forEach(sel => { expMap[sel.getAttribute('data-id')] = sel.value; });
 
-            // 🔴 Format: ลำดับ > คำนำหน้า > ชื่อ-สกุล > ชื่อเล่น > ทีม > วันที่อบรม > ปสก. > วันลงทะเบียน > วันที่1 > วันที่2 > วันที่3
+            // 🔴 ปรับรูปแบบหัวคอลัมน์ตามภาพเป๊ะๆ (A-K)
             let tsv = "ลำดับ\tคำนำหน้า\tชื่อ-นามสกุล\tชื่อเล่น\tทีม\tวันที่อบรม\tประสบการณ์\tวันที่ลงทะเบียนอบรมวันแรก\tวันที่ 1\tวันที่ 2\tวันที่ 3\n";
 
             items.forEach((item, index) => {
@@ -593,7 +629,7 @@
                 const team = item.team || '-';
                 const exp = expMap[item.id] || "ไม่มี";
                 
-                // แปลงวันที่ลงทะเบียน
+                // ดึงวันที่ลงทะเบียน และแปลงเป็น วว/ดด/ปปปป (ปี พ.ศ.)
                 const regDateObj = parseToDateObj(item.timestamp);
                 let regDateStr = "-";
                 if (regDateObj && !isNaN(regDateObj.getTime())) {
@@ -603,10 +639,12 @@
                     regDateStr = `${d}/${m}/${y}`;
                 }
 
+                // การเข้าเรียน (มีค่า = 1, ไม่มี = ว่าง)
                 const d1 = item.d1 ? "1" : ""; 
                 const d2 = item.d2 ? "1" : "";
                 const d3 = item.d3 ? "1" : "";
 
+                // 🔴 นำข้อมูลมาเรียงต่อกันด้วย Tab (\t)
                 tsv += `${no}\t${prefix}\t${name}\t${nick}\t${team}\t${trainDateRange}\t${exp}\t${regDateStr}\t${d1}\t${d2}\t${d3}\n`;
             });
 
@@ -614,7 +652,7 @@
                 Swal.fire({ 
                     icon: 'success', 
                     title: 'คัดลอกข้อมูลแล้ว', 
-                    text: 'นำไปกด วาง (Ctrl+V) ใน Google Sheet ได้เลย คอลัมน์จะแบ่งให้อัตโนมัติ', 
+                    text: 'นำไปกด วาง (Ctrl+V) ใน Google Sheet ได้เลย คอลัมน์จะลงล็อกพอดี', 
                     confirmButtonColor: '#10b981', 
                     background: '#1e293b', 
                     color: '#fff' 
