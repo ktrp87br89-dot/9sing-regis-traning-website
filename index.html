@@ -39,7 +39,7 @@
         .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
         .glass-input { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; transition: all 0.3s ease; }
         .glass-input:focus { border-color: #38bdf8; background: rgba(15, 23, 42, 0.9); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); outline: none; }
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
@@ -208,7 +208,7 @@
                     </table>
                 </div>
 
-                <div id="actionBar" class="fixed bottom-4 left-4 right-4 glass-panel rounded-2xl p-3 shadow-2xl transform translate-y-[150%] transition-transform duration-300 z-50 flex justify-between items-center border-t border-white/10 bg-slate-900/95 overflow-x-auto whitespace-nowrap scrollbar-hide">
+                <div id="actionBar" class="fixed bottom-4 left-4 right-4 glass-panel rounded-2xl p-3 shadow-2xl transform translate-y-[150%] transition-transform duration-300 z-50 flex justify-between items-center border-t border-white/10 bg-slate-900/95 overflow-x-auto whitespace-nowrap">
                     <div class="text-white text-xs pl-2 mr-4 inline-block align-middle">
                         <span class="text-slate-400">Selected:</span> <span id="selectedCount" class="text-cyan-400 font-digital text-lg font-bold ml-1">0</span>
                     </div>
@@ -283,23 +283,20 @@
         <div class="glass-panel w-full max-w-2xl rounded-2xl p-6 border border-slate-600 flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
                 <h3 class="text-white font-header font-bold text-lg"><i class="fa-solid fa-money-check-dollar mr-2 text-emerald-400"></i>สรุปทำจ่ายค่าอบรม</h3>
-                <button onclick="document.getElementById('paymentModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="document.getElementById('paymentModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             
             <div class="flex-1 overflow-y-auto space-y-4 pr-1">
-                <div class="bg-cyan-900/20 border border-cyan-500/30 p-3 rounded-xl text-xs text-cyan-200">
-                    <i class="fa-solid fa-circle-info mr-1"></i> ระบบจะดึง <b>"วันที่อบรม"</b> จากเวลาเข้าเรียน (Check-in) ของแต่ละคนมาให้โดยอัตโนมัติ (เช่น 19,20,22 ม.ค. 69)
-                </div>
-                
                 <div>
-                    <label class="text-[10px] text-slate-400 font-bold mb-1 block">รายชื่อที่เลือก (กำหนดประสบการณ์)</label>
-                    <div class="bg-slate-800/50 rounded-xl border border-slate-600 overflow-hidden">
-                        <table class="w-full text-left text-sm">
+                    <label class="text-[10px] text-cyan-400 font-bold mb-2 block uppercase tracking-widest">รายชื่อที่เลือก (ตรวจสอบวันที่ และ กำหนดประสบการณ์)</label>
+                    <div class="bg-slate-800/50 rounded-xl border border-slate-600 overflow-x-auto shadow-inner">
+                        <table class="w-full text-left text-sm whitespace-nowrap">
                             <thead class="bg-slate-900/80 text-[10px] text-slate-400 uppercase">
                                 <tr>
-                                    <th class="p-2 pl-4">ทีม</th>
-                                    <th class="p-2">ชื่อ-สกุล (ชื่อเล่น)</th>
-                                    <th class="p-2 text-center w-24">ประสบการณ์</th>
+                                    <th class="p-3 pl-4">ชื่อ-สกุล (ชื่อเล่น)</th>
+                                    <th class="p-3">ทีม</th>
+                                    <th class="p-3 text-center">วันที่อบรม (ดึงอัตโนมัติ)</th>
+                                    <th class="p-3 text-center w-24 pr-4">ประสบการณ์</th>
                                 </tr>
                             </thead>
                             <tbody id="paymentUserList" class="divide-y divide-slate-700/50">
@@ -310,10 +307,10 @@
             </div>
 
             <div class="mt-4 pt-4 border-t border-slate-700">
-                <button onclick="copyPaymentToSheet()" class="w-full py-3 bg-[#10b981] hover:bg-[#059669] rounded-xl text-white font-bold text-sm shadow hover:brightness-110 flex justify-center items-center gap-2 transition">
-                    <i class="fa-solid fa-table"></i> คัดลอกลง Google Sheet / Excel
+                <button onclick="copyPaymentToSheet()" class="w-full py-3.5 bg-gradient-to-r from-[#10b981] to-[#059669] rounded-xl text-white font-bold text-sm shadow-lg hover:brightness-110 flex justify-center items-center gap-2 transition active:scale-95">
+                    <i class="fa-solid fa-file-excel"></i> คัดลอกลง Excel / Sheet (Ctrl+C)
                 </button>
-                <p class="text-[10px] text-slate-400 text-center mt-2">กดปุ่มนี้แล้วไปกด วาง (Ctrl+V) ลงใน Sheet ได้เลย ข้อมูลจะเข้าช่องให้อัตโนมัติ</p>
+                <p class="text-[10px] text-slate-400 text-center mt-2 font-light">กดปุ่มนี้แล้วไปกด วาง (Ctrl+V) ลงใน Sheet ได้เลย <br>ระบบจัดเรียง: คำนำหน้า, ชื่อ, ชื่อเล่น, <span class="text-cyan-400 font-bold">ทีม</span>, วันที่อบรม, วันเข้าเรียน, ประสบการณ์</p>
             </div>
         </div>
     </div>
@@ -331,9 +328,9 @@
 
         function startTime() {
             const today = new Date();
-            const thaiDays = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
+            const thaiDays = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
             const thaiMonths = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
-            document.getElementById('clockDate').innerText = `${thaiDays[today.getDay()]}ที่ ${today.getDate()} ${thaiMonths[today.getMonth()]} ${today.getFullYear() + 543}`;
+            document.getElementById('clockDate').innerText = `วัน${thaiDays[today.getDay()]}ที่ ${today.getDate()} ${thaiMonths[today.getMonth()]} ${today.getFullYear() + 543}`;
             document.getElementById('clockTime').innerText = `${String(today.getHours()).padStart(2,'0')}:${String(today.getMinutes()).padStart(2,'0')}`;
             setTimeout(startTime, 1000);
         }
@@ -479,6 +476,7 @@
                         <div class="text-[10px] text-slate-400 mb-1">${row.nickname} | ${row.dept}</div>
                         <div class="text-[10px] text-cyan-400 font-bold mb-1">TEAM: ${row.team}</div>
                         ${formatPrettyDate(row.timestamp)}
+                        
                         <div class="mt-3 flex items-center gap-3 bg-slate-900/50 px-3 py-1.5 rounded-lg border border-white/5 w-fit shadow-inner">
                             <span class="text-[10px] text-slate-300 font-bold uppercase tracking-wide">เข้าเรียน <span class="text-lg mx-1 ${dayColor} leading-none font-digital drop-shadow-md">${attendedDays}</span>/ 3 วัน</span>
                             <div class="flex gap-1.5 border-l border-white/10 pl-3">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div>
@@ -514,44 +512,44 @@
         // --- Utilities ---
         function copyToClipboard(id) { let t = document.getElementById(id).value; if(id.includes('Report')) t += "ขอบคุณครับ"; navigator.clipboard.writeText(t).then(() => Swal.fire({ icon: 'success', title: 'คัดลอกแล้ว', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000, background: '#1e293b', color: '#fff' })); }
         function sendLine(id) { let t = document.getElementById(id).value; if(id.includes('Report')) t += "ขอบคุณครับ"; window.open(`https://line.me/R/msg/text/?${encodeURIComponent(t)}`, '_blank'); }
-        function formatDateThai(date) { const m = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; return `${date.getDate()} ${m[date.getMonth()]} ${date.getFullYear()+543}`; }
+        function formatDateThai(date) { const m = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.']; return `${date.getDate()} ${m[date.getMonth()]} ${date.getFullYear()+543}`; }
         function parseDateInput(dateStr) { if (!dateStr) return null; return new Date(dateStr); }
 
-        // --- 🔴 ดึงวันที่ Check-in มาทำเป็นข้อความ (เช่น 19,20,22 ม.ค. 69) ---
-        function formatCheckinDatesForPayment(d1, d2, d3, timestamp) {
-            const checkins = [d1, d2, d3].filter(d => d); 
-            if (checkins.length === 0) return "-";
-
-            const thaiMonthsShort = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+        // 🔴 Helper: คำนวณวันที่เข้าเรียนจริงจากข้อมูล Check-in (สำหรับ Payment Report)
+        function getActualTrainingDates(item) {
+            let dates = [];
+            let monthStr = '';
             
-            let yearThai = (new Date().getFullYear() + 543).toString().slice(-2); 
-            if (timestamp) {
-                let tDate = parseToDateObj(timestamp);
-                if (tDate && !isNaN(tDate.getTime())) yearThai = (tDate.getFullYear() + 543).toString().slice(-2);
+            let year = new Date().getFullYear(); 
+            if (item.timestamp) {
+                let dObj = parseToDateObj(item.timestamp);
+                if (dObj && !isNaN(dObj)) year = dObj.getFullYear();
             }
+            let shortYear = (year + 543).toString().slice(-2);
+            const thaiMonthsShort = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
 
-            let monthGroups = {};
-            checkins.forEach(c => {
-                let match = c.match(/^(\d{1,2})[\/\-](\d{1,2})/);
-                if (match) {
-                    let day = parseInt(match[1], 10);
-                    let monthIdx = parseInt(match[2], 10) - 1;
-                    let monthStr = thaiMonthsShort[monthIdx];
-                    if (!monthGroups[monthStr]) monthGroups[monthStr] = [];
-                    if (!monthGroups[monthStr].includes(day)) monthGroups[monthStr].push(day);
+            [item.d1, item.d2, item.d3].forEach(dStr => {
+                if (!dStr) return;
+                let datePart = dStr.split(' ')[0]; // แยกเอาแค่วันที่ (19/02)
+                let parts = datePart.split('/');
+                if (parts.length >= 2) {
+                    let day = parseInt(parts[0], 10);
+                    let monthIndex = parseInt(parts[1], 10) - 1;
+                    dates.push(day);
+                    if (!monthStr) monthStr = thaiMonthsShort[monthIndex];
                 }
             });
 
-            let parts = [];
-            for (let m in monthGroups) { parts.push(monthGroups[m].sort((a,b)=>a-b).join(',') + ' ' + m); }
-            if (parts.length === 0) return "-";
-            return parts.join(', ') + ' ' + yearThai;
+            if (dates.length === 0) return '-';
+            dates = [...new Set(dates)]; // ลบวันที่ซ้ำ (เผื่อเช็คซ้ำ)
+            return `${dates.join(',')} ${monthStr} ${shortYear}`;
         }
 
         // --- 1. Training Report ---
         function openReportModal() {
             document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
-            const d = formatDateThai(new Date()); const txt = document.getElementById('finalReportText');
+            const d = formatDateThai(new Date());
+            const txt = document.getElementById('finalReportText');
             if(!txt.value.trim()) txt.value = `เรียน พี่ด้า\nและหัวหน้างานที่เกี่ยวข้อง\nขอนำส่งรายงานการอบรมพนักงานใหม่\nรอบอบรมวันที่ ${d}\n\n`;
             document.getElementById('reportModal').classList.remove('hidden');
         }
@@ -579,23 +577,26 @@
             document.getElementById('hrReportText').value = txt;
         }
 
-        // --- 3. Payment Report (Updated) ---
+        // --- 3. Payment Report (ทำจ่ายค่าอบรม) ---
         function openPaymentModal() {
             const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
-            if (!items.length) return Swal.fire({icon:'warning', text:'กรุณาเลือกรายชื่อ', background:'#1e293b', color:'#fff'});
+            if (!items.length) return Swal.fire({icon:'warning', text:'กรุณาเลือกรายชื่อก่อน', background:'#1e293b', color:'#fff'});
 
+            // เรียงชื่อตามทีมอัตโนมัติ (A-Z)
             items.sort((a, b) => (a.team || '').localeCompare(b.team || ''));
 
             const tbody = document.getElementById('paymentUserList');
             tbody.innerHTML = '';
             
             items.forEach(item => {
+                const autoDate = getActualTrainingDates(item);
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="p-2 pl-4 text-xs font-bold text-cyan-400">${item.team || '-'}</td>
-                    <td class="p-2 text-xs text-white">${item.prefix||''}${item.name} (${item.nickname})</td>
-                    <td class="p-2 text-center">
-                        <select class="exp-select w-full bg-slate-700 border border-slate-600 rounded text-white text-[10px] p-1 focus:ring-1 focus:ring-cyan-500 outline-none" data-id="${item.id}">
+                    <td class="p-2 pl-4 text-xs text-white">${item.prefix||''}${item.name} <span class="text-slate-400">(${item.nickname})</span></td>
+                    <td class="p-2 text-xs font-bold text-cyan-400">${item.team || '-'}</td>
+                    <td class="p-2 text-xs text-slate-300 font-mono text-center">${autoDate}</td>
+                    <td class="p-2 text-center pr-4">
+                        <select class="exp-select w-full bg-slate-700 border border-slate-600 rounded text-white text-[10px] p-1.5 focus:border-cyan-500 outline-none" data-id="${item.id}">
                             <option value="ไม่มี">ไม่มี</option>
                             <option value="มี">มี</option>
                         </select>
@@ -603,49 +604,53 @@
                 `;
                 tbody.appendChild(tr);
             });
+
             document.getElementById('paymentModal').classList.remove('hidden');
         }
 
         function copyPaymentToSheet() {
             const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
-            items.sort((a, b) => (a.team || '').localeCompare(b.team || '')); 
+            items.sort((a, b) => (a.team || '').localeCompare(b.team || ''));
 
             const expSelects = document.querySelectorAll('.exp-select');
             const expMap = {};
             expSelects.forEach(sel => { expMap[sel.getAttribute('data-id')] = sel.value; });
 
-            let tsv = "ลำดับ\tทีม\tคำนำหน้า\tชื่อ-นามสกุล\tชื่อเล่น\tวันที่อบรม\tวันที่ 1\tวันที่ 2\tวันที่ 3\tประสบการณ์\n";
+            // 🔴 Format Header สำหรับ Google Sheet (แทรกคอลัมน์ทีม ไว้หลัง ชื่อเล่น)
+            let tsv = "ลำดับ\tคำนำหน้า\tชื่อ-นามสกุล\tชื่อเล่น\tทีม\tวันที่อบรม\tวันที่ 1\tวันที่ 2\tวันที่ 3\tประสบการณ์\n";
 
             items.forEach((item, index) => {
                 const no = index + 1;
-                const team = item.team || '-';
                 const prefix = item.prefix || '';
                 const name = item.name || '';
                 const nick = item.nickname || '';
+                const team = item.team || '-';
+                
+                // ดึงวันที่อัตโนมัติ
+                const autoDate = getActualTrainingDates(item);
+
                 const d1 = item.d1 ? "1" : ""; 
                 const d2 = item.d2 ? "1" : "";
                 const d3 = item.d3 ? "1" : "";
                 const exp = expMap[item.id] || "ไม่มี";
 
-                // 🔴 ใช้ฟังก์ชันดึงวันที่ Check-in จริงของแต่ละคน
-                const autoDates = formatCheckinDatesForPayment(item.d1, item.d2, item.d3, item.timestamp);
-
-                tsv += `${no}\t${team}\t${prefix}\t${name}\t${nick}\t${autoDates}\t${d1}\t${d2}\t${d3}\t${exp}\n`;
+                tsv += `${no}\t${prefix}\t${name}\t${nick}\t${team}\t${autoDate}\t${d1}\t${d2}\t${d3}\t${exp}\n`;
             });
 
             navigator.clipboard.writeText(tsv).then(() => {
                 Swal.fire({ 
                     icon: 'success', 
                     title: 'คัดลอกข้อมูลแล้ว', 
-                    text: 'นำไปกด วาง (Ctrl+V) ใน Google Sheet หรือ Excel ได้เลย', 
+                    text: 'กด วาง (Ctrl+V) ใน Google Sheet ได้เลย', 
                     confirmButtonColor: '#10b981', 
-                    background: '#1e293b', color: '#fff' 
+                    background: '#1e293b', 
+                    color: '#fff' 
                 });
                 document.getElementById('paymentModal').classList.add('hidden');
             });
         }
 
-        // --- Edit & Delete ---
+        // --- Actions ---
         function toggleTeamInput(s) { const i = document.getElementById('editTeamInput'); if (s.value === 'OTHER') { i.classList.remove('hidden'); i.focus(); } else { i.classList.add('hidden'); } }
         function openEditModal(row, st, tm, nt) {
             document.getElementById('editRowId').value = row; document.getElementById('editStatus').value = st; document.getElementById('editNote').value = nt;
