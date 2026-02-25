@@ -149,17 +149,19 @@
             <div id="adminDashboard" class="hidden flex-1 flex flex-col">
                 <div class="flex justify-between items-center mb-3 px-1">
                     <h2 class="text-white font-header font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-database text-cyan-400"></i> ฐานข้อมูล</h2>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 flex-wrap justify-end">
                         <button onclick="toggleFilterPanel()" class="text-[10px] bg-slate-800 border border-slate-600 hover:bg-cyan-900 hover:border-cyan-500 text-white px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="fa-solid fa-filter"></i> ตัวกรอง</button>
                         <button onclick="toggleSelectAll()" class="text-[10px] bg-slate-800 border border-slate-600 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg transition">Select All</button>
                         <button onclick="loadAdminData()" class="text-[10px] bg-slate-800 border border-slate-600 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-rotate"></i></button>
+                        
+                        <button onclick="openPaymentModal()" class="text-[10px] bg-emerald-700 border border-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg transition flex items-center gap-1 shadow-lg shadow-emerald-900/50"><i class="fa-solid fa-money-bill-wave"></i> สรุปทำจ่าย</button>
                     </div>
                 </div>
 
                 <div id="filterPanel" class="hidden glass-panel p-4 rounded-xl mb-4 border-t-2 border-cyan-500/50 animate-fade-in shadow-xl">
                     <div class="grid grid-cols-2 gap-3 mb-3">
                         <div>
-                            <label class="text-[10px] text-cyan-400 font-bold mb-1.5 block uppercase tracking-wide">ตั้งแต่วันที่</label>
+                            <label class="text-[10px] text-cyan-400 font-bold mb-1.5 block uppercase tracking-wide">ตั้งแต่วันที่เริ่มเทรน</label>
                             <input type="date" id="filterStart" class="w-full p-2.5 rounded-lg glass-input text-xs font-mono" onchange="applyAdminFilters()">
                         </div>
                         <div>
@@ -208,14 +210,11 @@
                     </table>
                 </div>
 
-                <div id="actionBar" class="fixed bottom-4 left-4 right-4 glass-panel rounded-2xl p-3 shadow-2xl transform translate-y-[150%] transition-transform duration-300 z-50 flex justify-between items-center border-t border-white/10 bg-slate-900/95 overflow-x-auto whitespace-nowrap scrollbar-hide">
-                    <div class="text-white text-xs pl-2 mr-4 inline-block align-middle">
-                        <span class="text-slate-400">Selected:</span> <span id="selectedCount" class="text-cyan-400 font-digital text-lg font-bold ml-1">0</span>
-                    </div>
-                    <div class="flex gap-2 inline-block align-middle pb-1">
-                        <button onclick="openReportModal()" class="bg-amber-500 hover:bg-amber-400 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-1.5 transition"><i class="fa-solid fa-file-invoice"></i> รายงาน</button>
-                        <button onclick="openHRModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-1.5 transition"><i class="fa-solid fa-paper-plane"></i> ส่ง HR</button>
-                        <button onclick="openPaymentModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-1.5 transition"><i class="fa-solid fa-money-check-dollar"></i> สรุปทำจ่าย</button>
+                <div id="actionBar" class="fixed bottom-6 left-4 right-4 glass-panel rounded-2xl p-3 shadow-2xl transform translate-y-[150%] transition-transform duration-300 z-50 flex justify-between items-center border-t border-white/10 bg-slate-900/95">
+                    <div class="text-white text-xs pl-2"><span class="text-slate-400">Selected:</span> <span id="selectedCount" class="text-cyan-400 font-digital text-lg font-bold ml-1">0</span></div>
+                    <div class="flex gap-2">
+                        <button onclick="openReportModal()" class="bg-amber-500 hover:bg-amber-400 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-2 transition"><i class="fa-solid fa-file-invoice"></i> รายงาน</button>
+                        <button onclick="openHRModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-2 transition"><i class="fa-solid fa-paper-plane"></i> ส่ง HR</button>
                     </div>
                 </div>
             </div>
@@ -254,18 +253,27 @@
             </div>
             <div class="flex-1 overflow-y-auto space-y-4 pr-1">
                 <div class="grid grid-cols-2 gap-3">
-                    <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">วันที่รอบอบรม</label><input type="date" id="reportDate" class="w-full p-2 rounded-lg glass-input text-xs"></div>
-                    <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">ครั้งที่</label><select id="reportDayType" class="w-full p-2 rounded-lg glass-input text-xs"><option value="วันแรก">วันแรก</option><option value="วันที่สอง">วันที่สอง</option><option value="วันที่สาม">วันที่สาม</option></select></div>
+                    <div>
+                        <label class="text-[10px] text-slate-400 font-bold mb-1 block">วันที่รอบอบรม</label>
+                        <input type="date" id="reportDate" class="w-full p-2 rounded-lg glass-input text-xs" onchange="updateReportDate()">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-400 font-bold mb-1 block">ครั้งที่</label>
+                        <select id="reportDayType" class="w-full p-2 rounded-lg glass-input text-xs">
+                            <option value="วันแรก">วันแรก</option><option value="วันที่สอง">วันที่สอง</option><option value="วันที่สาม">วันที่สาม</option>
+                        </select>
+                    </div>
                 </div>
-                <button onclick="addSelectionToReport()" class="w-full py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl text-white font-bold text-xs shadow hover:brightness-110">
-                    <i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการที่เลือก
-                </button>
-                <div>
-                    <label class="text-[10px] text-slate-400 font-bold mb-1 block">ข้อความรายงาน (แก้ไขได้)</label>
-                    <textarea id="finalReportText" class="w-full h-48 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
+                <div class="flex gap-2">
+                    <button onclick="addSelectionToReport()" class="flex-1 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl text-white font-bold text-xs shadow hover:brightness-110"><i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการ</button>
+                    <button onclick="resetReport()" class="px-3 py-2.5 bg-slate-700/80 hover:bg-red-500 rounded-xl text-white font-bold text-xs shadow transition-colors" title="เริ่มสร้างรายงานใหม่"><i class="fa-solid fa-rotate-right"></i> ล้างข้อมูล</button>
                 </div>
+                <textarea id="finalReportText" class="w-full h-40 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
             </div>
-            <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('finalReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('finalReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs hover:brightness-110"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
+            <div class="flex gap-3 mt-4">
+                <button onclick="copyToClipboard('finalReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
+                <button onclick="sendLine('finalReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs hover:brightness-110"><i class="fa-brands fa-line mr-1"></i> Line</button>
+            </div>
         </div>
     </div>
 
@@ -284,47 +292,33 @@
         </div>
     </div>
 
-    <div id="paymentModal" class="hidden fixed inset-0 z-[90] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-2xl rounded-2xl p-6 border border-slate-600 flex flex-col max-h-[90vh]">
+    <div id="paymentModal" class="hidden fixed inset-0 z-[80] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-3xl rounded-2xl p-6 border border-slate-600 flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
-                <h3 class="text-white font-header font-bold text-lg"><i class="fa-solid fa-money-check-dollar mr-2 text-emerald-400"></i>สรุปทำจ่ายค่าอบรม</h3>
-                <button onclick="document.getElementById('paymentModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <h3 class="text-white font-header font-bold text-lg"><i class="fa-solid fa-money-bill-wave mr-2 text-emerald-400"></i>สรุปทำจ่ายค่าอบรม</h3>
+                <button onclick="document.getElementById('paymentModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            
             <div class="flex-1 overflow-y-auto space-y-4 pr-1">
-                <div class="bg-slate-800/40 p-3 rounded-xl border border-slate-600/50">
-                    <label class="text-[10px] text-cyan-400 font-bold mb-2 block uppercase tracking-wide">1. เลือกวันที่เข้าอบรม (เพื่อสร้างรูปแบบอัตโนมัติ)</label>
-                    <div class="grid grid-cols-3 gap-2 mb-3">
-                        <input type="date" id="payDate1" class="w-full p-2 rounded-lg glass-input text-[10px] font-mono" onchange="generateTrainingDateStr()">
-                        <input type="date" id="payDate2" class="w-full p-2 rounded-lg glass-input text-[10px] font-mono" onchange="generateTrainingDateStr()">
-                        <input type="date" id="payDate3" class="w-full p-2 rounded-lg glass-input text-[10px] font-mono" onchange="generateTrainingDateStr()">
-                    </div>
-                    <label class="text-[10px] text-slate-400 font-bold mb-1 block">วันที่อบรม (แก้ไขข้อความได้ตามต้องการ)</label>
-                    <input type="text" id="payTrainingDate" class="w-full p-2.5 rounded-xl glass-input text-sm text-cyan-300 font-bold" placeholder="เช่น 19และ20และ22 ม.ค. 69">
+                <div class="bg-slate-800/80 p-3 rounded-xl border border-emerald-500/30 text-[11px] text-emerald-400 mb-2 flex items-start gap-2">
+                    <i class="fa-solid fa-circle-info mt-0.5"></i> 
+                    <div>ระบบคัดกรองเฉพาะผู้ที่ <b>"เข้าอบรมครบ 3 วัน"</b> และมีสถานะเป็น <b>"Passed"</b> เท่านั้น<br><span class="text-slate-400 text-[10px]">จัดเรียงลำดับตาม 'ทีม' และ 'วันที่ลงทะเบียน' พร้อมแยกคอลัมน์อัตโนมัติสำหรับ Google Sheet</span></div>
                 </div>
                 
-                <div>
-                    <label class="text-[10px] text-cyan-400 font-bold mb-1 block uppercase tracking-wide">2. กำหนดประสบการณ์ (รายชื่อที่เลือก)</label>
-                    <div class="bg-slate-800/50 rounded-xl border border-slate-600 overflow-hidden shadow-inner">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-900/80 text-[10px] text-slate-400 uppercase">
-                                <tr>
-                                    <th class="p-2 pl-4">ทีม</th>
-                                    <th class="p-2">ชื่อ-สกุล (ชื่อเล่น)</th>
-                                    <th class="p-2 text-center w-24">ประสบการณ์</th>
-                                </tr>
-                            </thead>
-                            <tbody id="paymentUserList" class="divide-y divide-slate-700/50">
-                                </tbody>
-                        </table>
+                <div class="grid grid-cols-2 gap-3 mb-2">
+                    <div>
+                        <label class="text-[10px] text-slate-400 font-bold mb-1 block">ตั้งแต่วันที่ (ลงทะเบียน)</label>
+                        <input type="date" id="paymentStartDate" class="w-full p-2 rounded-lg glass-input text-xs text-slate-300" onchange="generatePaymentReportText()">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-400 font-bold mb-1 block">ถึงวันที่</label>
+                        <input type="date" id="paymentEndDate" class="w-full p-2 rounded-lg glass-input text-xs text-slate-300" onchange="generatePaymentReportText()">
                     </div>
                 </div>
-            </div>
 
-            <div class="mt-4 pt-4 border-t border-slate-700">
-                <button onclick="copyPaymentToSheet()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 rounded-xl text-white font-bold text-sm shadow-lg shadow-emerald-900/30 flex justify-center items-center gap-2 transition transform active:scale-[0.98]">
-                    <i class="fa-solid fa-table"></i> คัดลอกลง Google Sheet / Excel
-                </button>
+                <textarea id="paymentReportText" class="w-full h-56 p-3 rounded-xl glass-input text-xs leading-relaxed font-sans whitespace-pre overflow-x-auto text-slate-300 bg-slate-900/80" spellcheck="false" readonly></textarea>
+            </div>
+            <div class="mt-4 pt-3 border-t border-white/10">
+                <button onclick="copyToClipboardPayment()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl text-white font-bold text-sm hover:brightness-110 shadow-lg shadow-emerald-900/30 transition transform active:scale-[0.98]"><i class="fa-regular fa-copy mr-2"></i> คัดลอกนำไปวางในเซลล์ A1 ของ Google Sheet</button>
             </div>
         </div>
     </div>
@@ -339,10 +333,8 @@
         let adminPassCache = "";
         let adminAllData = []; 
         let selectedRows = new Set(); 
-        
-        // 🔴 ตัวแปรเก็บยอดรวมการทำรายงาน
-        let reportTotalCount = 0; 
 
+        // --- Clock ---
         function startTime() {
             const today = new Date();
             const thaiDays = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
@@ -352,6 +344,7 @@
             setTimeout(startTime, 1000);
         }
 
+        // --- Core API ---
         async function fetchAPI(payload) {
             document.getElementById('loadingOverlay').classList.remove('hidden');
             try { const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) }); return await response.json(); } 
@@ -364,6 +357,7 @@
             document.getElementById(`page-${tab}`).classList.remove('hidden'); document.getElementById(`nav-${tab}`).classList.add('active', 'text-cyan-400');
         }
 
+        // --- Register & Checkin ---
         async function handleRegister(e) {
             e.preventDefault();
             const res = await fetchAPI({ action: 'register', ...Object.fromEntries(new FormData(e.target)) });
@@ -398,6 +392,7 @@
             }
         }
 
+        // --- Admin Data & Date Parsing ---
         async function adminAccess() {
             const pass = document.getElementById('adminPass').value;
             const res = await fetchAPI({ action: 'get_admin', pass });
@@ -426,16 +421,20 @@
             return `<div class="inline-flex items-center gap-2 bg-slate-800/80 px-2 py-1 rounded border border-white/5 mt-1 shadow-inner"><i class="fa-regular fa-clock text-[10px] text-slate-500"></i><span class="text-slate-300 font-mono tracking-wider text-[10px]">${d}-${m}-${y}</span><span class="text-cyan-400 font-digital font-bold text-[11px]">${h}:${min}</span></div>`;
         }
 
+        // --- Smart Filters ---
         function toggleFilterPanel() { document.getElementById('filterPanel').classList.toggle('hidden'); }
         function clearFilters() {
             document.getElementById('filterStart').value = ''; document.getElementById('filterEnd').value = '';
             document.getElementById('filterName').value = ''; document.getElementById('filterTeam').value = '';
-            document.getElementById('filterStatus').value = 'all'; applyAdminFilters();
+            document.getElementById('filterStatus').value = 'all';
+            applyAdminFilters();
         }
 
         function applyAdminFilters() {
-            const fStart = document.getElementById('filterStart').value; const fEnd = document.getElementById('filterEnd').value;
-            const fName = document.getElementById('filterName').value.toLowerCase(); const fTeam = document.getElementById('filterTeam').value.toLowerCase();
+            const fStart = document.getElementById('filterStart').value;
+            const fEnd = document.getElementById('filterEnd').value;
+            const fName = document.getElementById('filterName').value.toLowerCase();
+            const fTeam = document.getElementById('filterTeam').value.toLowerCase();
             const fStatus = document.getElementById('filterStatus').value;
 
             const filtered = adminAllData.filter(row => {
@@ -466,24 +465,35 @@
             renderAdminTable(filtered);
         }
 
+        // --- Render Table ---
         function renderAdminTable(data) {
-            const tbody = document.getElementById('adminTable'); tbody.innerHTML = '';
+            const tbody = document.getElementById('adminTable'); 
+            tbody.innerHTML = '';
+            
             data.forEach(row => {
                 const tr = document.createElement('tr'); 
+                
                 let attendedDays = 0;
                 if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
+
+                // ตรวจสอบออกกลางคัน
                 const isDropout = (attendedDays > 0 && attendedDays < 3) && ['Resigned', 'New Job'].includes(row.status);
 
                 tr.className = isDropout ? "transition border-b border-red-500/30 bg-red-900/10 hover:bg-red-900/20" : "hover:bg-white/5 transition border-b border-slate-700/50";
+                
                 const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-emerald-400 text-sm" title="${v}"></i>` : `<i class="fa-regular fa-circle text-slate-600 text-sm"></i>`;
+                
                 let badge = "bg-slate-800 text-slate-400 border border-slate-600";
                 if(row.status==='Active') badge="bg-blue-500/10 text-blue-400 border border-blue-500/30"; 
                 if(row.status==='Passed') badge="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"; 
                 if(['Resigned','New Job'].includes(row.status)) badge="bg-red-500/10 text-red-400 border border-red-500/30";
 
                 let dayColor = attendedDays === 3 ? 'text-emerald-400' : (isDropout ? 'text-red-400' : 'text-amber-400');
+
                 let nameDisplay = `<div class="font-bold text-white text-sm mb-0.5">${row.name}</div>`;
-                if (isDropout) nameDisplay = `<div class="font-bold text-red-400 text-sm mb-0.5 flex items-center gap-1.5 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]"><i class="fa-solid fa-circle-exclamation text-red-500 animate-pulse"></i>${row.name}</div>`;
+                if (isDropout) {
+                    nameDisplay = `<div class="font-bold text-red-400 text-sm mb-0.5 flex items-center gap-1.5 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]"><i class="fa-solid fa-circle-exclamation text-red-500 animate-pulse"></i>${row.name}</div>`;
+                }
 
                 tr.innerHTML = `
                     <td class="p-3 text-center align-top pt-5"><input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)"></td>
@@ -492,6 +502,7 @@
                         <div class="text-[10px] text-slate-400 mb-1">${row.nickname} | ${row.dept}</div>
                         <div class="text-[10px] text-cyan-400 font-bold mb-1">TEAM: ${row.team}</div>
                         ${formatPrettyDate(row.timestamp)}
+                        
                         <div class="mt-3 flex items-center gap-3 bg-slate-900/50 px-3 py-1.5 rounded-lg border border-white/5 w-fit shadow-inner">
                             <span class="text-[10px] text-slate-300 font-bold uppercase tracking-wide">เข้าเรียน <span class="text-lg mx-1 ${dayColor} leading-none font-digital drop-shadow-md">${attendedDays}</span>/ 3 วัน</span>
                             <div class="flex gap-1.5 border-l border-white/10 pl-3">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div>
@@ -515,6 +526,7 @@
             updateActionBar();
         }
 
+        // --- Selection & Action Bar ---
         function toggleRowSelection(cb) { if (cb.checked) selectedRows.add(cb.value); else selectedRows.delete(cb.value); updateActionBar(); }
         function toggleSelectAll() { const cbs = document.querySelectorAll('.custom-checkbox'); const all = selectedRows.size === cbs.length; selectedRows.clear(); cbs.forEach(cb => { cb.checked = !all; if (!all) selectedRows.add(cb.value); }); updateActionBar(); }
         function updateActionBar() { 
@@ -523,26 +535,65 @@
             if (count > 0) bar.classList.remove('translate-y-[150%]'); else bar.classList.add('translate-y-[150%]');
         }
 
-        function copyToClipboard(id) { let t = document.getElementById(id).value; if(id.includes('Report')) t += "ขอบคุณครับ"; navigator.clipboard.writeText(t).then(() => Swal.fire({ icon: 'success', title: 'คัดลอกแล้ว', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000, background: '#1e293b', color: '#fff' })); }
-        function sendLine(id) { let t = document.getElementById(id).value; if(id.includes('Report')) t += "ขอบคุณครับ"; window.open(`https://line.me/R/msg/text/?${encodeURIComponent(t)}`, '_blank'); }
-        function formatDateThai(date) { const m = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; return `${date.getDate()} ${m[date.getMonth()]} ${date.getFullYear()+543}`; }
+        // --- HELPERS ---
+        function copyToClipboard(id) { 
+            let t = document.getElementById(id).value; 
+            navigator.clipboard.writeText(t).then(() => Swal.fire({ icon: 'success', title: 'คัดลอกแล้ว', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000, background: '#1e293b', color: '#fff' })); 
+        }
+        function sendLine(id) { 
+            let t = document.getElementById(id).value; 
+            window.open(`https://line.me/R/msg/text/?${encodeURIComponent(t)}`, '_blank'); 
+        }
+        function formatDateThai(date) { 
+            const m = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; 
+            return `${date.getDate()} ${m[date.getMonth()]} ${date.getFullYear()+543}`; 
+        }
 
-        // --- 🔴 1. TRAINING REPORT (UPDATE LOGIC) ---
+        // --- Reports (อัปเดตระบบคำนวณและเก็บข้อมูล) ---
+        let reportTotalCount = 0;
+
+        function updateReportDate() {
+            const dateStr = document.getElementById('reportDate').value;
+            if(!dateStr) return;
+            const d = formatDateThai(new Date(dateStr));
+            let currentText = document.getElementById('finalReportText').value;
+            currentText = currentText.replace(/รอบอบรมวันที่ .*\n/, `รอบอบรมวันที่ ${d}\n`);
+            document.getElementById('finalReportText').value = currentText;
+        }
+
         function openReportModal() {
-            document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
-            const d = formatDateThai(new Date()); 
             const txt = document.getElementById('finalReportText');
             
-            // เช็คว่าถ้าช่องว่าง ให้รีเซ็ตยอดรวมเป็น 0 แล้วใส่ Header
-            if(!txt.value.trim()) {
-                reportTotalCount = 0;
-                txt.value = `เรียน พี่ด้า\nและหัวหน้างานที่เกี่ยวข้อง\nขอนำส่งรายงานการอบรมพนักงานใหม่\nรอบอบรมวันที่ ${d}\n\nอบรมทั้งหมดจำนวน 0 คน\n\n`;
-            } else {
-                // ถ้ามีข้อความเก่าอยู่ พยายามดึงยอดรวมเดิมมา
-                const match = txt.value.match(/อบรมทั้งหมดจำนวน (\d+) คน/);
-                if (match) reportTotalCount = parseInt(match[1], 10);
+            if (txt.value.trim() === '') {
+                if (!document.getElementById('reportDate').value) {
+                    document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
+                }
+                const d = formatDateThai(new Date(document.getElementById('reportDate').value || new Date()));
+                reportTotalCount = 0; 
+                txt.value = `เรียน พี่ด้า\nและหัวหน้างานที่เกี่ยวข้อง\nขอนำส่งรายงานการอบรมพนักงานใหม่\nรอบอบรมวันที่ ${d}\n\nอบรมทั้งหมดจำนวน 0 คน\n\nขอบคุณครับ`;
             }
+            
             document.getElementById('reportModal').classList.remove('hidden');
+        }
+
+        function resetReport() {
+            Swal.fire({
+                title: 'เริ่มสร้างรายงานใหม่?',
+                text: "ข้อความทั้งหมดจะถูกล้างและเริ่มนับยอดใหม่",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#475569',
+                confirmButtonText: 'เริ่มใหม่',
+                cancelButtonText: 'ยกเลิก',
+                background: '#1e293b', 
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('finalReportText').value = '';
+                    openReportModal(); 
+                }
+            });
         }
 
         function addSelectionToReport() {
@@ -550,96 +601,155 @@
             const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
             if (!items.length) return Swal.fire('แจ้งเตือน', 'กรุณาเลือกรายชื่ออย่างน้อย 1 คน', 'warning');
             
-            // เพิ่มยอดคนที่เลือกรอบนี้เข้ากับยอดรวมสะสม
             reportTotalCount += items.length;
-
-            const teams = {}; 
-            items.forEach(i => { const t = i.team || 'ไม่ระบุทีม'; if (!teams[t]) teams[t] = []; teams[t].push(i.nickname || i.name); });
             
-            let sectionText = `อบรม${type} ทั้งหมด ${items.length} คน\n\n`;
-            for (const [t, n] of Object.entries(teams)) sectionText += `${t}    จำนวน ${n.length} คน ${n.join(', ')}\n`;
-            sectionText += `\n`;
-
-            // อัปเดตข้อความในกล่อง (แทนที่ยอดรวมเดิม)
+            const teams = {}; 
+            items.forEach(i => { 
+                const t = i.team || 'ไม่ระบุทีม'; 
+                if (!teams[t]) teams[t] = []; 
+                teams[t].push(i.nickname || i.name); 
+            });
+            
+            let txt = `อบรม${type} ทั้งหมด ${items.length} คน\n\n`;
+            for (const [t, n] of Object.entries(teams)) {
+                txt += `(${t})    จำนวน ${n.length} คน ชื่อเล่น(${n.join(' ')})\n`;
+            }
+            txt += `\n`; 
+            
             let currentText = document.getElementById('finalReportText').value;
-            if (currentText.includes('อบรมทั้งหมดจำนวน')) {
-                currentText = currentText.replace(/อบรมทั้งหมดจำนวน \d+ คน/, `อบรมทั้งหมดจำนวน ${reportTotalCount} คน`);
+            
+            currentText = currentText.replace(/อบรมทั้งหมดจำนวน \d+ คน/, `อบรมทั้งหมดจำนวน ${reportTotalCount} คน`);
+            
+            if(currentText.includes("ขอบคุณครับ")) {
+                currentText = currentText.replace("ขอบคุณครับ", txt + "ขอบคุณครับ");
+            } else {
+                currentText += txt + "ขอบคุณครับ";
             }
             
-            // นำก้อนข้อความใหม่ต่อท้าย
-            document.getElementById('finalReportText').value = currentText + sectionText;
+            document.getElementById('finalReportText').value = currentText;
             
-            selectedRows.clear(); document.querySelectorAll('.custom-checkbox').forEach(c => c.checked = false); updateActionBar();
-            Swal.fire({ icon: 'success', title: 'เพิ่มลงรายงานแล้ว', text: `ยอดรวมปรับเป็น ${reportTotalCount} คน`, showConfirmButton: false, timer: 1500, background: '#1e293b', color: '#fff' });
+            selectedRows.clear(); 
+            document.querySelectorAll('.custom-checkbox').forEach(c => c.checked = false); 
+            updateActionBar();
         }
 
-        // --- 2. HR Report ---
-        function openHRModal() { document.getElementById('hrTrainingDate').value = new Date().toISOString().split('T')[0]; document.getElementById('hrWorkDate').value = ""; document.getElementById('hrReportText').value = ""; document.getElementById('hrModal').classList.remove('hidden'); }
+        // --- HR Report ---
+        function openHRModal() { 
+            document.getElementById('hrTrainingDate').value = new Date().toISOString().split('T')[0]; 
+            document.getElementById('hrWorkDate').value = ""; 
+            document.getElementById('hrReportText').value = ""; 
+            document.getElementById('hrModal').classList.remove('hidden'); 
+        }
+        
         function generateHRReport() {
-            const tDate = document.getElementById('hrTrainingDate').value; const wDate = document.getElementById('hrWorkDate').value;
+            const tDate = document.getElementById('hrTrainingDate').value;
+            const wDate = document.getElementById('hrWorkDate').value;
             if(!tDate || !wDate) return Swal.fire({icon:'warning', title:'เลือกวันที่ให้ครบ', toast:true, position:'top', showConfirmButton:false, timer:1500});
             const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate));
             const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
-            if (!items.length) return;
             let txt = "";
-            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${tStr}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
+            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${tStr}\nวันที่ของวันเริ่มงาน ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
+            txt += "ขอบคุณครับ";
             document.getElementById('hrReportText').value = txt;
         }
 
-        // --- 3. Payment Report ---
-        function generateTrainingDateStr() {
-            const d1 = document.getElementById('payDate1').value; const d2 = document.getElementById('payDate2').value; const d3 = document.getElementById('payDate3').value;
-            const dates = [d1, d2, d3].filter(v => v);
-            if (dates.length === 0) { document.getElementById('payTrainingDate').value = ""; return; }
-            const dateObjs = dates.map(d => new Date(d)).sort((a,b) => a - b);
-            const shortMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-            const lastDate = dateObjs[dateObjs.length - 1];
-            const isSameMonthYear = dateObjs.every(d => d.getMonth() === lastDate.getMonth() && d.getFullYear() === lastDate.getFullYear());
-            let result = "";
-            if (isSameMonthYear) { const days = dateObjs.map(d => d.getDate()).join('และ'); result = `${days} ${shortMonths[lastDate.getMonth()]} ${(lastDate.getFullYear() + 543).toString().slice(-2)}`; } 
-            else { result = dateObjs.map(d => `${d.getDate()} ${shortMonths[d.getMonth()]} ${(d.getFullYear() + 543).toString().slice(-2)}`).join(' และ '); }
-            document.getElementById('payTrainingDate').value = result;
-        }
-
+        // --- Payment Report (เพิ่มระบบกรองวันที่) ---
         function openPaymentModal() {
-            const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
-            if (!items.length) return Swal.fire({icon:'warning', text:'กรุณาเลือกรายชื่อ', background:'#1e293b', color:'#fff'});
-            items.sort((a, b) => (a.team || '').localeCompare(b.team || ''));
-            const tbody = document.getElementById('paymentUserList'); tbody.innerHTML = '';
-            items.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-2 pl-4 text-xs font-bold text-cyan-400">${item.team || '-'}</td>
-                    <td class="p-2 text-xs text-white">${item.prefix||''}${item.name} (${item.nickname})</td>
-                    <td class="p-2 text-center"><select class="exp-select w-full bg-slate-700 border border-slate-600 rounded text-white text-[10px] p-1 focus:ring-1 focus:ring-cyan-500 outline-none" data-id="${item.id}"><option value="ไม่มี">ไม่มี</option><option value="มี">มี</option></select></td>
-                `;
-                tbody.appendChild(tr);
-            });
-            document.getElementById('payDate1').value = ""; document.getElementById('payDate2').value = ""; document.getElementById('payDate3').value = ""; document.getElementById('payTrainingDate').value = "";
+            if (!adminAllData || adminAllData.length === 0) {
+                return Swal.fire({ icon: 'warning', text: 'ยังไม่มีข้อมูลพนักงานในระบบ', background: '#1e293b', color: '#fff' });
+            }
+            // ล้างวันที่เพื่อให้แสดงทั้งหมดก่อนเมื่อเปิดหน้าต่างขึ้นมา
+            document.getElementById('paymentStartDate').value = '';
+            document.getElementById('paymentEndDate').value = '';
+            
             document.getElementById('paymentModal').classList.remove('hidden');
+            generatePaymentReportText();
         }
 
-        function copyPaymentToSheet() {
-            const trainDateRange = document.getElementById('payTrainingDate').value || '-';
-            const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
-            items.sort((a, b) => (a.team || '').localeCompare(b.team || ''));
-            const expSelects = document.querySelectorAll('.exp-select'); const expMap = {};
-            expSelects.forEach(sel => { expMap[sel.getAttribute('data-id')] = sel.value; });
+        function generatePaymentReportText() {
+            const startDateStr = document.getElementById('paymentStartDate').value;
+            const endDateStr = document.getElementById('paymentEndDate').value;
 
-            let tsv = "ลำดับ\tคำนำหน้า\tชื่อ-นามสกุล\tชื่อเล่น\tทีม\tวันที่อบรม\tประสบการณ์\tวันที่ลงทะเบียนอบรมวันแรก\tวันที่ 1\tวันที่ 2\tวันที่ 3\n";
+            const passedUsers = adminAllData.filter(row => {
+                let attendedDays = 0;
+                if (row.d1) attendedDays++;
+                if (row.d2) attendedDays++;
+                if (row.d3) attendedDays++;
+                
+                // กรองเฉพาะคนผ่านและครบ 3 วัน
+                if (!(attendedDays === 3 && row.status === 'Passed')) return false;
 
-            items.forEach((item, index) => {
-                const no = index + 1; const prefix = item.prefix || ''; const name = item.name || ''; const nick = item.nickname || ''; const team = item.team || '-'; const exp = expMap[item.id] || "ไม่มี";
-                const regDateObj = parseToDateObj(item.timestamp);
-                let regDateStr = "-";
-                if (regDateObj && !isNaN(regDateObj.getTime())) {
-                    const d = String(regDateObj.getDate()).padStart(2, '0'); const m = String(regDateObj.getMonth() + 1).padStart(2, '0'); const y = regDateObj.getFullYear() + 543;
-                    regDateStr = `${d}/${m}/${y}`;
+                // กรองวันที่ (ถ้ามีการเลือก)
+                const rDate = parseToDateObj(row.timestamp);
+                if (rDate && !isNaN(rDate.getTime())) {
+                    rDate.setHours(0,0,0,0);
+                    if (startDateStr && rDate < new Date(startDateStr + "T00:00:00")) return false;
+                    if (endDateStr && rDate > new Date(endDateStr + "T00:00:00")) return false;
                 }
-                const d1 = item.d1 ? "1" : ""; const d2 = item.d2 ? "1" : ""; const d3 = item.d3 ? "1" : "";
-                tsv += `${no}\t${prefix}\t${name}\t${nick}\t${team}\t${trainDateRange}\t${exp}\t${regDateStr}\t${d1}\t${d2}\t${d3}\n`;
+                return true;
             });
-            navigator.clipboard.writeText(tsv).then(() => { Swal.fire({ icon: 'success', title: 'คัดลอกข้อมูลแล้ว', text: 'นำไปกด วาง (Ctrl+V) ใน Google Sheet ได้เลย คอลัมน์จะแบ่งให้อัตโนมัติ', confirmButtonColor: '#10b981', background: '#1e293b', color: '#fff' }); document.getElementById('paymentModal').classList.add('hidden'); });
+
+            // ถ้าไม่มีข้อมูลตรงกับวันที่ค้นหา
+            if (passedUsers.length === 0) {
+                document.getElementById('paymentReportText').value = "ไม่มีข้อมูลพนักงานที่ผ่านเกณฑ์ในช่วงเวลาที่เลือก...";
+                return;
+            }
+
+            // จัดเรียงตามทีมและวันที่
+            passedUsers.sort((a, b) => {
+                const teamA = (a.team || '').toLowerCase();
+                const teamB = (b.team || '').toLowerCase();
+                if (teamA < teamB) return -1;
+                if (teamA > teamB) return 1;
+                
+                const dateA = parseToDateObj(a.timestamp) || new Date(0);
+                const dateB = parseToDateObj(b.timestamp) || new Date(0);
+                return dateA - dateB;
+            });
+
+            let tsvText = "ลำดับที่\tคำนำหน้า\tชื่อนามสกุล\tชื่อเล่น\tทีม\tมี(ประสบการณ์)\tไม่มี(ประสบการณ์)\tวันที่อบรม(วันแรก)\n";
+            
+            passedUsers.forEach((user, index) => {
+                let dateStr = "-";
+                const dateObj = parseToDateObj(user.timestamp);
+                if (dateObj && !isNaN(dateObj.getTime())) {
+                    const d = String(dateObj.getDate()).padStart(2, '0');
+                    const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    const y = dateObj.getFullYear() + 543; 
+                    dateStr = `${d}/${m}/${y}`;
+                }
+
+                const prefix = user.prefix || "";
+                const name = user.name || "";
+                const nickname = user.nickname || "";
+                const team = user.team || "";
+                
+                tsvText += `${index + 1}\t${prefix}\t${name}\t${nickname}\t${team}\t\t\t${dateStr}\n`;
+            });
+
+            document.getElementById('paymentReportText').value = tsvText;
+        }
+
+        function copyToClipboardPayment() {
+            const text = document.getElementById('paymentReportText').value;
+            // ตรวจสอบว่ามีข้อมูลให้คัดลอกไหม
+            if(text.includes('ไม่มีข้อมูล')) {
+                return Swal.fire({ icon: 'warning', text: 'ไม่มีข้อมูลให้คัดลอก', background: '#1e293b', color: '#fff' });
+            }
+            
+            navigator.clipboard.writeText(text).then(() => {
+                Swal.fire({ 
+                    icon: 'success', 
+                    title: 'คัดลอกสำเร็จ!', 
+                    html: '<p class="text-sm text-slate-300 mt-2">สลับไปที่ Google Sheet คลิกขวาที่เซลล์บนสุดแล้วกด <b>Paste (วาง)</b> ข้อมูลจะถูกแบ่งคอลัมน์ให้ทันที</p>',
+                    confirmButtonColor: '#10b981', 
+                    background: '#1e293b', 
+                    color: '#fff' 
+                });
+                document.getElementById('paymentModal').classList.add('hidden');
+            }).catch(err => {
+                Swal.fire('Error', 'ไม่สามารถคัดลอกได้ กรุณาคัดลอกด้วยตัวเอง', 'error');
+            });
         }
 
         // --- Actions ---
