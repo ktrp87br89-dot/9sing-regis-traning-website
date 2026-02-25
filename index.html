@@ -281,7 +281,7 @@
 
             <div class="mt-4 pt-4 border-t border-slate-700">
                 <button onclick="copyPaymentToSheet()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 rounded-xl text-white font-bold text-sm shadow-lg shadow-emerald-900/30 flex justify-center items-center gap-2 transition transform active:scale-[0.98]">
-                    <i class="fa-solid fa-table"></i> คัดลอกข้อมูลทำจ่าย (วางใน Excel/Sheet)
+                    <i class="fa-solid fa-table"></i> คัดลอกลง Google Sheet / Excel
                 </button>
             </div>
         </div>
@@ -309,10 +309,22 @@
             setTimeout(startTime, 1000);
         }
 
+        // --- 🔴 Robust API Fetch (ป้องกันบั๊กเชื่อมต่อ) ---
         async function fetchAPI(payload) {
             document.getElementById('loadingOverlay').classList.remove('hidden');
-            try { const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) }); return await response.json(); } 
-            catch (error) { return { status: 'error', message: 'Connection Error' }; }
+            try { 
+                const response = await fetch(API_URL, { 
+                    method: 'POST', 
+                    // ใส่ Header เพื่อให้ทำงานผ่านระบบ CORS ได้ดีขึ้น
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload) 
+                }); 
+                return await response.json(); 
+            } 
+            catch (error) { 
+                console.error("API Error:", error);
+                return { status: 'error', message: 'เชื่อมต่อฐานข้อมูลไม่สำเร็จ โปรดตรวจสอบอินเทอร์เน็ตหรือ URL' }; 
+            }
             finally { document.getElementById('loadingOverlay').classList.add('hidden'); }
         }
 
@@ -352,6 +364,7 @@
             if (cf.isConfirmed) {
                 const res = await fetchAPI({ action: 'checkin', phone, day });
                 if (res.status === 'success') { checkStatus(); Swal.fire({ icon: 'success', title: 'สำเร็จ', timer: 1500, showConfirmButton: false, background: '#1e293b', color: '#fff' }); }
+                else { Swal.fire({ icon: 'error', text: res.message, background: '#1e293b', color: '#fff' }); }
             }
         }
 
@@ -359,17 +372,19 @@
             const pass = document.getElementById('adminPass').value;
             const res = await fetchAPI({ action: 'get_admin', pass });
             if (res.status === 'success') { adminPassCache = pass; document.getElementById('adminLogin').classList.add('hidden'); document.getElementById('adminDashboard').classList.remove('hidden'); adminAllData = res.data; applyAdminFilters(); }
-            else { Swal.fire({ icon: 'error', text: 'รหัสผ่านผิด', background: '#1e293b', color: '#fff' }); }
+            else { Swal.fire({ icon: 'error', text: res.message || 'รหัสผ่านผิด', background: '#1e293b', color: '#fff' }); }
         }
         async function loadAdminData() { if(adminPassCache) { const res = await fetchAPI({ action: 'get_admin', pass: adminPassCache }); if(res.status==='success') { adminAllData = res.data; applyAdminFilters(); } } }
 
+        // --- 🔴 Robust Date Parsing ---
         function parseToDateObj(dateStr) {
             if (!dateStr) return null;
-            if (dateStr.includes('/')) {
-                const parts = dateStr.split(' '); const dPart = parts[0].split('/'); const tPart = parts[1] ? parts[1].split(':') : ['00','00','00'];
+            const str = String(dateStr); // บังคับให้เป็น String ป้องกัน Error
+            if (str.includes('/')) {
+                const parts = str.split(' '); const dPart = parts[0].split('/'); const tPart = parts[1] ? parts[1].split(':') : ['00','00','00'];
                 if (dPart.length >= 3) return new Date(`${dPart[2]}-${dPart[1]}-${dPart[0]}T${tPart[0]}:${tPart[1]}:${tPart[2]||'00'}`);
             }
-            return new Date(dateStr);
+            return new Date(str);
         }
 
         function formatPrettyDate(dateString) {
@@ -381,7 +396,6 @@
             return `<div class="inline-flex items-center gap-2 bg-slate-800/80 px-2 py-1 rounded border border-white/5 mt-1 shadow-inner"><i class="fa-regular fa-clock text-[10px] text-slate-500"></i><span class="text-slate-300 font-mono tracking-wider text-[10px]">${d}-${m}-${y}</span><span class="text-cyan-400 font-digital font-bold text-[11px]">${h}:${min}</span></div>`;
         }
 
-        // --- Filters ---
         function toggleFilterPanel() { document.getElementById('filterPanel').classList.toggle('hidden'); }
         function clearFilters() { document.getElementById('filterStart').value = ''; document.getElementById('filterEnd').value = ''; document.getElementById('filterName').value = ''; document.getElementById('filterTeam').value = ''; document.getElementById('filterStatus').value = 'all'; applyAdminFilters(); }
 
@@ -391,8 +405,15 @@
             const fStatus = document.getElementById('filterStatus').value;
 
             const filtered = adminAllData.filter(row => {
-                const matchName = row.name.toLowerCase().includes(fName) || (row.nickname||'').toLowerCase().includes(fName);
-                const matchTeam = (row.team||'').toLowerCase().includes(fTeam);
+                // 🔴 ป้องกันระบบล่มถ้าเจอแถวว่างใน Sheet
+                if (!row || (!row.name && !row.phone)) return false; 
+
+                const safeName = String(row.name || '').toLowerCase();
+                const safeNick = String(row.nickname || '').toLowerCase();
+                const safeTeam = String(row.team || '').toLowerCase();
+
+                const matchName = safeName.includes(fName) || safeNick.includes(fName);
+                const matchTeam = safeTeam.includes(fTeam);
 
                 let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
                 const isDropout = (attendedDays > 0 && attendedDays < 3) && ['Resigned', 'New Job'].includes(row.status);
@@ -419,7 +440,16 @@
 
         function renderAdminTable(data) {
             const tbody = document.getElementById('adminTable'); tbody.innerHTML = '';
+            
+            if(!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-slate-500">ไม่พบข้อมูล</td></tr>';
+                updateActionBar();
+                return;
+            }
+
             data.forEach(row => {
+                if (!row || (!row.name && !row.phone)) return;
+
                 const tr = document.createElement('tr'); 
                 let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
                 const isDropout = (attendedDays > 0 && attendedDays < 3) && ['Resigned', 'New Job'].includes(row.status);
@@ -432,7 +462,7 @@
                 if(['Resigned','New Job'].includes(row.status)) badge="bg-red-500/10 text-red-400 border border-red-500/30";
 
                 let dayColor = attendedDays === 3 ? 'text-emerald-400' : (isDropout ? 'text-red-400' : 'text-amber-400');
-                let nameDisplay = `<div class="font-bold text-white text-sm mb-0.5">${row.name}</div>`;
+                let nameDisplay = `<div class="font-bold text-white text-sm mb-0.5">${row.name || '-'}</div>`;
                 if (isDropout) nameDisplay = `<div class="font-bold text-red-400 text-sm mb-0.5 flex items-center gap-1.5 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]"><i class="fa-solid fa-circle-exclamation text-red-500 animate-pulse"></i>${row.name}</div>`;
 
                 tr.innerHTML = `
@@ -465,7 +495,6 @@
             updateActionBar();
         }
 
-        // --- Selections ---
         function toggleRowSelection(cb) { if (cb.checked) selectedRows.add(cb.value); else selectedRows.delete(cb.value); updateActionBar(); }
         function toggleSelectAll() { const cbs = document.querySelectorAll('.custom-checkbox'); const all = selectedRows.size === cbs.length; selectedRows.clear(); cbs.forEach(cb => { cb.checked = !all; if (!all) selectedRows.add(cb.value); }); updateActionBar(); }
         function updateActionBar() { 
@@ -478,12 +507,9 @@
         function sendLine(id) { let t = document.getElementById(id).value; if(id.includes('Report')) t += "ขอบคุณครับ"; window.open(`https://line.me/R/msg/text/?${encodeURIComponent(t)}`, '_blank'); }
         function formatDateThai(date) { const m = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; return `${date.getDate()} ${m[date.getMonth()]} ${date.getFullYear()+543}`; }
 
-        // --- 1. TRAINING REPORT (อัปเดตระบบนับยอดรวม) ---
         function openReportModal() {
             document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
-            const d = formatDateThai(new Date()); 
-            const txt = document.getElementById('finalReportText');
-            
+            const d = formatDateThai(new Date()); const txt = document.getElementById('finalReportText');
             if(!txt.value.trim()) {
                 reportTotalCount = 0;
                 txt.value = `เรียน พี่ด้า\nและหัวหน้างานที่เกี่ยวข้อง\nขอนำส่งรายงานการอบรมพนักงานใหม่\nรอบอบรมวันที่ ${d}\n\nอบรมทั้งหมดจำนวน 0 คน\n\n`;
@@ -526,19 +552,17 @@
             const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
             if (!items.length) return;
             let txt = "";
-            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${tStr}\nวันที่ของวันเริ่มงาน ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
+            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${tStr}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
             document.getElementById('hrReportText').value = txt;
         }
 
-        // --- 🔴 3. PAYMENT REPORT (สรุปทำจ่าย + เรียงทีม + กรองออโต้) ---
-        
-        // ฟังก์ชันกำหนด Priority ทีม (เพื่อให้เรียงลำดับ RETAIL 1-4, PA... ตามลำดับ)
+        // --- PAYMENT REPORT ---
         function getTeamPriority(teamName) {
             if (!teamName) return 999;
             const t = teamName.toUpperCase();
             const order = ["RETAIL 1", "RETAIL 2", "RETAIL 3", "RETAIL 4", "PA 1A", "PA 1B", "PA 1C", "PA 1D", "PA 2A", "PA 2B", "PA 2C"];
             const index = order.indexOf(t);
-            return index !== -1 ? index : 999; // ถ้าไม่ตรงชื่อในระบบ ให้อยู่ล่างสุด
+            return index !== -1 ? index : 999; 
         }
 
         function generateTrainingDateStr() {
@@ -556,14 +580,12 @@
         }
 
         function openPaymentModal() {
-            // ดึงเฉพาะคนที่ถูก "ติ๊กเลือก"
             let items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
             
             if (items.length === 0) {
                 return Swal.fire({icon:'warning', text:'กรุณาเลือกรายชื่อที่ต้องการทำจ่ายก่อน', background:'#1e293b', color:'#fff'});
             }
 
-            // กรองเฉพาะคนที่ "มาครบ 3 วัน" และ "Passed"
             const eligibleItems = items.filter(row => {
                 let attendedDays = 0;
                 if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
@@ -574,10 +596,8 @@
                 return Swal.fire({icon:'error', title:'ไม่พบผู้มีสิทธิ์', text:'รายชื่อที่คุณเลือก ไม่มีใครเทรนครบ 3 วัน หรือไม่มีใครสถานะ Passed', background:'#1e293b', color:'#fff'});
             }
 
-            // จัดเรียงตามทีม (Custom Sort)
-            eligibleItems.sort((a, b) => getTeamPriority(a.team) - getTeamPriority(b.team) || (a.team || '').localeCompare(b.team || ''));
+            eligibleItems.sort((a, b) => getTeamPriority(a.team) - getTeamPriority(b.team) || (String(a.team || '')).localeCompare(String(b.team || '')));
 
-            // ดึงวันที่ลงทะเบียนวันแรกของคนแรกมาใช้เป็น Default (ถ้ามี)
             if (eligibleItems.length > 0) {
                 const firstDateObj = parseToDateObj(eligibleItems[0].timestamp);
                 if (firstDateObj && !isNaN(firstDateObj.getTime())) {
@@ -604,7 +624,6 @@
                 tbody.appendChild(tr);
             });
 
-            // บันทึกรายการที่ผ่านเกณฑ์ไว้ใช้ตอนกดคัดลอก (เก็บเป็นตัวแปรชั่วคราวซ่อนไว้ใน Element)
             window.currentPaymentItems = eligibleItems;
             
             document.getElementById('paymentModal').classList.remove('hidden');
@@ -618,8 +637,7 @@
             const expMap = {};
             expSelects.forEach(sel => { expMap[sel.getAttribute('data-id')] = sel.value; });
 
-            // สร้าง Header ให้ตรงเป๊ะ
-            let tsv = "ลำดับ\tคำนำหน้า\tชื่อ - นามสกุล\tชื่อเล่น\tทีม\tมี (ประสบการณ์)\tไม่มี (ประสบการณ์)\tวันที่อบรม\n";
+            let tsv = "ลำดับ\tคำนำหน้า\tชื่อ-นามสกุล\tชื่อเล่น\tทีม\tวันที่อบรม\tประสบการณ์\tวันที่ลงทะเบียนอบรมวันแรก\tวันที่ 1\tวันที่ 2\tวันที่ 3\n";
 
             items.forEach((item, index) => {
                 const no = index + 1;
@@ -628,12 +646,24 @@
                 const nick = item.nickname || '';
                 const team = item.team || '-';
                 
-                // แยกคอลัมน์ประสบการณ์
                 const exp = expMap[item.id] || "ไม่มี";
                 const hasExp = exp === "มี" ? "/" : "";
                 const noExp = exp === "ไม่มี" ? "/" : "";
                 
-                tsv += `${no}\t${prefix}\t${name}\t${nick}\t${team}\t${hasExp}\t${noExp}\t${trainDateRange}\n`;
+                const regDateObj = parseToDateObj(item.timestamp);
+                let regDateStr = "-";
+                if (regDateObj && !isNaN(regDateObj.getTime())) {
+                    const d = String(regDateObj.getDate()).padStart(2, '0');
+                    const m = String(regDateObj.getMonth() + 1).padStart(2, '0');
+                    const y = regDateObj.getFullYear() + 543;
+                    regDateStr = `${d}/${m}/${y}`;
+                }
+
+                const d1 = item.d1 ? "1" : ""; 
+                const d2 = item.d2 ? "1" : "";
+                const d3 = item.d3 ? "1" : "";
+
+                tsv += `${no}\t${prefix}\t${name}\t${nick}\t${team}\t${trainDateRange}\t${exp}\t${regDateStr}\t${d1}\t${d2}\t${d3}\n`;
             });
 
             navigator.clipboard.writeText(tsv).then(() => {
