@@ -36,20 +36,17 @@
             background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
             color: #e2e8f0; min-height: 100vh;
         }
-        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
         .glass-input { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; transition: all 0.3s ease; }
         .glass-input:focus { border-color: #38bdf8; background: rgba(15, 23, 42, 0.9); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); outline: none; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
-        .animate-float { animation: float 6s ease-in-out infinite; }
         .loader { width: 40px; height: 40px; border: 3px solid #FFF; border-bottom-color: #38bdf8; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .nav-btn.active { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border-bottom: 2px solid #38bdf8; }
         .font-digital { font-family: 'Chakra Petch', sans-serif; }
-        .text-glow { text-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
         .custom-checkbox { width: 20px; height: 20px; accent-color: #0ea5e9; cursor: pointer; border-radius: 4px; }
     </style>
 </head>
@@ -117,14 +114,13 @@
                     <i class="fa-solid fa-fingerprint text-4xl text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]"></i>
                 </div>
                 <h2 class="text-xl font-header font-bold text-white mb-2">ลงชื่อเข้าอบรม</h2>
-                <p class="text-xs text-slate-400 mb-8 font-light">กรอกเบอร์โทรศัพท์เพื่อยืนยันตัวตน</p>
-                <div class="relative max-w-xs mx-auto mb-6 group">
+                <div class="relative max-w-xs mx-auto mb-6 group mt-4">
                     <input type="tel" id="checkinPhone" class="w-full pl-12 pr-4 py-3.5 rounded-xl glass-input text-lg tracking-[0.2em] text-center font-digital group-focus-within:border-cyan-500 transition-colors" placeholder="08XXXXXXXX">
                     <i class="fa-solid fa-mobile-screen absolute left-4 top-4 text-slate-500 text-lg group-focus-within:text-cyan-400 transition-colors"></i>
                 </div>
-                <button onclick="checkStatus()" class="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-header font-medium transition border border-slate-600 hover:border-slate-500">ตรวจสอบสถานะ</button>
+                <button onclick="checkStatus()" class="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-header font-medium transition border border-slate-600">ตรวจสอบสถานะ</button>
 
-                <div id="profileCard" class="hidden mt-8 text-left bg-slate-800/40 rounded-xl p-5 border border-slate-700/50 animate-float">
+                <div id="profileCard" class="hidden mt-8 text-left bg-slate-800/40 rounded-xl p-5 border border-slate-700/50">
                     <div class="flex justify-between items-start mb-4 pb-4 border-b border-white/5">
                         <div><h3 class="text-lg font-header font-bold text-white" id="uiName">...</h3><p class="text-xs text-slate-400 mt-1 font-mono"><span id="uiNick">...</span> | <span id="uiDept" class="text-cyan-400">...</span></p></div>
                         <span id="uiStatus" class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 tracking-wider">Active</span>
@@ -150,68 +146,36 @@
                 <div class="flex justify-between items-center mb-3 px-1">
                     <h2 class="text-white font-header font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-database text-cyan-400"></i> ฐานข้อมูล</h2>
                     <div class="flex gap-2">
-                        <button onclick="toggleFilterPanel()" class="text-[10px] bg-slate-800 border border-slate-600 hover:bg-cyan-900 hover:border-cyan-500 text-white px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="fa-solid fa-filter"></i> ตัวกรอง</button>
-                        <button onclick="toggleSelectAll()" class="text-[10px] bg-slate-800 border border-slate-600 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg transition">Select All</button>
-                        <button onclick="loadAdminData()" class="text-[10px] bg-slate-800 border border-slate-600 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-rotate"></i></button>
+                        <button onclick="toggleFilterPanel()" class="text-[10px] bg-slate-800 border border-slate-600 text-white px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-filter"></i></button>
+                        <button onclick="toggleSelectAll()" class="text-[10px] bg-slate-800 border border-slate-600 text-white px-3 py-1.5 rounded-lg transition">Select All</button>
+                        <button onclick="loadAdminData()" class="text-[10px] bg-slate-800 border border-slate-600 text-white px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-rotate"></i></button>
                     </div>
                 </div>
 
-                <div id="filterPanel" class="hidden glass-panel p-4 rounded-xl mb-4 border-t-2 border-cyan-500/50 animate-fade-in shadow-xl">
-                    <div class="grid grid-cols-2 gap-3 mb-3">
-                        <div>
-                            <label class="text-[10px] text-cyan-400 font-bold mb-1.5 block uppercase tracking-wide">ตั้งแต่วันที่</label>
-                            <input type="date" id="filterStart" class="w-full p-2.5 rounded-lg glass-input text-xs font-mono" onchange="applyAdminFilters()">
-                        </div>
-                        <div>
-                            <label class="text-[10px] text-cyan-400 font-bold mb-1.5 block uppercase tracking-wide">ถึงวันที่</label>
-                            <input type="date" id="filterEnd" class="w-full p-2.5 rounded-lg glass-input text-xs font-mono" onchange="applyAdminFilters()">
-                        </div>
-                    </div>
+                <div id="filterPanel" class="hidden glass-panel p-4 rounded-xl mb-4 border-t-2 border-cyan-500/50">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div class="col-span-2 md:col-span-1">
-                            <label class="text-[10px] text-slate-400 font-bold mb-1.5 block uppercase">ค้นหาชื่อ/ชื่อเล่น</label>
-                            <input type="text" id="filterName" class="w-full p-2.5 rounded-lg glass-input text-xs" placeholder="พิมพ์ชื่อ..." onkeyup="applyAdminFilters()">
-                        </div>
+                        <div class="col-span-2 md:col-span-1"><label class="text-[10px] text-slate-400 font-bold mb-1 block">ค้นหา</label><input type="text" id="filterName" class="w-full p-2.5 rounded-lg glass-input text-xs" placeholder="ชื่อ/ชื่อเล่น" onkeyup="applyAdminFilters()"></div>
+                        <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">ทีม</label><input type="text" id="filterTeam" class="w-full p-2.5 rounded-lg glass-input text-xs" placeholder="พิมพ์ทีม..." onkeyup="applyAdminFilters()"></div>
                         <div>
-                            <label class="text-[10px] text-slate-400 font-bold mb-1.5 block uppercase">ทีม</label>
-                            <input type="text" id="filterTeam" class="w-full p-2.5 rounded-lg glass-input text-xs" placeholder="พิมพ์ทีม..." onkeyup="applyAdminFilters()">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="text-[10px] text-slate-400 font-bold mb-1.5 block uppercase">สถานะ</label>
+                            <label class="text-[10px] text-slate-400 font-bold mb-1 block">สถานะ</label>
                             <select id="filterStatus" class="w-full p-2.5 rounded-lg glass-input text-xs" onchange="applyAdminFilters()">
-                                <option value="all">ทั้งหมด (All)</option>
-                                <option value="active">กำลังเทรน (Active)</option>
-                                <option value="passed">เทรนครบ 3 วัน (Passed)</option>
-                                <option value="dropout">🔴 ออกระหว่างเทรน</option>
-                                <option value="resigned">ออก/สละสิทธิ์ (Resigned)</option>
+                                <option value="all">ทั้งหมด</option><option value="active">กำลังเทรน</option><option value="passed">เทรนครบ 3 วัน</option><option value="dropout">🔴 ออกกลางคัน</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="text-right mt-3">
-                        <button onclick="clearFilters()" class="text-[10px] text-slate-400 hover:text-white transition underline"><i class="fa-solid fa-eraser mr-1"></i>ล้างตัวกรอง</button>
                     </div>
                 </div>
                 
                 <div class="flex-1 overflow-auto glass-panel rounded-xl mb-20 border-0 shadow-lg">
                     <table class="w-full text-left border-collapse">
                         <thead class="bg-slate-900/80 backdrop-blur text-slate-400 text-[10px] font-bold uppercase sticky top-0 z-10 shadow-md">
-                            <tr>
-                                <th class="p-3 w-10 text-center">#</th>
-                                <th class="p-3">ข้อมูล & การเข้าเรียน</th>
-                                <th class="p-3 text-center hidden md:table-cell">Check-in</th>
-                                <th class="p-3 text-center w-24">สถานะ</th>
-                                <th class="p-3 text-center w-20">จัดการ</th>
-                            </tr>
+                            <tr><th class="p-3 w-10 text-center">#</th><th class="p-3">ข้อมูลพนักงาน</th><th class="p-3 text-center hidden md:table-cell">เข้าเรียน</th><th class="p-3 text-center w-24">สถานะ</th><th class="p-3 text-center w-20">จัดการ</th></tr>
                         </thead>
-                        <tbody id="adminTable" class="divide-y divide-slate-700/50 text-sm text-slate-300">
-                            </tbody>
+                        <tbody id="adminTable" class="divide-y divide-slate-700/50 text-sm text-slate-300"></tbody>
                     </table>
                 </div>
 
                 <div id="actionBar" class="fixed bottom-4 left-4 right-4 glass-panel rounded-2xl p-3 shadow-2xl transform translate-y-[150%] transition-transform duration-300 z-50 flex justify-between items-center border-t border-white/10 bg-slate-900/95 overflow-x-auto whitespace-nowrap scrollbar-hide">
-                    <div class="text-white text-xs pl-2 mr-4 inline-block align-middle">
-                        <span class="text-slate-400">Selected:</span> <span id="selectedCount" class="text-cyan-400 font-digital text-lg font-bold ml-1">0</span>
-                    </div>
+                    <div class="text-white text-xs pl-2 mr-4 inline-block align-middle"><span class="text-slate-400">Selected:</span> <span id="selectedCount" class="text-cyan-400 font-digital text-lg font-bold ml-1">0</span></div>
                     <div class="flex gap-2 inline-block align-middle pb-1">
                         <button onclick="openReportModal()" class="bg-amber-500 hover:bg-amber-400 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-1.5 transition"><i class="fa-solid fa-file-invoice"></i> รายงาน</button>
                         <button onclick="openHRModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-1.5 transition"><i class="fa-solid fa-paper-plane"></i> ส่ง HR</button>
@@ -240,8 +204,8 @@
                 <div><label class="text-[10px] text-slate-400 font-bold block mb-1">หมายเหตุ</label><textarea id="editNote" rows="2" class="w-full p-2.5 rounded-lg glass-input text-sm border-slate-600"></textarea></div>
             </div>
             <div class="flex gap-3 mt-6 pt-4 border-t border-white/10">
-                <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 py-2 rounded-lg border border-slate-600 text-slate-400 text-sm hover:bg-slate-700">ยกเลิก</button>
-                <button onclick="saveAdminEdit()" class="flex-1 py-2 rounded-lg bg-cyan-600 text-white font-bold text-sm hover:bg-cyan-500 shadow-lg">บันทึก</button>
+                <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 py-2 rounded-lg border border-slate-600 text-slate-400 text-sm">ยกเลิก</button>
+                <button onclick="saveAdminEdit()" class="flex-1 py-2 rounded-lg bg-cyan-600 text-white font-bold text-sm">บันทึก</button>
             </div>
         </div>
     </div>
@@ -257,15 +221,10 @@
                     <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">วันที่รอบอบรม</label><input type="date" id="reportDate" class="w-full p-2 rounded-lg glass-input text-xs"></div>
                     <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">ครั้งที่</label><select id="reportDayType" class="w-full p-2 rounded-lg glass-input text-xs"><option value="วันแรก">วันแรก</option><option value="วันที่สอง">วันที่สอง</option><option value="วันที่สาม">วันที่สาม</option></select></div>
                 </div>
-                <button onclick="addSelectionToReport()" class="w-full py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl text-white font-bold text-xs shadow hover:brightness-110">
-                    <i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการที่เลือก
-                </button>
-                <div>
-                    <label class="text-[10px] text-slate-400 font-bold mb-1 block">ข้อความรายงาน (แก้ไขได้)</label>
-                    <textarea id="finalReportText" class="w-full h-48 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
-                </div>
+                <button onclick="addSelectionToReport()" class="w-full py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl text-white font-bold text-xs shadow"><i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการ</button>
+                <textarea id="finalReportText" class="w-full h-40 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
             </div>
-            <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('finalReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('finalReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs hover:brightness-110"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
+            <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('finalReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('finalReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
         </div>
     </div>
 
@@ -277,10 +236,10 @@
                     <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">วันเริ่มอบรม</label><input type="date" id="hrTrainingDate" class="w-full p-2.5 rounded-xl glass-input text-sm"></div>
                     <div><label class="text-[10px] text-cyan-400 font-bold mb-1 block">วันเริ่มงานจริง</label><input type="date" id="hrWorkDate" class="w-full p-2.5 rounded-xl glass-input text-sm border-cyan-500/30"></div>
                 </div>
-                <button onclick="generateHRReport()" class="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl text-white font-bold text-xs shadow hover:brightness-110 mt-2"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> สร้างข้อความ</button>
+                <button onclick="generateHRReport()" class="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl text-white font-bold text-xs shadow mt-2"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> สร้างข้อความ</button>
                 <textarea id="hrReportText" class="w-full h-40 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
             </div>
-            <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('hrReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('hrReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs hover:brightness-110"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
+            <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('hrReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('hrReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
         </div>
     </div>
 
@@ -291,20 +250,24 @@
                 <button onclick="document.getElementById('paymentModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             
+            <div class="bg-amber-500/10 border border-amber-500/30 p-2 rounded-lg mb-4 text-[10px] text-amber-200">
+                <i class="fa-solid fa-circle-info mr-1"></i> ระบบคัดกรองเฉพาะผู้ที่ <b>ติ๊กเลือก + เทรนครบ 3 วัน + สถานะ Passed</b> มาให้แล้ว
+            </div>
+            
             <div class="flex-1 overflow-y-auto space-y-4 pr-1">
                 <div class="bg-slate-800/40 p-3 rounded-xl border border-slate-600/50">
-                    <label class="text-[10px] text-cyan-400 font-bold mb-2 block uppercase tracking-wide">1. เลือกวันที่เข้าอบรม (เพื่อสร้างรูปแบบอัตโนมัติ)</label>
+                    <label class="text-[10px] text-cyan-400 font-bold mb-2 block uppercase tracking-wide">1. เลือกวันที่เข้าอบรม</label>
                     <div class="grid grid-cols-3 gap-2 mb-3">
                         <input type="date" id="payDate1" class="w-full p-2 rounded-lg glass-input text-[10px] font-mono" onchange="generateTrainingDateStr()">
                         <input type="date" id="payDate2" class="w-full p-2 rounded-lg glass-input text-[10px] font-mono" onchange="generateTrainingDateStr()">
                         <input type="date" id="payDate3" class="w-full p-2 rounded-lg glass-input text-[10px] font-mono" onchange="generateTrainingDateStr()">
                     </div>
-                    <label class="text-[10px] text-slate-400 font-bold mb-1 block">วันที่อบรม (แก้ไขข้อความได้ตามต้องการ)</label>
-                    <input type="text" id="payTrainingDate" class="w-full p-2.5 rounded-xl glass-input text-sm text-cyan-300 font-bold" placeholder="เช่น 19และ20และ22 ม.ค. 69">
+                    <label class="text-[10px] text-slate-400 font-bold mb-1 block">วันที่อบรมที่จะแสดง (แก้ไขข้อความได้)</label>
+                    <input type="text" id="payTrainingDate" class="w-full p-2.5 rounded-xl glass-input text-sm text-cyan-300 font-bold" placeholder="เช่น 19และ20และ23 ก.พ. 69">
                 </div>
                 
                 <div>
-                    <label class="text-[10px] text-cyan-400 font-bold mb-1 block uppercase tracking-wide">2. กำหนดประสบการณ์ (รายชื่อที่เลือก)</label>
+                    <label class="text-[10px] text-cyan-400 font-bold mb-1 block uppercase tracking-wide">2. กำหนดประสบการณ์ (เรียงตามทีมอัตโนมัติ)</label>
                     <div class="bg-slate-800/50 rounded-xl border border-slate-600 overflow-hidden shadow-inner">
                         <table class="w-full text-left text-sm">
                             <thead class="bg-slate-900/80 text-[10px] text-slate-400 uppercase">
@@ -323,7 +286,7 @@
 
             <div class="mt-4 pt-4 border-t border-slate-700">
                 <button onclick="copyPaymentToSheet()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 rounded-xl text-white font-bold text-sm shadow-lg shadow-emerald-900/30 flex justify-center items-center gap-2 transition transform active:scale-[0.98]">
-                    <i class="fa-solid fa-table"></i> คัดลอกลง Google Sheet / Excel
+                    <i class="fa-solid fa-table"></i> คัดลอกข้อมูลทำจ่าย (วางใน Excel/Sheet)
                 </button>
             </div>
         </div>
@@ -333,29 +296,38 @@
         // **********************************************
         // 🔴 ใส่ URL WEB APP (Apps Script) ตรงนี้
         // **********************************************
-        const API_URL = "https://script.google.com/macros/s/AKfycbyYYauRspNoRvkhUWKZh4c5Hp1TzhxWGu_T96TvPPMZ6p1DHJqh30Azzi_PrEcGn9dy/exec"; 
+        const API_URL = "URL_APPS_SCRIPT_ของคุณ_ใส่ตรงนี้"; 
         // **********************************************
         
         let adminPassCache = "";
         let adminAllData = []; 
         let selectedRows = new Set(); 
-        
-        // 🔴 ตัวแปรเก็บยอดรวมการทำรายงาน
         let reportTotalCount = 0; 
 
+        // --- Clock ---
         function startTime() {
             const today = new Date();
             const thaiDays = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
-            const thaiMonths = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+            const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
             document.getElementById('clockDate').innerText = `${thaiDays[today.getDay()]}ที่ ${today.getDate()} ${thaiMonths[today.getMonth()]} ${today.getFullYear() + 543}`;
             document.getElementById('clockTime').innerText = `${String(today.getHours()).padStart(2,'0')}:${String(today.getMinutes()).padStart(2,'0')}`;
             setTimeout(startTime, 1000);
         }
 
+        // --- 🔴 Robust API Fetch (ป้องกันบั๊กเชื่อมต่อ) ---
         async function fetchAPI(payload) {
             document.getElementById('loadingOverlay').classList.remove('hidden');
-            try { const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) }); return await response.json(); } 
-            catch (error) { return { status: 'error', message: 'Connection Error' }; }
+            try { 
+                const response = await fetch(API_URL, { 
+                    method: 'POST', 
+                    body: JSON.stringify(payload) 
+                }); 
+                return await response.json(); 
+            } 
+            catch (error) { 
+                console.error("API Error Details:", error);
+                return { status: 'error', message: 'เชื่อมต่อฐานข้อมูลไม่สำเร็จ โปรดตรวจสอบ URL หรือความเสถียรของอินเทอร์เน็ต' }; 
+            }
             finally { document.getElementById('loadingOverlay').classList.add('hidden'); }
         }
 
@@ -377,7 +349,10 @@
             const res = await fetchAPI({ action: 'login', phone });
             if (res.status === 'success') {
                 const d = res.data;
-                document.getElementById('uiName').innerText = d.name; document.getElementById('uiNick').innerText = d.nickname; document.getElementById('uiDept').innerText = d.dept; document.getElementById('uiStatus').innerText = d.status;
+                document.getElementById('uiName').innerText = d.name || '-'; 
+                document.getElementById('uiNick').innerText = d.nickname || '-'; 
+                document.getElementById('uiDept').innerText = d.dept || '-'; 
+                document.getElementById('uiStatus').innerText = d.status || 'Active';
                 document.getElementById('profileCard').classList.remove('hidden');
                 ['1','2','3'].forEach(i => updateCheckBtn(`boxD${i}`, i, d[`d${i}`]));
             } else { Swal.fire({ icon: 'error', text: 'ไม่พบข้อมูล', background: '#1e293b', color: '#fff' }); document.getElementById('profileCard').classList.add('hidden'); }
@@ -395,26 +370,33 @@
             if (cf.isConfirmed) {
                 const res = await fetchAPI({ action: 'checkin', phone, day });
                 if (res.status === 'success') { checkStatus(); Swal.fire({ icon: 'success', title: 'สำเร็จ', timer: 1500, showConfirmButton: false, background: '#1e293b', color: '#fff' }); }
+                else { Swal.fire({ icon: 'error', text: res.message, background: '#1e293b', color: '#fff' }); }
             }
         }
 
         async function adminAccess() {
             const pass = document.getElementById('adminPass').value;
             const res = await fetchAPI({ action: 'get_admin', pass });
-            if (res.status === 'success') { adminPassCache = pass; document.getElementById('adminLogin').classList.add('hidden'); document.getElementById('adminDashboard').classList.remove('hidden'); adminAllData = res.data; applyAdminFilters(); }
-            else { Swal.fire({ icon: 'error', text: 'รหัสผ่านผิด', background: '#1e293b', color: '#fff' }); }
+            if (res.status === 'success') { adminPassCache = pass; document.getElementById('adminLogin').classList.add('hidden'); document.getElementById('adminDashboard').classList.remove('hidden'); adminAllData = res.data || []; applyAdminFilters(); }
+            else { Swal.fire({ icon: 'error', text: res.message || 'รหัสผ่านผิด', background: '#1e293b', color: '#fff' }); }
         }
-        async function loadAdminData() { if(adminPassCache) { const res = await fetchAPI({ action: 'get_admin', pass: adminPassCache }); if(res.status==='success') { adminAllData = res.data; applyAdminFilters(); } } }
+        
+        async function loadAdminData() { 
+            if(adminPassCache) { 
+                const res = await fetchAPI({ action: 'get_admin', pass: adminPassCache }); 
+                if(res.status==='success') { adminAllData = res.data || []; applyAdminFilters(); } 
+            } 
+        }
 
+        // 🔴 ป้องกันบักการแปลงวันที่
         function parseToDateObj(dateStr) {
             if (!dateStr) return null;
-            if (dateStr.includes('/')) {
-                const parts = dateStr.split(' ');
-                const dPart = parts[0].split('/');
-                const tPart = parts[1] ? parts[1].split(':') : ['00','00','00'];
+            const str = String(dateStr); 
+            if (str.includes('/')) {
+                const parts = str.split(' '); const dPart = parts[0].split('/'); const tPart = parts[1] ? parts[1].split(':') : ['00','00','00'];
                 if (dPart.length >= 3) return new Date(`${dPart[2]}-${dPart[1]}-${dPart[0]}T${tPart[0]}:${tPart[1]}:${tPart[2]||'00'}`);
             }
-            return new Date(dateStr);
+            return new Date(str);
         }
 
         function formatPrettyDate(dateString) {
@@ -427,11 +409,7 @@
         }
 
         function toggleFilterPanel() { document.getElementById('filterPanel').classList.toggle('hidden'); }
-        function clearFilters() {
-            document.getElementById('filterStart').value = ''; document.getElementById('filterEnd').value = '';
-            document.getElementById('filterName').value = ''; document.getElementById('filterTeam').value = '';
-            document.getElementById('filterStatus').value = 'all'; applyAdminFilters();
-        }
+        function clearFilters() { document.getElementById('filterStart').value = ''; document.getElementById('filterEnd').value = ''; document.getElementById('filterName').value = ''; document.getElementById('filterTeam').value = ''; document.getElementById('filterStatus').value = 'all'; applyAdminFilters(); }
 
         function applyAdminFilters() {
             const fStart = document.getElementById('filterStart').value; const fEnd = document.getElementById('filterEnd').value;
@@ -439,18 +417,25 @@
             const fStatus = document.getElementById('filterStatus').value;
 
             const filtered = adminAllData.filter(row => {
-                const matchName = row.name.toLowerCase().includes(fName) || (row.nickname||'').toLowerCase().includes(fName);
-                const matchTeam = (row.team||'').toLowerCase().includes(fTeam);
+                // 🔴 ป้องกันการล่มเมื่อเจอแถวว่างใน Sheet
+                if (!row || (!row.name && !row.phone)) return false;
 
-                let attendedDays = 0;
-                if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
-                const isDropout = (attendedDays > 0 && attendedDays < 3) && ['Resigned', 'New Job'].includes(row.status);
+                const safeName = String(row.name || '').toLowerCase();
+                const safeNick = String(row.nickname || '').toLowerCase();
+                const safeTeam = String(row.team || '').toLowerCase();
+                const safeStatus = String(row.status || '');
+
+                const matchName = safeName.includes(fName) || safeNick.includes(fName);
+                const matchTeam = safeTeam.includes(fTeam);
+
+                let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
+                const isDropout = (attendedDays > 0 && attendedDays < 3) && ['Resigned', 'New Job'].includes(safeStatus);
 
                 let matchStatus = true;
-                if (fStatus === 'active') matchStatus = row.status === 'Active';
-                else if (fStatus === 'passed') matchStatus = (row.status === 'Passed' || attendedDays === 3);
+                if (fStatus === 'active') matchStatus = safeStatus === 'Active';
+                else if (fStatus === 'passed') matchStatus = (safeStatus === 'Passed' || attendedDays === 3);
                 else if (fStatus === 'dropout') matchStatus = isDropout;
-                else if (fStatus === 'resigned') matchStatus = ['Resigned', 'New Job'].includes(row.status);
+                else if (fStatus === 'resigned') matchStatus = ['Resigned', 'New Job'].includes(safeStatus);
 
                 let matchDate = true;
                 if (fStart || fEnd) {
@@ -468,49 +453,62 @@
 
         function renderAdminTable(data) {
             const tbody = document.getElementById('adminTable'); tbody.innerHTML = '';
+            
+            if(!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-slate-500">ไม่พบข้อมูล</td></tr>';
+                updateActionBar();
+                return;
+            }
+
             data.forEach(row => {
-                const tr = document.createElement('tr'); 
-                let attendedDays = 0;
-                if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
-                const isDropout = (attendedDays > 0 && attendedDays < 3) && ['Resigned', 'New Job'].includes(row.status);
+                try {
+                    if (!row || (!row.name && !row.phone)) return; 
 
-                tr.className = isDropout ? "transition border-b border-red-500/30 bg-red-900/10 hover:bg-red-900/20" : "hover:bg-white/5 transition border-b border-slate-700/50";
-                const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-emerald-400 text-sm" title="${v}"></i>` : `<i class="fa-regular fa-circle text-slate-600 text-sm"></i>`;
-                let badge = "bg-slate-800 text-slate-400 border border-slate-600";
-                if(row.status==='Active') badge="bg-blue-500/10 text-blue-400 border border-blue-500/30"; 
-                if(row.status==='Passed') badge="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"; 
-                if(['Resigned','New Job'].includes(row.status)) badge="bg-red-500/10 text-red-400 border border-red-500/30";
+                    const tr = document.createElement('tr'); 
+                    let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
+                    const safeStatus = String(row.status || '');
+                    const isDropout = (attendedDays > 0 && attendedDays < 3) && ['Resigned', 'New Job'].includes(safeStatus);
 
-                let dayColor = attendedDays === 3 ? 'text-emerald-400' : (isDropout ? 'text-red-400' : 'text-amber-400');
-                let nameDisplay = `<div class="font-bold text-white text-sm mb-0.5">${row.name}</div>`;
-                if (isDropout) nameDisplay = `<div class="font-bold text-red-400 text-sm mb-0.5 flex items-center gap-1.5 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]"><i class="fa-solid fa-circle-exclamation text-red-500 animate-pulse"></i>${row.name}</div>`;
+                    tr.className = isDropout ? "transition border-b border-red-500/30 bg-red-900/10 hover:bg-red-900/20" : "hover:bg-white/5 transition border-b border-slate-700/50";
+                    const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-emerald-400 text-sm" title="${v}"></i>` : `<i class="fa-regular fa-circle text-slate-600 text-sm"></i>`;
+                    let badge = "bg-slate-800 text-slate-400 border border-slate-600";
+                    if(safeStatus==='Active') badge="bg-blue-500/10 text-blue-400 border border-blue-500/30"; 
+                    if(safeStatus==='Passed') badge="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"; 
+                    if(['Resigned','New Job'].includes(safeStatus)) badge="bg-red-500/10 text-red-400 border border-red-500/30";
 
-                tr.innerHTML = `
-                    <td class="p-3 text-center align-top pt-5"><input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)"></td>
-                    <td class="p-3 align-top">
-                        ${nameDisplay}
-                        <div class="text-[10px] text-slate-400 mb-1">${row.nickname} | ${row.dept}</div>
-                        <div class="text-[10px] text-cyan-400 font-bold mb-1">TEAM: ${row.team}</div>
-                        ${formatPrettyDate(row.timestamp)}
-                        <div class="mt-3 flex items-center gap-3 bg-slate-900/50 px-3 py-1.5 rounded-lg border border-white/5 w-fit shadow-inner">
-                            <span class="text-[10px] text-slate-300 font-bold uppercase tracking-wide">เข้าเรียน <span class="text-lg mx-1 ${dayColor} leading-none font-digital drop-shadow-md">${attendedDays}</span>/ 3 วัน</span>
-                            <div class="flex gap-1.5 border-l border-white/10 pl-3">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div>
-                        </div>
-                    </td>
-                    <td class="p-3 text-center hidden md:table-cell align-middle"><div class="flex justify-center gap-2">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div></td>
-                    <td class="p-3 text-center align-top pt-5">
-                        <div class="inline-block px-2.5 py-1.5 rounded-lg text-[10px] uppercase font-bold tracking-wider ${badge} min-w-[75px] shadow-sm">${row.status}</div>
-                        ${isDropout ? `<div class="mt-2 inline-block bg-red-500/20 border border-red-500/50 text-red-400 text-[9px] font-bold px-2 py-1 rounded shadow-lg animate-pulse"><i class="fa-solid fa-user-slash mr-1"></i>ออกระหว่างเทรน</div>` : ''}
-                        ${row.note ? `<div class="text-[9px] text-slate-400 mt-2 max-w-[80px] truncate mx-auto" title="${row.note}"><i class="fa-solid fa-comment-dots mr-1"></i> ${row.note}</div>` : ''}
-                    </td>
-                    <td class="p-3 text-center align-top pt-5">
-                        <div class="flex justify-center gap-1.5">
-                            <button onclick="openEditModal(${row.row}, '${row.status}', '${row.team}', '${row.note||''}')" class="text-cyan-400 bg-cyan-500/10 w-8 h-8 rounded-lg hover:bg-cyan-500/20 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteUser(${row.row})" class="text-red-400 bg-red-500/10 w-8 h-8 rounded-lg hover:bg-red-500/20 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
+                    let dayColor = attendedDays === 3 ? 'text-emerald-400' : (isDropout ? 'text-red-400' : 'text-amber-400');
+                    let nameDisplay = `<div class="font-bold text-white text-sm mb-0.5">${row.name || '-'}</div>`;
+                    if (isDropout) nameDisplay = `<div class="font-bold text-red-400 text-sm mb-0.5 flex items-center gap-1.5 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]"><i class="fa-solid fa-circle-exclamation text-red-500 animate-pulse"></i>${row.name}</div>`;
+
+                    tr.innerHTML = `
+                        <td class="p-3 text-center align-top pt-5"><input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)"></td>
+                        <td class="p-3 align-top">
+                            ${nameDisplay}
+                            <div class="text-[10px] text-slate-400 mb-1">${row.nickname || '-'} | ${row.dept || '-'}</div>
+                            <div class="text-[10px] text-cyan-400 font-bold mb-1">TEAM: ${row.team || '-'}</div>
+                            ${formatPrettyDate(row.timestamp)}
+                            <div class="mt-3 flex items-center gap-3 bg-slate-900/50 px-3 py-1.5 rounded-lg border border-white/5 w-fit shadow-inner">
+                                <span class="text-[10px] text-slate-300 font-bold uppercase tracking-wide">เข้าเรียน <span class="text-lg mx-1 ${dayColor} leading-none font-digital drop-shadow-md">${attendedDays}</span>/ 3 วัน</span>
+                                <div class="flex gap-1.5 border-l border-white/10 pl-3">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div>
+                            </div>
+                        </td>
+                        <td class="p-3 text-center hidden md:table-cell align-middle"><div class="flex justify-center gap-2">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div></td>
+                        <td class="p-3 text-center align-top pt-5">
+                            <div class="inline-block px-2.5 py-1.5 rounded-lg text-[10px] uppercase font-bold tracking-wider ${badge} min-w-[75px] shadow-sm">${safeStatus || 'N/A'}</div>
+                            ${isDropout ? `<div class="mt-2 inline-block bg-red-500/20 border border-red-500/50 text-red-400 text-[9px] font-bold px-2 py-1 rounded shadow-lg animate-pulse"><i class="fa-solid fa-user-slash mr-1"></i>ออกระหว่างเทรน</div>` : ''}
+                            ${row.note ? `<div class="text-[9px] text-slate-400 mt-2 max-w-[80px] truncate mx-auto" title="${row.note}"><i class="fa-solid fa-comment-dots mr-1"></i> ${row.note}</div>` : ''}
+                        </td>
+                        <td class="p-3 text-center align-top pt-5">
+                            <div class="flex justify-center gap-1.5">
+                                <button onclick="openEditModal(${row.row}, '${safeStatus}', '${row.team||''}', '${row.note||''}')" class="text-cyan-400 bg-cyan-500/10 w-8 h-8 rounded-lg hover:bg-cyan-500/20 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteUser(${row.row})" class="text-red-400 bg-red-500/10 w-8 h-8 rounded-lg hover:bg-red-500/20 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                } catch(err) {
+                    console.error("Error render row:", err);
+                }
             });
             updateActionBar();
         }
@@ -527,18 +525,13 @@
         function sendLine(id) { let t = document.getElementById(id).value; if(id.includes('Report')) t += "ขอบคุณครับ"; window.open(`https://line.me/R/msg/text/?${encodeURIComponent(t)}`, '_blank'); }
         function formatDateThai(date) { const m = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; return `${date.getDate()} ${m[date.getMonth()]} ${date.getFullYear()+543}`; }
 
-        // --- 🔴 1. TRAINING REPORT (UPDATE LOGIC) ---
         function openReportModal() {
             document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
-            const d = formatDateThai(new Date()); 
-            const txt = document.getElementById('finalReportText');
-            
-            // เช็คว่าถ้าช่องว่าง ให้รีเซ็ตยอดรวมเป็น 0 แล้วใส่ Header
+            const d = formatDateThai(new Date()); const txt = document.getElementById('finalReportText');
             if(!txt.value.trim()) {
                 reportTotalCount = 0;
                 txt.value = `เรียน พี่ด้า\nและหัวหน้างานที่เกี่ยวข้อง\nขอนำส่งรายงานการอบรมพนักงานใหม่\nรอบอบรมวันที่ ${d}\n\nอบรมทั้งหมดจำนวน 0 คน\n\n`;
             } else {
-                // ถ้ามีข้อความเก่าอยู่ พยายามดึงยอดรวมเดิมมา
                 const match = txt.value.match(/อบรมทั้งหมดจำนวน (\d+) คน/);
                 if (match) reportTotalCount = parseInt(match[1], 10);
             }
@@ -550,30 +543,25 @@
             const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
             if (!items.length) return Swal.fire('แจ้งเตือน', 'กรุณาเลือกรายชื่ออย่างน้อย 1 คน', 'warning');
             
-            // เพิ่มยอดคนที่เลือกรอบนี้เข้ากับยอดรวมสะสม
             reportTotalCount += items.length;
 
             const teams = {}; 
-            items.forEach(i => { const t = i.team || 'ไม่ระบุทีม'; if (!teams[t]) teams[t] = []; teams[t].push(i.nickname || i.name); });
+            items.forEach(i => { const t = i.team || 'ไม่ระบุทีม'; if (!teams[t]) teams[t] = []; teams[t].push(i.nickname || i.name || '-'); });
             
             let sectionText = `อบรม${type} ทั้งหมด ${items.length} คน\n\n`;
             for (const [t, n] of Object.entries(teams)) sectionText += `${t}    จำนวน ${n.length} คน ${n.join(', ')}\n`;
             sectionText += `\n`;
 
-            // อัปเดตข้อความในกล่อง (แทนที่ยอดรวมเดิม)
             let currentText = document.getElementById('finalReportText').value;
             if (currentText.includes('อบรมทั้งหมดจำนวน')) {
                 currentText = currentText.replace(/อบรมทั้งหมดจำนวน \d+ คน/, `อบรมทั้งหมดจำนวน ${reportTotalCount} คน`);
             }
             
-            // นำก้อนข้อความใหม่ต่อท้าย
             document.getElementById('finalReportText').value = currentText + sectionText;
-            
             selectedRows.clear(); document.querySelectorAll('.custom-checkbox').forEach(c => c.checked = false); updateActionBar();
             Swal.fire({ icon: 'success', title: 'เพิ่มลงรายงานแล้ว', text: `ยอดรวมปรับเป็น ${reportTotalCount} คน`, showConfirmButton: false, timer: 1500, background: '#1e293b', color: '#fff' });
         }
 
-        // --- 2. HR Report ---
         function openHRModal() { document.getElementById('hrTrainingDate').value = new Date().toISOString().split('T')[0]; document.getElementById('hrWorkDate').value = ""; document.getElementById('hrReportText').value = ""; document.getElementById('hrModal').classList.remove('hidden'); }
         function generateHRReport() {
             const tDate = document.getElementById('hrTrainingDate').value; const wDate = document.getElementById('hrWorkDate').value;
@@ -582,11 +570,19 @@
             const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
             if (!items.length) return;
             let txt = "";
-            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${tStr}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
+            items.forEach(i => { txt += `${i.prefix||''}${i.name||''}\n${i.nickname||'-'}  ${i.team||'-'}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${tStr}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
             document.getElementById('hrReportText').value = txt;
         }
 
-        // --- 3. Payment Report ---
+        // --- 🔴 PAYMENT REPORT (อัปเดตเรียงลำดับทีม และคัดกรอง Passed) ---
+        function getTeamPriority(teamName) {
+            if (!teamName) return 999;
+            const t = String(teamName).toUpperCase().trim();
+            const order = ["RETAIL 1", "RETAIL 2", "RETAIL 3", "RETAIL 4", "PA 1A", "PA 1B", "PA 1C", "PA 1D", "PA 2A", "PA 2B", "PA 2C"];
+            const index = order.indexOf(t);
+            return index !== -1 ? index : 999; 
+        }
+
         function generateTrainingDateStr() {
             const d1 = document.getElementById('payDate1').value; const d2 = document.getElementById('payDate2').value; const d3 = document.getElementById('payDate3').value;
             const dates = [d1, d2, d3].filter(v => v);
@@ -602,44 +598,72 @@
         }
 
         function openPaymentModal() {
-            const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
-            if (!items.length) return Swal.fire({icon:'warning', text:'กรุณาเลือกรายชื่อ', background:'#1e293b', color:'#fff'});
-            items.sort((a, b) => (a.team || '').localeCompare(b.team || ''));
+            let items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
+            if (items.length === 0) return Swal.fire({icon:'warning', text:'กรุณาเลือกรายชื่อที่ต้องการทำจ่ายก่อน', background:'#1e293b', color:'#fff'});
+
+            // 🔴 กรองเฉพาะคนที่ "มาครบ 3 วัน" และ "Passed" เท่านั้น
+            const eligibleItems = items.filter(row => {
+                let attendedDays = 0; 
+                if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
+                return attendedDays === 3 && row.status === 'Passed';
+            });
+
+            if (eligibleItems.length === 0) return Swal.fire({icon:'error', title:'ไม่พบผู้มีสิทธิ์', text:'รายชื่อที่คุณเลือก ไม่มีใครเทรนครบ 3 วัน หรือไม่มีใครสถานะ Passed', background:'#1e293b', color:'#fff'});
+
+            // 🔴 เรียงลำดับตาม Priority RETAIL 1 -> PA...
+            eligibleItems.sort((a, b) => getTeamPriority(a.team) - getTeamPriority(b.team) || (String(a.team || '')).localeCompare(String(b.team || '')));
+
+            // ดึงวันที่ลงทะเบียนวันแรก เป็นค่าตั้งต้นให้อัตโนมัติ
+            if (eligibleItems.length > 0) {
+                const firstDateObj = parseToDateObj(eligibleItems[0].timestamp);
+                if (firstDateObj && !isNaN(firstDateObj.getTime())) {
+                    document.getElementById('payDate1').value = firstDateObj.toISOString().split('T')[0];
+                    
+                    const d2 = new Date(firstDateObj); d2.setDate(d2.getDate() + 1);
+                    document.getElementById('payDate2').value = d2.toISOString().split('T')[0];
+                    
+                    const d3 = new Date(firstDateObj); d3.setDate(d3.getDate() + 2);
+                    document.getElementById('payDate3').value = d3.toISOString().split('T')[0];
+                    
+                    generateTrainingDateStr();
+                }
+            }
+
             const tbody = document.getElementById('paymentUserList'); tbody.innerHTML = '';
-            items.forEach(item => {
+            eligibleItems.forEach(item => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-2 pl-4 text-xs font-bold text-cyan-400">${item.team || '-'}</td>
-                    <td class="p-2 text-xs text-white">${item.prefix||''}${item.name} (${item.nickname})</td>
+                    <td class="p-2 text-xs text-white">${item.prefix||''}${item.name||''} (${item.nickname||'-'})</td>
                     <td class="p-2 text-center"><select class="exp-select w-full bg-slate-700 border border-slate-600 rounded text-white text-[10px] p-1 focus:ring-1 focus:ring-cyan-500 outline-none" data-id="${item.id}"><option value="ไม่มี">ไม่มี</option><option value="มี">มี</option></select></td>
                 `;
                 tbody.appendChild(tr);
             });
-            document.getElementById('payDate1').value = ""; document.getElementById('payDate2').value = ""; document.getElementById('payDate3').value = ""; document.getElementById('payTrainingDate').value = "";
+            window.currentPaymentItems = eligibleItems;
             document.getElementById('paymentModal').classList.remove('hidden');
         }
 
         function copyPaymentToSheet() {
             const trainDateRange = document.getElementById('payTrainingDate').value || '-';
-            const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
-            items.sort((a, b) => (a.team || '').localeCompare(b.team || ''));
+            const items = window.currentPaymentItems || [];
             const expSelects = document.querySelectorAll('.exp-select'); const expMap = {};
             expSelects.forEach(sel => { expMap[sel.getAttribute('data-id')] = sel.value; });
 
-            let tsv = "ลำดับ\tคำนำหน้า\tชื่อ-นามสกุล\tชื่อเล่น\tทีม\tวันที่อบรม\tประสบการณ์\tวันที่ลงทะเบียนอบรมวันแรก\tวันที่ 1\tวันที่ 2\tวันที่ 3\n";
+            // 🔴 Header ตามที่ขอเป๊ะๆ (8 คอลัมน์)
+            let tsv = "ลำดับ\tคำนำหน้า\tชื่อ - นามสกุล\tชื่อเล่น\tทีม\tมี (ประสบการณ์)\tไม่มี (ประสบการณ์)\tวันที่อบรม\n";
 
             items.forEach((item, index) => {
-                const no = index + 1; const prefix = item.prefix || ''; const name = item.name || ''; const nick = item.nickname || ''; const team = item.team || '-'; const exp = expMap[item.id] || "ไม่มี";
-                const regDateObj = parseToDateObj(item.timestamp);
-                let regDateStr = "-";
-                if (regDateObj && !isNaN(regDateObj.getTime())) {
-                    const d = String(regDateObj.getDate()).padStart(2, '0'); const m = String(regDateObj.getMonth() + 1).padStart(2, '0'); const y = regDateObj.getFullYear() + 543;
-                    regDateStr = `${d}/${m}/${y}`;
-                }
-                const d1 = item.d1 ? "1" : ""; const d2 = item.d2 ? "1" : ""; const d3 = item.d3 ? "1" : "";
-                tsv += `${no}\t${prefix}\t${name}\t${nick}\t${team}\t${trainDateRange}\t${exp}\t${regDateStr}\t${d1}\t${d2}\t${d3}\n`;
+                const no = index + 1; const prefix = item.prefix || ''; const name = item.name || ''; const nick = item.nickname || ''; const team = item.team || '-';
+                
+                // แยกคอลัมน์ประสบการณ์
+                const exp = expMap[item.id] || "ไม่มี";
+                const hasExp = exp === "มี" ? "/" : "";
+                const noExp = exp === "ไม่มี" ? "/" : "";
+                
+                tsv += `${no}\t${prefix}\t${name}\t${nick}\t${team}\t${hasExp}\t${noExp}\t${trainDateRange}\n`;
             });
-            navigator.clipboard.writeText(tsv).then(() => { Swal.fire({ icon: 'success', title: 'คัดลอกข้อมูลแล้ว', text: 'นำไปกด วาง (Ctrl+V) ใน Google Sheet ได้เลย คอลัมน์จะแบ่งให้อัตโนมัติ', confirmButtonColor: '#10b981', background: '#1e293b', color: '#fff' }); document.getElementById('paymentModal').classList.add('hidden'); });
+
+            navigator.clipboard.writeText(tsv).then(() => { Swal.fire({ icon: 'success', title: 'คัดลอกข้อมูลแล้ว', text: 'นำไปกด วาง (Ctrl+V) ใน Google Sheet ได้เลย', confirmButtonColor: '#10b981', background: '#1e293b', color: '#fff' }); document.getElementById('paymentModal').classList.add('hidden'); });
         }
 
         // --- Actions ---
