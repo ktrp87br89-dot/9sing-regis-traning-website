@@ -257,8 +257,13 @@
                     <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">วันที่รอบอบรม</label><input type="date" id="reportDate" class="w-full p-2 rounded-lg glass-input text-xs"></div>
                     <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">ครั้งที่</label><select id="reportDayType" class="w-full p-2 rounded-lg glass-input text-xs"><option value="วันแรก">วันแรก</option><option value="วันที่สอง">วันที่สอง</option><option value="วันที่สาม">วันที่สาม</option></select></div>
                 </div>
-                <button onclick="addSelectionToReport()" class="w-full py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl text-white font-bold text-xs shadow hover:brightness-110"><i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการ</button>
-                <textarea id="finalReportText" class="w-full h-40 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
+                <button onclick="addSelectionToReport()" class="w-full py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl text-white font-bold text-xs shadow hover:brightness-110">
+                    <i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการที่เลือก
+                </button>
+                <div>
+                    <label class="text-[10px] text-slate-400 font-bold mb-1 block">ข้อความรายงาน (แก้ไขได้)</label>
+                    <textarea id="finalReportText" class="w-full h-48 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
+                </div>
             </div>
             <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('finalReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('finalReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs hover:brightness-110"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
         </div>
@@ -287,7 +292,6 @@
             </div>
             
             <div class="flex-1 overflow-y-auto space-y-4 pr-1">
-                
                 <div class="bg-slate-800/40 p-3 rounded-xl border border-slate-600/50">
                     <label class="text-[10px] text-cyan-400 font-bold mb-2 block uppercase tracking-wide">1. เลือกวันที่เข้าอบรม (เพื่อสร้างรูปแบบอัตโนมัติ)</label>
                     <div class="grid grid-cols-3 gap-2 mb-3">
@@ -321,7 +325,6 @@
                 <button onclick="copyPaymentToSheet()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 rounded-xl text-white font-bold text-sm shadow-lg shadow-emerald-900/30 flex justify-center items-center gap-2 transition transform active:scale-[0.98]">
                     <i class="fa-solid fa-table"></i> คัดลอกลง Google Sheet / Excel
                 </button>
-                <p class="text-[10px] text-slate-400 text-center mt-2 font-light">กดปุ่มนี้แล้วไปกด วาง (Ctrl+V) ลงใน Sheet ได้เลย ข้อมูลจะลงคอลัมน์ให้อัตโนมัติ</p>
             </div>
         </div>
     </div>
@@ -336,6 +339,9 @@
         let adminPassCache = "";
         let adminAllData = []; 
         let selectedRows = new Set(); 
+        
+        // 🔴 ตัวแปรเก็บยอดรวมการทำรายงาน
+        let reportTotalCount = 0; 
 
         function startTime() {
             const today = new Date();
@@ -521,23 +527,53 @@
         function sendLine(id) { let t = document.getElementById(id).value; if(id.includes('Report')) t += "ขอบคุณครับ"; window.open(`https://line.me/R/msg/text/?${encodeURIComponent(t)}`, '_blank'); }
         function formatDateThai(date) { const m = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; return `${date.getDate()} ${m[date.getMonth()]} ${date.getFullYear()+543}`; }
 
+        // --- 🔴 1. TRAINING REPORT (UPDATE LOGIC) ---
         function openReportModal() {
             document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
-            const d = formatDateThai(new Date()); const txt = document.getElementById('finalReportText');
-            if(!txt.value.trim()) txt.value = `เรียน พี่ด้า\nและหัวหน้างานที่เกี่ยวข้อง\nขอนำส่งรายงานการอบรมพนักงานใหม่\nรอบอบรมวันที่ ${d}\n\n`;
+            const d = formatDateThai(new Date()); 
+            const txt = document.getElementById('finalReportText');
+            
+            // เช็คว่าถ้าช่องว่าง ให้รีเซ็ตยอดรวมเป็น 0 แล้วใส่ Header
+            if(!txt.value.trim()) {
+                reportTotalCount = 0;
+                txt.value = `เรียน พี่ด้า\nและหัวหน้างานที่เกี่ยวข้อง\nขอนำส่งรายงานการอบรมพนักงานใหม่\nรอบอบรมวันที่ ${d}\n\nอบรมทั้งหมดจำนวน 0 คน\n\n`;
+            } else {
+                // ถ้ามีข้อความเก่าอยู่ พยายามดึงยอดรวมเดิมมา
+                const match = txt.value.match(/อบรมทั้งหมดจำนวน (\d+) คน/);
+                if (match) reportTotalCount = parseInt(match[1], 10);
+            }
             document.getElementById('reportModal').classList.remove('hidden');
         }
+
         function addSelectionToReport() {
             const type = document.getElementById('reportDayType').value;
             const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
             if (!items.length) return Swal.fire('แจ้งเตือน', 'กรุณาเลือกรายชื่ออย่างน้อย 1 คน', 'warning');
-            const teams = {}; items.forEach(i => { const t = i.team || 'No Team'; if (!teams[t]) teams[t] = []; teams[t].push(i.nickname); });
-            let txt = `อบรม${type} ทั้งหมด ${items.length} คน\n\n`;
-            for (const [t, n] of Object.entries(teams)) txt += `${t}    จำนวน ${n.length} คน ${n.join(' ')}\n`;
-            document.getElementById('finalReportText').value += txt + `\n`;
+            
+            // เพิ่มยอดคนที่เลือกรอบนี้เข้ากับยอดรวมสะสม
+            reportTotalCount += items.length;
+
+            const teams = {}; 
+            items.forEach(i => { const t = i.team || 'ไม่ระบุทีม'; if (!teams[t]) teams[t] = []; teams[t].push(i.nickname || i.name); });
+            
+            let sectionText = `อบรม${type} ทั้งหมด ${items.length} คน\n\n`;
+            for (const [t, n] of Object.entries(teams)) sectionText += `${t}    จำนวน ${n.length} คน ${n.join(', ')}\n`;
+            sectionText += `\n`;
+
+            // อัปเดตข้อความในกล่อง (แทนที่ยอดรวมเดิม)
+            let currentText = document.getElementById('finalReportText').value;
+            if (currentText.includes('อบรมทั้งหมดจำนวน')) {
+                currentText = currentText.replace(/อบรมทั้งหมดจำนวน \d+ คน/, `อบรมทั้งหมดจำนวน ${reportTotalCount} คน`);
+            }
+            
+            // นำก้อนข้อความใหม่ต่อท้าย
+            document.getElementById('finalReportText').value = currentText + sectionText;
+            
             selectedRows.clear(); document.querySelectorAll('.custom-checkbox').forEach(c => c.checked = false); updateActionBar();
+            Swal.fire({ icon: 'success', title: 'เพิ่มลงรายงานแล้ว', text: `ยอดรวมปรับเป็น ${reportTotalCount} คน`, showConfirmButton: false, timer: 1500, background: '#1e293b', color: '#fff' });
         }
 
+        // --- 2. HR Report ---
         function openHRModal() { document.getElementById('hrTrainingDate').value = new Date().toISOString().split('T')[0]; document.getElementById('hrWorkDate').value = ""; document.getElementById('hrReportText').value = ""; document.getElementById('hrModal').classList.remove('hidden'); }
         function generateHRReport() {
             const tDate = document.getElementById('hrTrainingDate').value; const wDate = document.getElementById('hrWorkDate').value;
@@ -550,62 +586,36 @@
             document.getElementById('hrReportText').value = txt;
         }
 
-        // --- 🔴 SMART DATE PICKER FORMATTER ---
+        // --- 3. Payment Report ---
         function generateTrainingDateStr() {
-            const d1 = document.getElementById('payDate1').value;
-            const d2 = document.getElementById('payDate2').value;
-            const d3 = document.getElementById('payDate3').value;
-            
+            const d1 = document.getElementById('payDate1').value; const d2 = document.getElementById('payDate2').value; const d3 = document.getElementById('payDate3').value;
             const dates = [d1, d2, d3].filter(v => v);
-            if (dates.length === 0) {
-                document.getElementById('payTrainingDate').value = "";
-                return;
-            }
-
+            if (dates.length === 0) { document.getElementById('payTrainingDate').value = ""; return; }
             const dateObjs = dates.map(d => new Date(d)).sort((a,b) => a - b);
             const shortMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
             const lastDate = dateObjs[dateObjs.length - 1];
             const isSameMonthYear = dateObjs.every(d => d.getMonth() === lastDate.getMonth() && d.getFullYear() === lastDate.getFullYear());
-
             let result = "";
-            if (isSameMonthYear) {
-                const days = dateObjs.map(d => d.getDate()).join('และ');
-                result = `${days} ${shortMonths[lastDate.getMonth()]} ${(lastDate.getFullYear() + 543).toString().slice(-2)}`;
-            } else {
-                result = dateObjs.map(d => `${d.getDate()} ${shortMonths[d.getMonth()]} ${(d.getFullYear() + 543).toString().slice(-2)}`).join(' และ ');
-            }
+            if (isSameMonthYear) { const days = dateObjs.map(d => d.getDate()).join('และ'); result = `${days} ${shortMonths[lastDate.getMonth()]} ${(lastDate.getFullYear() + 543).toString().slice(-2)}`; } 
+            else { result = dateObjs.map(d => `${d.getDate()} ${shortMonths[d.getMonth()]} ${(d.getFullYear() + 543).toString().slice(-2)}`).join(' และ '); }
             document.getElementById('payTrainingDate').value = result;
         }
 
-        // --- 🔴 PAYMENT REPORT (อัปเดตการเรียงคอลัมน์) ---
         function openPaymentModal() {
             const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
             if (!items.length) return Swal.fire({icon:'warning', text:'กรุณาเลือกรายชื่อ', background:'#1e293b', color:'#fff'});
-
             items.sort((a, b) => (a.team || '').localeCompare(b.team || ''));
-
-            const tbody = document.getElementById('paymentUserList');
-            tbody.innerHTML = '';
-            
+            const tbody = document.getElementById('paymentUserList'); tbody.innerHTML = '';
             items.forEach(item => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-2 pl-4 text-xs font-bold text-cyan-400">${item.team || '-'}</td>
                     <td class="p-2 text-xs text-white">${item.prefix||''}${item.name} (${item.nickname})</td>
-                    <td class="p-2 text-center">
-                        <select class="exp-select w-full bg-slate-700 border border-slate-600 rounded text-white text-[10px] p-1 focus:ring-1 focus:ring-cyan-500 outline-none" data-id="${item.id}">
-                            <option value="ไม่มี">ไม่มี</option>
-                            <option value="มี">มี</option>
-                        </select>
-                    </td>
+                    <td class="p-2 text-center"><select class="exp-select w-full bg-slate-700 border border-slate-600 rounded text-white text-[10px] p-1 focus:ring-1 focus:ring-cyan-500 outline-none" data-id="${item.id}"><option value="ไม่มี">ไม่มี</option><option value="มี">มี</option></select></td>
                 `;
                 tbody.appendChild(tr);
             });
-
-            document.getElementById('payDate1').value = "";
-            document.getElementById('payDate2').value = "";
-            document.getElementById('payDate3').value = "";
-            document.getElementById('payTrainingDate').value = "";
+            document.getElementById('payDate1').value = ""; document.getElementById('payDate2').value = ""; document.getElementById('payDate3').value = ""; document.getElementById('payTrainingDate').value = "";
             document.getElementById('paymentModal').classList.remove('hidden');
         }
 
@@ -613,52 +623,23 @@
             const trainDateRange = document.getElementById('payTrainingDate').value || '-';
             const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
             items.sort((a, b) => (a.team || '').localeCompare(b.team || ''));
-
-            const expSelects = document.querySelectorAll('.exp-select');
-            const expMap = {};
+            const expSelects = document.querySelectorAll('.exp-select'); const expMap = {};
             expSelects.forEach(sel => { expMap[sel.getAttribute('data-id')] = sel.value; });
 
-            // 🔴 ปรับรูปแบบหัวคอลัมน์ตามภาพเป๊ะๆ (A-K)
             let tsv = "ลำดับ\tคำนำหน้า\tชื่อ-นามสกุล\tชื่อเล่น\tทีม\tวันที่อบรม\tประสบการณ์\tวันที่ลงทะเบียนอบรมวันแรก\tวันที่ 1\tวันที่ 2\tวันที่ 3\n";
 
             items.forEach((item, index) => {
-                const no = index + 1;
-                const prefix = item.prefix || '';
-                const name = item.name || '';
-                const nick = item.nickname || '';
-                const team = item.team || '-';
-                const exp = expMap[item.id] || "ไม่มี";
-                
-                // ดึงวันที่ลงทะเบียน และแปลงเป็น วว/ดด/ปปปป (ปี พ.ศ.)
+                const no = index + 1; const prefix = item.prefix || ''; const name = item.name || ''; const nick = item.nickname || ''; const team = item.team || '-'; const exp = expMap[item.id] || "ไม่มี";
                 const regDateObj = parseToDateObj(item.timestamp);
                 let regDateStr = "-";
                 if (regDateObj && !isNaN(regDateObj.getTime())) {
-                    const d = String(regDateObj.getDate()).padStart(2, '0');
-                    const m = String(regDateObj.getMonth() + 1).padStart(2, '0');
-                    const y = regDateObj.getFullYear() + 543;
+                    const d = String(regDateObj.getDate()).padStart(2, '0'); const m = String(regDateObj.getMonth() + 1).padStart(2, '0'); const y = regDateObj.getFullYear() + 543;
                     regDateStr = `${d}/${m}/${y}`;
                 }
-
-                // การเข้าเรียน (มีค่า = 1, ไม่มี = ว่าง)
-                const d1 = item.d1 ? "1" : ""; 
-                const d2 = item.d2 ? "1" : "";
-                const d3 = item.d3 ? "1" : "";
-
-                // 🔴 นำข้อมูลมาเรียงต่อกันด้วย Tab (\t)
+                const d1 = item.d1 ? "1" : ""; const d2 = item.d2 ? "1" : ""; const d3 = item.d3 ? "1" : "";
                 tsv += `${no}\t${prefix}\t${name}\t${nick}\t${team}\t${trainDateRange}\t${exp}\t${regDateStr}\t${d1}\t${d2}\t${d3}\n`;
             });
-
-            navigator.clipboard.writeText(tsv).then(() => {
-                Swal.fire({ 
-                    icon: 'success', 
-                    title: 'คัดลอกข้อมูลแล้ว', 
-                    text: 'นำไปกด วาง (Ctrl+V) ใน Google Sheet ได้เลย คอลัมน์จะลงล็อกพอดี', 
-                    confirmButtonColor: '#10b981', 
-                    background: '#1e293b', 
-                    color: '#fff' 
-                });
-                document.getElementById('paymentModal').classList.add('hidden');
-            });
+            navigator.clipboard.writeText(tsv).then(() => { Swal.fire({ icon: 'success', title: 'คัดลอกข้อมูลแล้ว', text: 'นำไปกด วาง (Ctrl+V) ใน Google Sheet ได้เลย คอลัมน์จะแบ่งให้อัตโนมัติ', confirmButtonColor: '#10b981', background: '#1e293b', color: '#fff' }); document.getElementById('paymentModal').classList.add('hidden'); });
         }
 
         // --- Actions ---
