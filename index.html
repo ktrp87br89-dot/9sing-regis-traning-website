@@ -612,7 +612,8 @@
             
             let txt = `อบรม${type} ทั้งหมด ${items.length} คน\n\n`;
             for (const [t, n] of Object.entries(teams)) {
-                txt += `(${t})    จำนวน ${n.length} คน ชื่อเล่น(${n.join(' ')})\n`;
+                // เปลี่ยนรูปแบบเป็น "ทีม จำนวน ... คน (ชื่อเล่น1 ชื่อเล่น2)" ตามต้องการเป๊ะๆ
+                txt += `${t}    จำนวน ${n.length} คน (${n.join(' ')})\n`;
             }
             txt += `\n`; 
             
@@ -648,7 +649,7 @@
             const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate));
             const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
             let txt = "";
-            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${tStr}\nวันที่ของวันเริ่มงาน ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
+            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${tStr}\nวันที่เริ่มลงทะเบียนวันแรกของวันเริ่มอบรม ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
             txt += "ขอบคุณครับ";
             document.getElementById('hrReportText').value = txt;
         }
@@ -776,4 +777,3 @@
     </script>
 </body>
 </html>
-
