@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HR Training Portal | Premium</title>
+    <title>HR Training Portal | Premium UX/UI</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -20,126 +20,216 @@
                         sans: ['Sarabun', 'sans-serif'],
                         header: ['Prompt', 'sans-serif'],
                         digital: ['Chakra Petch', 'sans-serif']
-                    },
-                    colors: {
-                        glass: "rgba(255, 255, 255, 0.03)",
-                        glassBorder: "rgba(255, 255, 255, 0.08)"
-                    },
-                    boxShadow: { glow: '0 0 20px rgba(56, 189, 248, 0.15)' }
+                    }
                 }
             }
         }
     </script>
 
     <style>
-        body { 
-            background-color: #0f172a; 
-            background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
-            color: #e2e8f0; min-height: 100vh;
+        /* =========================================
+           UX/UI DESIGN SYSTEM: THEME VARIABLES
+           ========================================= */
+        :root, [data-theme="cyber"] {
+            --bg-color: #0f172a;
+            --bg-grad1: hsla(253,16%,7%,1);
+            --bg-grad2: hsla(225,39%,30%,1);
+            --bg-grad3: hsla(339,49%,30%,1);
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-input: rgba(15, 23, 42, 0.6);
+            --glass-input-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --btn-from: #0891b2;
+            --btn-to: #2563eb;
+            --btn-text: #ffffff;
+            --status-active-bg: rgba(59, 130, 246, 0.15);
+            --status-active-text: #60a5fa;
+            --status-passed-bg: rgba(16, 185, 129, 0.15);
+            --status-passed-text: #34d399;
+            --status-alert-bg: rgba(239, 68, 68, 0.15);
+            --status-alert-text: #f87171;
+            --shadow-glow: rgba(56, 189, 248, 0.2);
         }
-        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
-        .glass-input { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; transition: all 0.3s ease; }
-        .glass-input:focus { border-color: #38bdf8; background: rgba(15, 23, 42, 0.9); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); outline: none; }
+
+        [data-theme="gold"] {
+            --bg-color: #050505;
+            --bg-grad1: hsla(0,0%,3%,1);
+            --bg-grad2: hsla(43, 40%, 10%, 1);
+            --bg-grad3: hsla(0,0%,0%,1);
+            --glass-bg: rgba(20, 20, 20, 0.85);
+            --glass-border: rgba(212, 175, 55, 0.25);
+            --glass-input: rgba(0, 0, 0, 0.6);
+            --glass-input-border: rgba(212, 175, 55, 0.35);
+            --text-main: #fcfcfc;
+            --text-muted: #a3a3a3;
+            --accent: #D4AF37;
+            --btn-from: #996515;
+            --btn-to: #D4AF37;
+            --btn-text: #050505;
+            --status-active-bg: rgba(212, 175, 55, 0.15);
+            --status-active-text: #D4AF37;
+            --status-passed-bg: rgba(16, 185, 129, 0.15);
+            --status-passed-text: #34d399;
+            --status-alert-bg: rgba(239, 68, 68, 0.15);
+            --status-alert-text: #f87171;
+            --shadow-glow: rgba(212, 175, 55, 0.15);
+        }
+
+        [data-theme="pearl"] {
+            --bg-color: #f8fafc;
+            --bg-grad1: hsla(210, 40%, 98%, 1);
+            --bg-grad2: hsla(210, 20%, 95%, 1);
+            --bg-grad3: hsla(210, 10%, 99%, 1);
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --glass-input: rgba(241, 245, 249, 0.8);
+            --glass-input-border: rgba(0, 0, 0, 0.15);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --accent: #0f172a;
+            --btn-from: #334155;
+            --btn-to: #0f172a;
+            --btn-text: #ffffff;
+            --status-active-bg: rgba(15, 23, 42, 0.1);
+            --status-active-text: #0f172a;
+            --status-passed-bg: rgba(16, 185, 129, 0.15);
+            --status-passed-text: #059669;
+            --status-alert-bg: rgba(239, 68, 68, 0.1);
+            --status-alert-text: #dc2626;
+            --shadow-glow: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Core Elements */
+        body { 
+            background-color: var(--bg-color); 
+            background-image: radial-gradient(at 0% 0%, var(--bg-grad1) 0, transparent 50%), radial-gradient(at 50% 0%, var(--bg-grad2) 0, transparent 50%), radial-gradient(at 100% 0%, var(--bg-grad3) 0, transparent 50%);
+            color: var(--text-main); min-height: 100vh;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--glass-border); box-shadow: 0 10px 40px 0 var(--shadow-glow); transition: all 0.4s ease; }
+        .glass-input { background: var(--glass-input); border: 1px solid var(--glass-input-border); color: var(--text-main); transition: all 0.3s ease; }
+        .glass-input:focus { border-color: var(--accent); background: var(--glass-bg); box-shadow: 0 0 0 2px var(--shadow-glow); outline: none; }
+        .glass-input::placeholder { color: var(--text-muted); opacity: 0.6; }
+        
+        /* Theme Utilities */
+        .text-theme-main { color: var(--text-main); }
+        .text-theme-muted { color: var(--text-muted); }
+        .text-theme-accent { color: var(--accent); }
+        .bg-theme-panel { background-color: var(--glass-bg); border-color: var(--glass-border); }
+        .border-theme-border { border-color: var(--glass-border); }
+        
+        .btn-primary { background: linear-gradient(to right, var(--btn-from), var(--btn-to)); color: var(--btn-text); }
+        .btn-primary:hover { filter: brightness(1.1); }
+        .icon-primary { background: linear-gradient(to bottom right, var(--btn-from), var(--btn-to)); color: var(--btn-text); }
+        
+        /* Status Badges */
+        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; border: 1px solid; min-width: 75px; text-align: center; }
+        .status-active { background-color: var(--status-active-bg); color: var(--status-active-text); border-color: var(--status-active-text); box-shadow: 0 0 10px var(--status-active-bg); }
+        .status-passed { background-color: var(--status-passed-bg); color: var(--status-passed-text); border-color: var(--status-passed-text); box-shadow: 0 0 10px var(--status-passed-bg); }
+        .status-alert { background-color: var(--status-alert-bg); color: var(--status-alert-text); border-color: var(--status-alert-text); box-shadow: 0 0 10px var(--status-alert-bg); }
+        .status-default { background-color: var(--glass-bg); color: var(--text-muted); border-color: var(--glass-border); }
+        
+        /* Scrollbar & Misc */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+        
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
         .animate-float { animation: float 6s ease-in-out infinite; }
-        .loader { width: 40px; height: 40px; border: 3px solid #FFF; border-bottom-color: #38bdf8; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
+        .loader { width: 40px; height: 40px; border: 3px solid var(--text-main); border-bottom-color: var(--accent); border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .nav-btn.active { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border-bottom: 2px solid #38bdf8; }
-        .font-digital { font-family: 'Chakra Petch', sans-serif; }
-        .text-glow { text-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
-        .custom-checkbox { width: 20px; height: 20px; accent-color: #0ea5e9; cursor: pointer; border-radius: 4px; }
         
-        /* Style สำหรับจัดเรียงหัวตาราง */
-        .sort-icon { transition: transform 0.2s; display: inline-block; margin-left: 4px; opacity: 0.5; }
+        .nav-btn.active { background: var(--glass-border); color: var(--accent); border-bottom: 2px solid var(--accent); }
+        .font-digital { font-family: 'Chakra Petch', sans-serif; }
+        .custom-checkbox { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; border-radius: 4px; }
         th.sortable { cursor: pointer; transition: background 0.2s; }
-        th.sortable:hover { background: rgba(255,255,255,0.05); }
+        th.sortable:hover { background: var(--glass-border); }
+        .sort-icon { transition: transform 0.2s; display: inline-block; margin-left: 4px; opacity: 0.5; }
         th.sortable:hover .sort-icon { opacity: 1; }
     </style>
 </head>
-<body class="flex flex-col h-screen overflow-hidden text-slate-200" onload="initApp()">
+<body class="flex flex-col h-screen overflow-hidden" onload="initApp()">
 
-    <header class="glass-panel sticky top-0 z-50 rounded-b-3xl mx-2 mt-2 px-6 py-4 shadow-glow mb-4">
+    <header class="glass-panel sticky top-0 z-50 rounded-b-3xl mx-2 mt-2 px-6 py-4 mb-4">
         <div class="flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-layer-group"></i></div>
+                <div class="w-10 h-10 rounded-xl icon-primary flex items-center justify-center shadow-lg"><i class="fa-solid fa-layer-group"></i></div>
                 <div>
-                    <h1 class="font-header font-bold text-sm text-white tracking-wide">HR PORTAL</h1>
-                    <p class="text-[10px] text-cyan-400 font-medium tracking-wider uppercase">Training System</p>
+                    <h1 class="font-header font-bold text-sm text-theme-main tracking-wide">HR PORTAL</h1>
+                    <p class="text-[10px] text-theme-accent font-medium tracking-wider uppercase">Training System</p>
                 </div>
             </div>
             <div class="text-right">
-                <div id="clockDate" class="text-[10px] text-slate-400 font-medium uppercase tracking-widest">...</div>
-                <div id="clockTime" class="font-digital text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-cyan-200 leading-none mt-0.5">00:00</div>
+                <div id="clockDate" class="text-[10px] text-theme-muted font-medium uppercase tracking-widest">...</div>
+                <div id="clockTime" class="font-digital text-2xl font-bold text-theme-main leading-none mt-0.5">00:00</div>
             </div>
         </div>
-        <div class="flex justify-center mt-4 border-t border-white/5 pt-2 gap-1">
-            <button onclick="switchTab('register')" id="nav-register" class="nav-btn active flex-1 py-2 rounded-lg text-xs font-header transition-all hover:bg-white/5 text-slate-400">ลงทะเบียน</button>
-            <button onclick="switchTab('checkin')" id="nav-checkin" class="nav-btn flex-1 py-2 rounded-lg text-xs font-header transition-all hover:bg-white/5 text-slate-400">เช็คชื่อ</button>
-            <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn flex-1 py-2 rounded-lg text-xs font-header transition-all hover:bg-white/5 text-slate-400">Admin</button>
+        <div class="flex justify-center mt-4 border-t border-theme-border pt-2 gap-1">
+            <button onclick="switchTab('register')" id="nav-register" class="nav-btn active flex-1 py-2 rounded-lg text-xs font-header transition-all text-theme-muted hover:text-theme-main">ลงทะเบียน</button>
+            <button onclick="switchTab('checkin')" id="nav-checkin" class="nav-btn flex-1 py-2 rounded-lg text-xs font-header transition-all text-theme-muted hover:text-theme-main">เช็คชื่อ</button>
+            <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn flex-1 py-2 rounded-lg text-xs font-header transition-all text-theme-muted hover:text-theme-main">Admin</button>
         </div>
     </header>
 
     <main class="flex-1 overflow-y-auto px-4 pb-24 scroll-smooth">
-        <div id="loadingOverlay" class="hidden fixed inset-0 z-[60] bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center">
+        <div id="loadingOverlay" class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center">
             <div class="loader mb-4"></div>
-            <p class="text-xs text-cyan-400 font-header tracking-widest animate-pulse">PROCESSING...</p>
+            <p class="text-xs text-theme-accent font-header tracking-widest animate-pulse">PROCESSING...</p>
         </div>
 
         <section id="page-register" class="max-w-md mx-auto animate-fade-in">
-            <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none group-hover:bg-cyan-500/20 transition duration-700"></div>
-                <h2 class="text-lg font-header font-bold text-white mb-6 flex items-center gap-2"><span class="w-1 h-5 bg-cyan-400 rounded-full"></span> ลงทะเบียนพนักงานใหม่</h2>
+            <div class="glass-panel p-6 rounded-2xl relative overflow-hidden">
+                <h2 class="text-lg font-header font-bold text-theme-main mb-6 flex items-center gap-2"><span class="w-1 h-5 rounded-full" style="background: var(--accent);"></span> ลงทะเบียนพนักงานใหม่</h2>
                 <form id="regForm" onsubmit="handleRegister(event)" class="space-y-4 relative z-10">
                     <div class="grid grid-cols-3 gap-3">
-                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">คำนำหน้า</label><select name="prefix" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm focus:ring-0"><option class="text-slate-900">นาย</option><option class="text-slate-900">นาง</option><option class="text-slate-900">นางสาว</option></select></div>
-                        <div class="col-span-2"><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ชื่อ-นามสกุล</label><input type="text" name="name" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm placeholder-slate-600" placeholder="เว้นวรรคระหว่างชื่อ-สกุล"></div>
+                        <div><label class="text-[10px] text-theme-muted font-bold mb-1.5 block ml-1">คำนำหน้า</label><select name="prefix" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm focus:ring-0"><option class="bg-white text-black">นาย</option><option class="bg-white text-black">นาง</option><option class="bg-white text-black">นางสาว</option></select></div>
+                        <div class="col-span-2"><label class="text-[10px] text-theme-muted font-bold mb-1.5 block ml-1">ชื่อ-นามสกุล</label><input type="text" name="name" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm" placeholder="เว้นวรรคระหว่างชื่อ-สกุล"></div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
-                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ชื่อเล่น</label><input type="text" name="nickname" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
-                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">เบอร์โทร</label><input type="tel" id="regPhone" name="phone" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm" placeholder="08X-XXX-XXXX"></div>
+                        <div><label class="text-[10px] text-theme-muted font-bold mb-1.5 block ml-1">ชื่อเล่น</label><input type="text" name="nickname" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
+                        <div><label class="text-[10px] text-theme-muted font-bold mb-1.5 block ml-1">เบอร์โทร</label><input type="tel" id="regPhone" name="phone" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm font-digital tracking-wide" placeholder="08X-XXX-XXXX"></div>
                     </div>
                     <div>
-                        <label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">แผนก</label>
+                        <label class="text-[10px] text-theme-muted font-bold mb-1.5 block ml-1">แผนก</label>
                         <select name="dept" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm">
-                            <option value="Telesales Product" class="text-slate-900">Telesales Product</option><option value="Telesales Insurance" class="text-slate-900">Telesales Insurance</option><option value="Back Office" class="text-slate-900">Back Office</option>
+                            <option value="Telesales Product" class="bg-white text-black">Telesales Product</option><option value="Telesales Insurance" class="bg-white text-black">Telesales Insurance</option><option value="Back Office" class="bg-white text-black">Back Office</option>
                         </select>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
-                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ทีม</label><input type="text" name="team" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
-                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ผู้แนะนำ</label><input type="text" name="recruiter" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
+                        <div><label class="text-[10px] text-theme-muted font-bold mb-1.5 block ml-1">ทีม</label><input type="text" name="team" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
+                        <div><label class="text-[10px] text-theme-muted font-bold mb-1.5 block ml-1">ผู้แนะนำ</label><input type="text" name="recruiter" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
                     </div>
-                    <button type="submit" id="btnRegister" class="w-full mt-4 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-header font-medium rounded-xl shadow-lg shadow-cyan-900/20 transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed">ยืนยันข้อมูล</button>
+                    <button type="submit" id="btnRegister" class="btn-primary w-full mt-4 py-3 font-header font-bold rounded-xl shadow-lg transition-transform transform active:scale-[0.98] disabled:opacity-50">ยืนยันข้อมูล</button>
                 </form>
             </div>
         </section>
 
         <section id="page-checkin" class="hidden max-w-md mx-auto pt-4">
             <div class="glass-panel p-8 rounded-2xl text-center relative overflow-hidden">
-                <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50"></div>
-                <div class="w-20 h-20 bg-slate-800/50 rounded-2xl mx-auto flex items-center justify-center mb-6 border border-slate-700 shadow-inner rotate-3 hover:rotate-0 transition duration-500">
-                    <i class="fa-solid fa-fingerprint text-4xl text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]"></i>
+                <div class="w-20 h-20 bg-theme-panel border border-theme-border rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-inner rotate-3 hover:rotate-0 transition duration-500">
+                    <i class="fa-solid fa-fingerprint text-4xl text-theme-accent drop-shadow-md"></i>
                 </div>
-                <h2 class="text-xl font-header font-bold text-white mb-2">ลงชื่อเข้าอบรม</h2>
-                <p class="text-xs text-slate-400 mb-8 font-light">กรอกเบอร์โทรศัพท์เพื่อยืนยันตัวตน</p>
+                <h2 class="text-xl font-header font-bold text-theme-main mb-2">ลงชื่อเข้าอบรม</h2>
+                <p class="text-xs text-theme-muted mb-8 font-light">กรอกเบอร์โทรศัพท์เพื่อยืนยันตัวตน</p>
                 <div class="relative max-w-xs mx-auto mb-6 group">
-                    <input type="tel" id="checkinPhone" class="w-full pl-12 pr-4 py-3.5 rounded-xl glass-input text-lg tracking-widest text-center font-digital group-focus-within:border-cyan-500 transition-colors" placeholder="08X-XXX-XXXX">
-                    <i class="fa-solid fa-mobile-screen absolute left-4 top-4 text-slate-500 text-lg group-focus-within:text-cyan-400 transition-colors"></i>
+                    <input type="tel" id="checkinPhone" class="w-full pl-12 pr-4 py-3.5 rounded-xl glass-input text-lg tracking-widest text-center font-digital font-bold transition-colors" placeholder="08X-XXX-XXXX">
+                    <i class="fa-solid fa-mobile-screen absolute left-4 top-4 text-theme-muted text-lg group-focus-within:text-theme-accent transition-colors"></i>
                 </div>
-                <button onclick="checkStatus()" id="btnCheckStatus" class="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-header font-medium transition border border-slate-600 hover:border-slate-500 disabled:opacity-50 disabled:cursor-not-allowed">ตรวจสอบสถานะ</button>
+                <button onclick="checkStatus()" id="btnCheckStatus" class="w-full py-3 bg-theme-panel text-theme-main rounded-xl font-header font-medium transition border border-theme-border hover:border-theme-accent disabled:opacity-50">ตรวจสอบสถานะ</button>
 
-                <div id="profileCard" class="hidden mt-8 text-left bg-slate-800/40 rounded-xl p-5 border border-slate-700/50 animate-float">
-                    <div class="flex justify-between items-start mb-4 pb-4 border-b border-white/5">
-                        <div><h3 class="text-lg font-header font-bold text-white" id="uiName">...</h3><p class="text-xs text-slate-400 mt-1 font-mono"><span id="uiNick">...</span> | <span id="uiDept" class="text-cyan-400">...</span></p></div>
-                        <span id="uiStatus" class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 tracking-wider">Active</span>
+                <div id="profileCard" class="hidden mt-8 text-left bg-theme-panel rounded-xl p-5 border border-theme-border animate-float">
+                    <div class="flex justify-between items-start mb-4 pb-4 border-b border-theme-border">
+                        <div><h3 class="text-lg font-header font-bold text-theme-main" id="uiName">...</h3><p class="text-xs text-theme-muted mt-1 font-mono"><span id="uiNick">...</span> | <span id="uiDept" class="text-theme-accent">...</span></p></div>
+                        <span id="uiStatus" class="status-badge status-active">Active</span>
                     </div>
                     <div class="grid grid-cols-3 gap-3">
-                        <div id="boxD1" class="bg-slate-900/50 p-2 rounded-lg text-center border border-white/5"><span class="text-[10px] text-slate-500 uppercase font-bold block mb-2 tracking-wider">Day 1</span><button onclick="doCheckIn(1)" class="w-full py-1.5 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-cyan-600 transition"><i class="fa-solid fa-check"></i></button></div>
-                        <div id="boxD2" class="bg-slate-900/50 p-2 rounded-lg text-center border border-white/5"><span class="text-[10px] text-slate-500 uppercase font-bold block mb-2 tracking-wider">Day 2</span><button onclick="doCheckIn(2)" class="w-full py-1.5 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-cyan-600 transition"><i class="fa-solid fa-check"></i></button></div>
-                        <div id="boxD3" class="bg-slate-900/50 p-2 rounded-lg text-center border border-white/5"><span class="text-[10px] text-slate-500 uppercase font-bold block mb-2 tracking-wider">Day 3</span><button onclick="doCheckIn(3)" class="w-full py-1.5 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-cyan-600 transition"><i class="fa-solid fa-check"></i></button></div>
+                        <div id="boxD1" class="bg-theme-panel p-2 rounded-lg text-center border border-theme-border"><span class="text-[10px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 1</span><button onclick="doCheckIn(1)" class="w-full py-1.5 rounded text-theme-muted hover:text-theme-main transition"><i class="fa-solid fa-check"></i></button></div>
+                        <div id="boxD2" class="bg-theme-panel p-2 rounded-lg text-center border border-theme-border"><span class="text-[10px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 2</span><button onclick="doCheckIn(2)" class="w-full py-1.5 rounded text-theme-muted hover:text-theme-main transition"><i class="fa-solid fa-check"></i></button></div>
+                        <div id="boxD3" class="bg-theme-panel p-2 rounded-lg text-center border border-theme-border"><span class="text-[10px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 3</span><button onclick="doCheckIn(3)" class="w-full py-1.5 rounded text-theme-muted hover:text-theme-main transition"><i class="fa-solid fa-check"></i></button></div>
                     </div>
                 </div>
             </div>
@@ -148,62 +238,40 @@
         <section id="page-admin" class="hidden h-full flex flex-col">
             <div id="adminLogin" class="max-w-xs mx-auto glass-panel p-8 rounded-2xl text-center mt-10 border border-red-500/20">
                 <div class="w-14 h-14 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20"><i class="fa-solid fa-shield-cat text-2xl text-red-400"></i></div>
-                <h3 class="text-white font-header font-bold mb-6">Restricted Area</h3>
+                <h3 class="text-theme-main font-header font-bold mb-6">Restricted Area</h3>
                 <input type="password" id="adminPass" class="w-full px-4 py-3 rounded-xl glass-input text-center mb-4 text-sm" placeholder="Admin Password">
-                <button onclick="adminAccess()" class="w-full py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold text-sm transition shadow-lg shadow-red-900/30">เข้าสู่ระบบ</button>
+                <button onclick="adminAccess()" class="w-full py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold text-sm transition shadow-lg">เข้าสู่ระบบ</button>
             </div>
 
             <div id="adminDashboard" class="hidden flex-1 flex flex-col">
                 <div class="flex justify-between items-center mb-3 px-1">
-                    <h2 class="text-white font-header font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-database text-cyan-400"></i> ฐานข้อมูล</h2>
+                    <h2 class="text-theme-main font-header font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-database text-theme-accent"></i> ฐานข้อมูล</h2>
                     <div class="flex gap-2 flex-wrap justify-end">
-                        <button onclick="toggleFilterPanel()" class="text-[10px] bg-slate-800 border border-slate-600 hover:bg-cyan-900 hover:border-cyan-500 text-white px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="fa-solid fa-filter"></i> ตัวกรอง</button>
-                        <button onclick="toggleSelectAll()" class="text-[10px] bg-slate-800 border border-slate-600 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg transition">Select All</button>
-                        <button onclick="loadAdminData()" class="text-[10px] bg-slate-800 border border-slate-600 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-rotate"></i></button>
+                        <button onclick="copyThemeLink()" class="text-[10px] bg-purple-600/20 text-purple-400 border border-purple-500/50 hover:bg-purple-600/40 px-3 py-1.5 rounded-lg transition flex items-center gap-1 shadow-md" title="สร้างลิงก์สำหรับบังคับให้พนักงานใช้ธีมนี้"><i class="fa-solid fa-link"></i> แชร์ลิงก์ธีม</button>
                         
-                        <button onclick="openPaymentModal()" class="text-[10px] bg-emerald-700 border border-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg transition flex items-center gap-1 shadow-lg shadow-emerald-900/50"><i class="fa-solid fa-money-bill-wave"></i> สรุปทำจ่าย</button>
+                        <button onclick="toggleFilterPanel()" class="text-[10px] bg-theme-panel border border-theme-border hover:border-theme-accent text-theme-main px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-filter"></i> ตัวกรอง</button>
+                        <button onclick="toggleSelectAll()" class="text-[10px] bg-theme-panel border border-theme-border text-theme-main px-3 py-1.5 rounded-lg transition">Select All</button>
+                        <button onclick="loadAdminData()" class="text-[10px] bg-theme-panel border border-theme-border text-theme-main px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-rotate"></i></button>
+                        <button onclick="openPaymentModal()" class="text-[10px] bg-[#10b981] text-white px-3 py-1.5 rounded-lg transition shadow-md"><i class="fa-solid fa-money-bill-wave"></i> สรุปทำจ่าย</button>
                     </div>
                 </div>
 
-                <div id="filterPanel" class="hidden glass-panel p-4 rounded-xl mb-4 border-t-2 border-cyan-500/50 animate-fade-in shadow-xl">
+                <div id="filterPanel" class="hidden glass-panel p-4 rounded-xl mb-4 border-t-2 border-theme-accent animate-fade-in">
                     <div class="grid grid-cols-2 gap-3 mb-3">
-                        <div>
-                            <label class="text-[10px] text-cyan-400 font-bold mb-1.5 block uppercase tracking-wide">ตั้งแต่วันที่เริ่มเทรน</label>
-                            <input type="date" id="filterStart" class="w-full p-2.5 rounded-lg glass-input text-xs font-mono" onchange="applyAdminFilters()">
-                        </div>
-                        <div>
-                            <label class="text-[10px] text-cyan-400 font-bold mb-1.5 block uppercase tracking-wide">ถึงวันที่</label>
-                            <input type="date" id="filterEnd" class="w-full p-2.5 rounded-lg glass-input text-xs font-mono" onchange="applyAdminFilters()">
-                        </div>
+                        <div><label class="text-[10px] text-theme-accent font-bold mb-1.5 block uppercase">ตั้งแต่วันที่</label><input type="date" id="filterStart" class="w-full p-2.5 rounded-lg glass-input text-xs" onchange="applyAdminFilters()"></div>
+                        <div><label class="text-[10px] text-theme-accent font-bold mb-1.5 block uppercase">ถึงวันที่</label><input type="date" id="filterEnd" class="w-full p-2.5 rounded-lg glass-input text-xs" onchange="applyAdminFilters()"></div>
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div class="col-span-2 md:col-span-1">
-                            <label class="text-[10px] text-slate-400 font-bold mb-1.5 block uppercase">ค้นหาชื่อ/ชื่อเล่น</label>
-                            <input type="text" id="filterName" class="w-full p-2.5 rounded-lg glass-input text-xs" placeholder="พิมพ์ชื่อ..." onkeyup="applyAdminFilters()">
-                        </div>
-                        <div>
-                            <label class="text-[10px] text-slate-400 font-bold mb-1.5 block uppercase">ทีม</label>
-                            <input type="text" id="filterTeam" class="w-full p-2.5 rounded-lg glass-input text-xs" placeholder="พิมพ์ทีม..." onkeyup="applyAdminFilters()">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="text-[10px] text-slate-400 font-bold mb-1.5 block uppercase">สถานะ</label>
-                            <select id="filterStatus" class="w-full p-2.5 rounded-lg glass-input text-xs" onchange="applyAdminFilters()">
-                                <option value="all">ทั้งหมด (All)</option>
-                                <option value="active">กำลังเทรน (Active)</option>
-                                <option value="passed">เทรนครบ 3 วัน (Passed)</option>
-                                <option value="dropout">🔴 ออกระหว่างเทรน</option>
-                                <option value="resigned">ออก/สละสิทธิ์ (Resigned)</option>
-                            </select>
-                        </div>
+                        <div class="col-span-2 md:col-span-1"><label class="text-[10px] text-theme-muted font-bold mb-1.5 block">ค้นหาชื่อ/ชื่อเล่น</label><input type="text" id="filterName" class="w-full p-2.5 rounded-lg glass-input text-xs" placeholder="พิมพ์ชื่อ..." onkeyup="applyAdminFilters()"></div>
+                        <div><label class="text-[10px] text-theme-muted font-bold mb-1.5 block">ทีม</label><input type="text" id="filterTeam" class="w-full p-2.5 rounded-lg glass-input text-xs" placeholder="พิมพ์ทีม..." onkeyup="applyAdminFilters()"></div>
+                        <div class="col-span-2"><label class="text-[10px] text-theme-muted font-bold mb-1.5 block">สถานะ</label><select id="filterStatus" class="w-full p-2.5 rounded-lg glass-input text-xs" onchange="applyAdminFilters()"><option value="all" class="bg-white text-black">ทั้งหมด (All)</option><option value="active" class="bg-white text-black">กำลังเทรน (Active)</option><option value="passed" class="bg-white text-black">เทรนครบ 3 วัน (Passed)</option><option value="dropout" class="bg-white text-black">🔴 ออกระหว่างเทรน</option><option value="resigned" class="bg-white text-black">ออก/สละสิทธิ์ (Resigned)</option></select></div>
                     </div>
-                    <div class="text-right mt-3">
-                        <button onclick="clearFilters()" class="text-[10px] text-slate-400 hover:text-white transition underline"><i class="fa-solid fa-eraser mr-1"></i>ล้างตัวกรอง</button>
-                    </div>
+                    <div class="text-right mt-3"><button onclick="clearFilters()" class="text-[10px] text-theme-muted hover:text-theme-main transition underline"><i class="fa-solid fa-eraser mr-1"></i>ล้างตัวกรอง</button></div>
                 </div>
                 
                 <div class="flex-1 overflow-auto glass-panel rounded-xl mb-20 border-0 shadow-lg">
                     <table class="w-full text-left border-collapse">
-                        <thead class="bg-slate-900/80 backdrop-blur text-slate-400 text-[10px] font-bold uppercase sticky top-0 z-10 shadow-md">
+                        <thead class="bg-theme-panel backdrop-blur text-theme-muted text-[10px] font-bold uppercase sticky top-0 z-10 shadow-md border-b border-theme-border">
                             <tr>
                                 <th class="p-3 w-10 text-center">#</th>
                                 <th class="p-3 sortable" onclick="handleSort('name')">ข้อมูล & การเข้าเรียน <i class="fa-solid fa-sort sort-icon" id="sort-icon-name"></i></th>
@@ -212,103 +280,115 @@
                                 <th class="p-3 text-center w-20">จัดการ</th>
                             </tr>
                         </thead>
-                        <tbody id="adminTable" class="divide-y divide-slate-700/50 text-sm text-slate-300">
-                            </tbody>
+                        <tbody id="adminTable" class="divide-y divide-[var(--glass-border)] text-sm">
+                        </tbody>
                     </table>
                 </div>
 
-                <div id="actionBar" class="fixed bottom-6 left-4 right-4 glass-panel rounded-2xl p-3 shadow-2xl transform translate-y-[150%] transition-transform duration-300 z-50 flex justify-between items-center border-t border-white/10 bg-slate-900/95">
-                    <div class="text-white text-xs pl-2"><span class="text-slate-400">Selected:</span> <span id="selectedCount" class="text-cyan-400 font-digital text-lg font-bold ml-1">0</span></div>
+                <div id="actionBar" class="fixed bottom-6 left-4 right-20 glass-panel rounded-2xl p-3 shadow-2xl transform translate-y-[150%] transition-transform duration-300 z-40 flex justify-between items-center border-t border-theme-border bg-theme-panel">
+                    <div class="text-theme-main text-xs pl-2"><span class="text-theme-muted">Selected:</span> <span id="selectedCount" class="text-theme-accent font-digital text-lg font-bold ml-1">0</span></div>
                     <div class="flex gap-2">
-                        <button onclick="openReportModal()" class="bg-amber-500 hover:bg-amber-400 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-2 transition"><i class="fa-solid fa-file-invoice"></i> รายงาน</button>
-                        <button onclick="openHRModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg flex items-center gap-2 transition"><i class="fa-solid fa-paper-plane"></i> ส่ง HR</button>
+                        <button onclick="openReportModal()" class="bg-[#f59e0b] hover:brightness-110 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg transition"><i class="fa-solid fa-file-invoice"></i> รายงาน</button>
+                        <button onclick="openHRModal()" class="bg-[#4f46e5] hover:brightness-110 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg transition"><i class="fa-solid fa-paper-plane"></i> ส่ง HR</button>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
+    <div class="fixed bottom-6 right-4 z-[100]">
+        <button id="themeMenuBtn" class="w-12 h-12 rounded-full bg-theme-panel border border-theme-border shadow-[0_4px_15px_var(--shadow-glow)] flex items-center justify-center text-theme-main backdrop-blur-xl transition-transform hover:scale-110 focus:outline-none">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </button>
+        <div id="themeMenu" class="hidden absolute bottom-16 right-0 bg-theme-panel border border-theme-border p-3 rounded-2xl shadow-2xl backdrop-blur-2xl flex flex-col gap-2 transition-all w-48 origin-bottom-right">
+            <div class="text-[10px] text-theme-muted font-bold uppercase tracking-wider mb-1 px-2 border-b border-theme-border pb-2">Select UX Theme</div>
+            <button onclick="setTheme('cyber')" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-[var(--glass-border)] text-theme-main text-sm transition-colors text-left"><div class="w-4 h-4 rounded-full bg-[#0ea5e9] shadow-[0_0_8px_#0ea5e9]"></div>Cyber Space</button>
+            <button onclick="setTheme('gold')" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-[var(--glass-border)] text-theme-main text-sm transition-colors text-left"><div class="w-4 h-4 rounded-full bg-[#D4AF37] shadow-[0_0_8px_#D4AF37]"></div>Majestic Gold</button>
+            <button onclick="setTheme('pearl')" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-[var(--glass-border)] text-theme-main text-sm transition-colors text-left"><div class="w-4 h-4 rounded-full bg-[#f8fafc] border border-slate-400 shadow-[0_0_8px_rgba(0,0,0,0.1)]"></div>Pearl Minimal</button>
+        </div>
+    </div>
+
     <div id="editModal" class="hidden fixed inset-0 z-[70] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-sm rounded-2xl p-6 border border-slate-600">
-            <h3 class="text-white font-header font-bold text-lg mb-4 border-b border-white/10 pb-2">แก้ไขข้อมูล</h3>
+        <div class="glass-panel w-full max-w-sm rounded-2xl p-6">
+            <h3 class="text-theme-main font-header font-bold text-lg mb-4 border-b border-theme-border pb-2">แก้ไขข้อมูล</h3>
             <input type="hidden" id="editRowId">
             <div class="space-y-4">
                 <div>
-                    <label class="text-[10px] text-slate-400 font-bold block mb-1">ทีม (Team)</label>
-                    <select id="editTeamSelect" onchange="toggleTeamInput(this)" class="w-full p-2.5 rounded-lg glass-input text-sm border-slate-600">
-                        <option value="RETAIL 1">RETAIL 1</option><option value="RETAIL 2">RETAIL 2</option><option value="RETAIL 3">RETAIL 3</option><option value="RETAIL 4">RETAIL 4</option>
-                        <option value="PA 1A">PA 1A</option><option value="PA 1B">PA 1B</option><option value="PA 1C">PA 1C</option><option value="PA 1D">PA 1D</option>
-                        <option value="PA 2A">PA 2A</option><option value="PA 2B">PA 2B</option><option value="PA 2C">PA 2C</option><option value="OTHER" class="text-yellow-400 font-bold">+ พิมพ์เอง</option>
+                    <label class="text-[10px] text-theme-muted font-bold block mb-1">ทีม (Team)</label>
+                    <select id="editTeamSelect" onchange="toggleTeamInput(this)" class="w-full p-2.5 rounded-lg glass-input text-sm">
+                        <option value="RETAIL 1" class="bg-white text-black">RETAIL 1</option><option value="RETAIL 2" class="bg-white text-black">RETAIL 2</option><option value="RETAIL 3" class="bg-white text-black">RETAIL 3</option><option value="RETAIL 4" class="bg-white text-black">RETAIL 4</option>
+                        <option value="PA 1A" class="bg-white text-black">PA 1A</option><option value="PA 1B" class="bg-white text-black">PA 1B</option><option value="PA 1C" class="bg-white text-black">PA 1C</option><option value="PA 1D" class="bg-white text-black">PA 1D</option>
+                        <option value="PA 2A" class="bg-white text-black">PA 2A</option><option value="PA 2B" class="bg-white text-black">PA 2B</option><option value="PA 2C" class="bg-white text-black">PA 2C</option><option value="OTHER" class="bg-white text-black font-bold">+ พิมพ์เอง</option>
                     </select>
                     <input type="text" id="editTeamInput" class="hidden w-full mt-2 p-2.5 rounded-lg glass-input text-sm" placeholder="ระบุชื่อทีม...">
                 </div>
-                <div><label class="text-[10px] text-slate-400 font-bold block mb-1">สถานะ</label><select id="editStatus" class="w-full p-2.5 rounded-lg glass-input text-sm border-slate-600"><option value="Active">Active</option><option value="Passed">Passed</option><option value="Resigned">Resigned</option><option value="New Job">New Job</option><option value="Back Office">Back Office</option><option value="Other">Other</option></select></div>
-                <div><label class="text-[10px] text-slate-400 font-bold block mb-1">หมายเหตุ</label><textarea id="editNote" rows="2" class="w-full p-2.5 rounded-lg glass-input text-sm border-slate-600"></textarea></div>
+                <div><label class="text-[10px] text-theme-muted font-bold block mb-1">สถานะ</label><select id="editStatus" class="w-full p-2.5 rounded-lg glass-input text-sm"><option value="Active" class="bg-white text-black">Active</option><option value="Passed" class="bg-white text-black">Passed</option><option value="Resigned" class="bg-white text-black">Resigned</option><option value="New Job" class="bg-white text-black">New Job</option><option value="Back Office" class="bg-white text-black">Back Office</option><option value="Other" class="bg-white text-black">Other</option></select></div>
+                <div><label class="text-[10px] text-theme-muted font-bold block mb-1">หมายเหตุ</label><textarea id="editNote" rows="2" class="w-full p-2.5 rounded-lg glass-input text-sm"></textarea></div>
             </div>
-            <div class="flex gap-3 mt-6 pt-4 border-t border-white/10">
-                <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 py-2 rounded-lg border border-slate-600 text-slate-400 text-sm hover:bg-slate-700">ยกเลิก</button>
-                <button onclick="saveAdminEdit()" class="flex-1 py-2 rounded-lg bg-cyan-600 text-white font-bold text-sm hover:bg-cyan-500 shadow-lg">บันทึก</button>
+            <div class="flex gap-3 mt-6 pt-4 border-t border-theme-border">
+                <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 py-2 rounded-lg border border-theme-border text-theme-muted text-sm hover:bg-theme-panel">ยกเลิก</button>
+                <button onclick="saveAdminEdit()" class="flex-1 py-2 rounded-lg btn-primary font-bold text-sm shadow-lg">บันทึก</button>
             </div>
         </div>
     </div>
 
     <div id="reportModal" class="hidden fixed inset-0 z-[80] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-md rounded-2xl p-6 border border-slate-600 flex flex-col max-h-[90vh]">
-            <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
-                <h3 class="text-white font-header font-bold text-lg"><i class="fa-solid fa-file-lines mr-2 text-amber-400"></i>รายงานอบรม</h3>
-                <button onclick="document.getElementById('reportModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+        <div class="glass-panel w-full max-w-md rounded-2xl p-6 flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center mb-4 border-b border-theme-border pb-3">
+                <h3 class="text-theme-main font-header font-bold text-lg"><i class="fa-solid fa-file-lines mr-2 text-[#f59e0b]"></i>รายงานอบรม</h3>
+                <button onclick="document.getElementById('reportModal').classList.add('hidden')" class="text-theme-muted hover:text-theme-main"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto space-y-4 pr-1">
                 <div class="grid grid-cols-2 gap-3">
-                    <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">วันที่รอบอบรม</label><input type="date" id="reportDate" class="w-full p-2 rounded-lg glass-input text-xs" onchange="updateReportDate()"></div>
-                    <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">ครั้งที่</label><select id="reportDayType" class="w-full p-2 rounded-lg glass-input text-xs"><option value="วันแรก">วันแรก</option><option value="วันที่สอง">วันที่สอง</option><option value="วันที่สาม">วันที่สาม</option></select></div>
+                    <div><label class="text-[10px] text-theme-muted font-bold mb-1 block">วันที่รอบอบรม</label><input type="date" id="reportDate" class="w-full p-2 rounded-lg glass-input text-xs" onchange="updateReportDate()"></div>
+                    <div><label class="text-[10px] text-theme-muted font-bold mb-1 block">ครั้งที่</label><select id="reportDayType" class="w-full p-2 rounded-lg glass-input text-xs"><option value="วันแรก" class="bg-white text-black">วันแรก</option><option value="วันที่สอง" class="bg-white text-black">วันที่สอง</option><option value="วันที่สาม" class="bg-white text-black">วันที่สาม</option></select></div>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="addSelectionToReport()" class="flex-1 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl text-white font-bold text-xs shadow hover:brightness-110"><i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการ</button>
-                    <button onclick="resetReport()" class="px-3 py-2.5 bg-slate-700/80 hover:bg-red-500 rounded-xl text-white font-bold text-xs shadow transition-colors" title="เริ่มสร้างรายงานใหม่"><i class="fa-solid fa-rotate-right"></i> ล้างข้อมูล</button>
+                    <button onclick="addSelectionToReport()" class="flex-1 py-2.5 btn-primary rounded-xl font-bold text-xs shadow"><i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการ</button>
+                    <button onclick="resetReport()" class="px-3 py-2.5 bg-red-600 hover:bg-red-500 rounded-xl text-white font-bold text-xs shadow"><i class="fa-solid fa-rotate-right"></i> ล้างข้อมูล</button>
                 </div>
                 <textarea id="finalReportText" class="w-full h-40 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
             </div>
-            <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('finalReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('finalReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs hover:brightness-110"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
+            <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('finalReportText')" class="flex-1 py-2.5 bg-theme-panel border border-theme-border text-theme-main rounded-xl font-bold text-xs"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('finalReportText')" class="flex-1 py-2.5 bg-[#06C755] text-white rounded-xl font-bold text-xs"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
         </div>
     </div>
 
     <div id="hrModal" class="hidden fixed inset-0 z-[80] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-md rounded-2xl p-6 border border-slate-600 flex flex-col max-h-[90vh]">
-            <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3"><h3 class="text-white font-header font-bold text-lg"><i class="fa-solid fa-user-tie mr-2 text-indigo-400"></i>ส่งรายชื่อ HR</h3><button onclick="document.getElementById('hrModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button></div>
+        <div class="glass-panel w-full max-w-md rounded-2xl p-6 flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center mb-4 border-b border-theme-border pb-3"><h3 class="text-theme-main font-header font-bold text-lg"><i class="fa-solid fa-user-tie mr-2 text-[#4f46e5]"></i>ส่งรายชื่อ HR</h3><button onclick="document.getElementById('hrModal').classList.add('hidden')" class="text-theme-muted hover:text-theme-main"><i class="fa-solid fa-xmark"></i></button></div>
             <div class="flex-1 overflow-y-auto space-y-4 pr-1">
                 <div class="space-y-3">
-                    <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">วันเริ่มอบรม</label><input type="date" id="hrTrainingDate" class="w-full p-2.5 rounded-xl glass-input text-sm"></div>
-                    <div><label class="text-[10px] text-cyan-400 font-bold mb-1 block">วันเริ่มงานจริง</label><input type="date" id="hrWorkDate" class="w-full p-2.5 rounded-xl glass-input text-sm border-cyan-500/30"></div>
+                    <div><label class="text-[10px] text-theme-muted font-bold mb-1 block">วันเริ่มอบรม</label><input type="date" id="hrTrainingDate" class="w-full p-2.5 rounded-xl glass-input text-sm"></div>
+                    <div><label class="text-[10px] text-theme-accent font-bold mb-1 block">วันเริ่มงานจริง</label><input type="date" id="hrWorkDate" class="w-full p-2.5 rounded-xl glass-input text-sm"></div>
                 </div>
-                <button onclick="generateHRReport()" class="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl text-white font-bold text-xs shadow hover:brightness-110 mt-2"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> สร้างข้อความ</button>
+                <button onclick="generateHRReport()" class="w-full py-2.5 btn-primary rounded-xl font-bold text-xs shadow mt-2"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> สร้างข้อความ</button>
                 <textarea id="hrReportText" class="w-full h-40 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
             </div>
-            <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('hrReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('hrReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs hover:brightness-110"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
+            <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('hrReportText')" class="flex-1 py-2.5 bg-theme-panel border border-theme-border text-theme-main rounded-xl font-bold text-xs"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('hrReportText')" class="flex-1 py-2.5 bg-[#06C755] text-white rounded-xl font-bold text-xs"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
         </div>
     </div>
 
     <div id="paymentModal" class="hidden fixed inset-0 z-[80] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-3xl rounded-2xl p-6 border border-slate-600 flex flex-col max-h-[90vh]">
-            <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
-                <h3 class="text-white font-header font-bold text-lg"><i class="fa-solid fa-money-bill-wave mr-2 text-emerald-400"></i>สรุปทำจ่ายค่าอบรม</h3>
-                <button onclick="document.getElementById('paymentModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+        <div class="glass-panel w-full max-w-3xl rounded-2xl p-6 flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center mb-4 border-b border-theme-border pb-3">
+                <h3 class="text-theme-main font-header font-bold text-lg"><i class="fa-solid fa-money-bill-wave mr-2 text-[#10b981]"></i>สรุปทำจ่ายค่าอบรม</h3>
+                <button onclick="document.getElementById('paymentModal').classList.add('hidden')" class="text-theme-muted hover:text-theme-main"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto space-y-4 pr-1">
-                <div class="bg-slate-800/80 p-3 rounded-xl border border-emerald-500/30 text-[11px] text-emerald-400 mb-2 flex items-start gap-2">
+                <div class="bg-theme-panel p-3 rounded-xl border border-theme-border text-[11px] text-[#10b981] mb-2 flex items-start gap-2">
                     <i class="fa-solid fa-circle-info mt-0.5"></i> 
-                    <div>ระบบคัดกรองเฉพาะผู้ที่ <b>"เข้าอบรมครบ 3 วัน"</b> และมีสถานะเป็น <b>"Passed"</b> เท่านั้น<br><span class="text-slate-400 text-[10px]">จัดเรียงลำดับตาม 'ทีม' และ 'วันที่ลงทะเบียน' พร้อมแยกคอลัมน์อัตโนมัติสำหรับ Google Sheet</span></div>
+                    <div>ระบบคัดกรองเฉพาะผู้ที่ <b>"เข้าอบรมครบ 3 วัน"</b> และมีสถานะเป็น <b>"Passed"</b> เท่านั้น<br><span class="text-theme-muted text-[10px]">จัดเรียงลำดับตาม 'ทีม' และ 'วันที่ลงทะเบียน' พร้อมแยกคอลัมน์อัตโนมัติสำหรับ Google Sheet</span></div>
                 </div>
                 
                 <div class="grid grid-cols-2 gap-3 mb-2">
-                    <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">ตั้งแต่วันที่ (ลงทะเบียน)</label><input type="date" id="paymentStartDate" class="w-full p-2 rounded-lg glass-input text-xs text-slate-300" onchange="generatePaymentReportText()"></div>
-                    <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">ถึงวันที่</label><input type="date" id="paymentEndDate" class="w-full p-2 rounded-lg glass-input text-xs text-slate-300" onchange="generatePaymentReportText()"></div>
+                    <div><label class="text-[10px] text-theme-muted font-bold mb-1 block">ตั้งแต่วันที่ (ลงทะเบียน)</label><input type="date" id="paymentStartDate" class="w-full p-2 rounded-lg glass-input text-xs" onchange="generatePaymentReportText()"></div>
+                    <div><label class="text-[10px] text-theme-muted font-bold mb-1 block">ถึงวันที่</label><input type="date" id="paymentEndDate" class="w-full p-2 rounded-lg glass-input text-xs" onchange="generatePaymentReportText()"></div>
                 </div>
 
-                <textarea id="paymentReportText" class="w-full h-56 p-3 rounded-xl glass-input text-xs leading-relaxed font-sans whitespace-pre overflow-x-auto text-slate-300 bg-slate-900/80" spellcheck="false" readonly></textarea>
+                <textarea id="paymentReportText" class="w-full h-56 p-3 rounded-xl glass-input text-xs leading-relaxed font-sans whitespace-pre overflow-x-auto" spellcheck="false" readonly></textarea>
             </div>
-            <div class="mt-4 pt-3 border-t border-white/10">
-                <button onclick="copyToClipboardPayment()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl text-white font-bold text-sm hover:brightness-110 shadow-lg shadow-emerald-900/30 transition transform active:scale-[0.98]"><i class="fa-regular fa-copy mr-2"></i> คัดลอกนำไปวางในเซลล์ A1 ของ Google Sheet</button>
+            <div class="mt-4 pt-3 border-t border-theme-border">
+                <button onclick="copyToClipboardPayment()" class="w-full py-3 bg-[#10b981] text-white rounded-xl font-bold text-sm shadow-lg transition transform active:scale-[0.98]"><i class="fa-regular fa-copy mr-2"></i> คัดลอกนำไปวางในเซลล์ A1 ของ Google Sheet</button>
             </div>
         </div>
     </div>
@@ -319,19 +399,64 @@
         // **********************************************
         const API_URL = "https://script.google.com/macros/s/AKfycbyYYauRspNoRvkhUWKZh4c5Hp1TzhxWGu_T96TvPPMZ6p1DHJqh30Azzi_PrEcGn9dy/exec"; 
         // **********************************************
+
+        // =========================================================
+        // ⚙️ ADMIN CONFIGURATION (การตั้งค่าโดยแอดมิน)
+        // =========================================================
+        // เปลี่ยนค่าตรงนี้เป็น 'cyber', 'gold', หรือ 'pearl' 
+        // เพื่อตั้งเป็นค่า Default ของระบบให้พนักงานทุกคนที่เพิ่งเปิดเว็บครั้งแรก
+        const ADMIN_DEFAULT_THEME = 'gold'; 
+        // =========================================================
         
         let adminPassCache = "";
         let adminAllData = []; 
         let selectedRows = new Set(); 
-        
-        // ตัวแปรสำหรับจัดเรียงหน้า Admin
         let sortState = { key: 'timestamp', asc: false };
 
-        // Function ทำงานเมื่อโหลดหน้าเว็บ
         function initApp() {
+            // ระบบเช็ค URL Parameter ถ้า Admin ส่งลิงก์แชร์มา (เช่น ?theme=gold) จะบังคับเปลี่ยนทันที
+            const urlParams = new URLSearchParams(window.location.search);
+            let themeToSet = ADMIN_DEFAULT_THEME; // ค่าพื้นฐานจากโค้ดด้านบน
+
+            if (urlParams.get('theme') && ['cyber', 'gold', 'pearl'].includes(urlParams.get('theme'))) {
+                themeToSet = urlParams.get('theme'); // สิทธิ์สูงสุด: ลิงก์จาก Admin
+            } else if (localStorage.getItem('hr_theme')) {
+                themeToSet = localStorage.getItem('hr_theme'); // สิทธิ์รอง: สิ่งที่พนักงานเคยเลือกไว้
+            }
+
+            setTheme(themeToSet);
+            
             startTime();
             setupPhoneFormatting();
             loadSavedPhone();
+        }
+
+        // --- Theme Switcher Logic ---
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('hr_theme', theme);
+            document.getElementById('themeMenu').classList.add('hidden');
+        }
+        document.getElementById('themeMenuBtn').addEventListener('click', () => {
+            document.getElementById('themeMenu').classList.toggle('hidden');
+        });
+
+        // [NEW] ฟังก์ชันคัดลอกลิงก์พร้อมธีมที่ใช้งานอยู่
+        function copyThemeLink() {
+            let currentUrl = window.location.href.split('?')[0]; // ลบพารามิเตอร์เก่าออก
+            let currentTheme = document.documentElement.getAttribute('data-theme') || ADMIN_DEFAULT_THEME;
+            let shareLink = currentUrl + "?theme=" + currentTheme;
+
+            navigator.clipboard.writeText(shareLink).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'คัดลอกลิงก์สำเร็จ!',
+                    html: `<p class="text-sm">นำลิงก์นี้ไปให้พนักงาน<br>เมื่อเขาเปิดเว็บ ระบบจะเปลี่ยนเป็นธีม <b>${currentTheme.toUpperCase()}</b> ทันที</p>`,
+                    background: 'var(--glass-bg)',
+                    color: 'var(--text-main)',
+                    confirmButtonColor: 'var(--accent)'
+                });
+            });
         }
 
         // --- Clock ---
@@ -344,14 +469,12 @@
             setTimeout(startTime, 1000);
         }
 
-        // --- ระบบฟอร์แมตเบอร์โทร & LocalStorage ---
+        // --- Phone Formatting & LocalStorage ---
         function setupPhoneFormatting() {
             const formatInput = function(e) {
-                let val = e.target.value.replace(/\D/g, ''); // ลบตัวอักษรที่ไม่ใช่ตัวเลขออก
+                let val = e.target.value.replace(/\D/g, '');
                 let match = val.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
-                if (match) {
-                    e.target.value = !match[2] ? match[1] : `${match[1]}-${match[2]}` + (match[3] ? `-${match[3]}` : '');
-                }
+                if (match) { e.target.value = !match[2] ? match[1] : `${match[1]}-${match[2]}` + (match[3] ? `-${match[3]}` : ''); }
             };
             document.getElementById('regPhone').addEventListener('input', formatInput);
             document.getElementById('checkinPhone').addEventListener('input', formatInput);
@@ -360,18 +483,12 @@
         function loadSavedPhone() {
             const savedPhone = localStorage.getItem('hr_saved_phone');
             if(savedPhone) {
-                // ดึงจาก Local มาจัดฟอร์แมตโชว์
                 let match = savedPhone.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
-                if(match) {
-                    document.getElementById('checkinPhone').value = `${match[1]}-${match[2]}-${match[3]}`;
-                }
+                if(match) document.getElementById('checkinPhone').value = `${match[1]}-${match[2]}-${match[3]}`;
             }
         }
         
-        // ฟังก์ชันดึงเบอร์เพียวๆ ไว้ส่ง API (ถอดขีดออก)
-        function getRawPhone(inputId) {
-            return document.getElementById(inputId).value.replace(/-/g, '');
-        }
+        function getRawPhone(inputId) { return document.getElementById(inputId).value.replace(/-/g, ''); }
 
         // --- Core API ---
         async function fetchAPI(payload) {
@@ -382,490 +499,215 @@
         }
 
         function switchTab(tab) {
-            ['register', 'checkin', 'admin'].forEach(t => { document.getElementById(`page-${t}`).classList.add('hidden'); document.getElementById(`nav-${t}`).classList.remove('active', 'text-cyan-400'); });
-            document.getElementById(`page-${tab}`).classList.remove('hidden'); document.getElementById(`nav-${tab}`).classList.add('active', 'text-cyan-400');
+            ['register', 'checkin', 'admin'].forEach(t => { document.getElementById(`page-${t}`).classList.add('hidden'); document.getElementById(`nav-${t}`).classList.remove('active'); });
+            document.getElementById(`page-${tab}`).classList.remove('hidden'); document.getElementById(`nav-${tab}`).classList.add('active');
         }
 
         // --- Register & Checkin ---
         async function handleRegister(e) {
             e.preventDefault();
-            
-            // --- [NEW] Form Validation (ตรวจสอบความถูกต้องของข้อมูล) ---
-            // 1. จัดการช่องว่าง (Trim Space) และแทนที่การเว้นวรรคหลายๆ ครั้งให้เหลือครั้งเดียว
-            let cleanName = e.target.name.value.trim().replace(/\s+/g, ' '); 
-            let cleanNickname = e.target.nickname.value.trim();
-            let cleanTeam = e.target.team.value.trim();
-            let cleanRecruiter = e.target.recruiter.value.trim();
-            
-            // อัปเดตค่ากลับเข้าไปในช่องเผื่อให้ผู้ใช้เห็นว่าฟอร์แมตถูกจัดเรียงแล้ว
-            e.target.name.value = cleanName;
-            e.target.nickname.value = cleanNickname;
-            e.target.team.value = cleanTeam;
-            e.target.recruiter.value = cleanRecruiter;
+            let cleanName = e.target.name.value.trim().replace(/\s+/g, ' '); let cleanNickname = e.target.nickname.value.trim();
+            let cleanTeam = e.target.team.value.trim(); let cleanRecruiter = e.target.recruiter.value.trim();
+            e.target.name.value = cleanName; e.target.nickname.value = cleanNickname; e.target.team.value = cleanTeam; e.target.recruiter.value = cleanRecruiter;
 
-            // 2. ตรวจสอบความถูกต้องของ ชื่อ-นามสกุล (ต้องมีเว้นวรรค 1 ที และยาวพอสมควร)
-            if (cleanName.split(' ').length < 2 || cleanName.length < 5) {
-                return Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณากรอกทั้ง "ชื่อ" และ "นามสกุล" โดยเว้นวรรคตรงกลางครับ', background: '#1e293b', color: '#fff' });
-            }
-
-            // 3. ตรวจสอบเบอร์โทร (ต้องขึ้นต้นด้วยเลข 0 และเป็นตัวเลข 10 หลักเป๊ะๆ)
+            if (cleanName.split(' ').length < 2 || cleanName.length < 5) { return Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณากรอกทั้ง "ชื่อ" และ "นามสกุล" โดยเว้นวรรคตรงกลางครับ', background: 'var(--glass-bg)', color: 'var(--text-main)' }); }
             let rawPhone = getRawPhone('regPhone');
-            if (!/^0\d{9}$/.test(rawPhone)) {
-                return Swal.fire({ icon: 'warning', title: 'เบอร์โทรศัพท์ไม่ถูกต้อง', text: 'เบอร์โทรศัพท์ต้องขึ้นต้นด้วยเลข 0 และมีจำนวน 10 หลักพอดีครับ', background: '#1e293b', color: '#fff' });
-            }
-            // ---------------------------------------------------------
+            if (!/^0\d{9}$/.test(rawPhone)) { return Swal.fire({ icon: 'warning', title: 'เบอร์โทรศัพท์ไม่ถูกต้อง', text: 'เบอร์โทรศัพท์ต้องขึ้นต้นด้วยเลข 0 และมีจำนวน 10 หลักพอดีครับ', background: 'var(--glass-bg)', color: 'var(--text-main)' }); }
 
-            // ระบบ Anti-Spam
-            const btn = document.getElementById('btnRegister');
-            const originalText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังบันทึก...';
+            const btn = document.getElementById('btnRegister'); const originalText = btn.innerHTML;
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังบันทึก...';
             
-            // ดึงข้อมูลไปทำ Payload (โครงสร้างเดิมเป๊ะ 100%)
             let formData = Object.fromEntries(new FormData(e.target));
-            // นำข้อมูลที่ผ่านการคลีนแล้วทับลงไป
-            formData.name = cleanName;
-            formData.nickname = cleanNickname;
-            formData.team = cleanTeam;
-            formData.recruiter = cleanRecruiter;
-            formData.phone = rawPhone; // ส่งเบอร์เพียวๆ กลับไปที่ Google Sheet
+            formData.name = cleanName; formData.nickname = cleanNickname; formData.team = cleanTeam; formData.recruiter = cleanRecruiter; formData.phone = rawPhone; 
 
             const res = await fetchAPI({ action: 'register', ...formData });
-            
-            // คืนค่าปุ่ม
-            btn.disabled = false;
-            btn.innerHTML = originalText;
+            btn.disabled = false; btn.innerHTML = originalText;
 
             if (res.status === 'success') { 
-                Swal.fire({ icon: 'success', title: 'ลงทะเบียนสำเร็จ', confirmButtonColor: '#38bdf8', background: '#1e293b', color: '#fff' }); 
-                e.target.reset(); 
-                
-                // สลับไปหน้าเช็คชื่อพร้อมยัดเบอร์ลงไปให้เลย
-                document.getElementById('checkinPhone').value = document.getElementById('regPhone').value; 
-                switchTab('checkin'); 
-            }
-            else { Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: res.message, background: '#1e293b', color: '#fff' }); }
+                Swal.fire({ icon: 'success', title: 'ลงทะเบียนสำเร็จ', confirmButtonColor: 'var(--accent)', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
+                e.target.reset(); document.getElementById('checkinPhone').value = document.getElementById('regPhone').value; switchTab('checkin'); 
+            } else { Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: res.message, background: 'var(--glass-bg)', color: 'var(--text-main)' }); }
         }
 
         async function checkStatus() {
             const rawPhone = getRawPhone('checkinPhone');
+            if (!/^0\d{9}$/.test(rawPhone)) return Swal.fire({ icon: 'warning', text: 'เบอร์โทรศัพท์ต้องขึ้นต้นด้วยเลข 0 และมีจำนวน 10 หลัก', background: 'var(--glass-bg)', color: 'var(--text-main)' });
             
-            // --- [NEW] ตรวจสอบเบอร์โทร (Phone Validation) สำหรับหน้าเช็คชื่อ ---
-            if (!/^0\d{9}$/.test(rawPhone)) {
-                return Swal.fire({ icon: 'warning', text: 'เบอร์โทรศัพท์ต้องขึ้นต้นด้วยเลข 0 และมีจำนวน 10 หลักพอดีครับ', background: '#1e293b', color: '#fff' });
-            }
-            
-            // Anti-Spam
-            const btn = document.getElementById('btnCheckStatus');
-            const originalText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังตรวจสอบ...';
+            const btn = document.getElementById('btnCheckStatus'); const originalText = btn.innerHTML;
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังตรวจสอบ...';
 
-            const res = await fetchAPI({ action: 'login', phone: rawPhone }); // ส่งเบอร์เพียว
-            
-            btn.disabled = false;
-            btn.innerHTML = originalText;
+            const res = await fetchAPI({ action: 'login', phone: rawPhone });
+            btn.disabled = false; btn.innerHTML = originalText;
 
             if (res.status === 'success') {
-                // จำเบอร์ลงเครื่อง
                 localStorage.setItem('hr_saved_phone', rawPhone);
-
                 const d = res.data;
                 document.getElementById('uiName').innerText = d.name; document.getElementById('uiNick').innerText = d.nickname; document.getElementById('uiDept').innerText = d.dept; document.getElementById('uiStatus').innerText = d.status;
+                let bCls = 'status-default'; if(d.status==='Active') bCls='status-active'; else if(d.status==='Passed') bCls='status-passed'; else if(['Resigned','New Job'].includes(d.status)) bCls='status-alert';
+                document.getElementById('uiStatus').className = `status-badge ${bCls}`;
                 document.getElementById('profileCard').classList.remove('hidden');
                 ['1','2','3'].forEach(i => updateCheckBtn(`boxD${i}`, i, d[`d${i}`]));
-            } else { Swal.fire({ icon: 'error', text: 'ไม่พบข้อมูล หรือคุณยังไม่ได้ลงทะเบียน', background: '#1e293b', color: '#fff' }); document.getElementById('profileCard').classList.add('hidden'); }
+            } else { Swal.fire({ icon: 'error', text: 'ไม่พบข้อมูล หรือคุณยังไม่ได้ลงทะเบียน', background: 'var(--glass-bg)', color: 'var(--text-main)' }); document.getElementById('profileCard').classList.add('hidden'); }
         }
 
         function updateCheckBtn(id, day, val) {
             const btn = document.querySelector(`#${id} button`); const box = document.getElementById(id);
-            if(val) { box.classList.add('border-emerald-500/30', 'bg-emerald-500/5'); btn.className="w-full py-1.5 rounded bg-emerald-500/20 text-emerald-400 cursor-default font-digital text-sm"; btn.innerHTML= val; btn.onclick=null; } 
-            else { box.classList.remove('border-emerald-500/30', 'bg-emerald-500/5'); btn.className="w-full py-1.5 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-cyan-600 transition"; btn.innerHTML=`<i class="fa-solid fa-check"></i>`; btn.onclick=()=>doCheckIn(day); }
-        }
-
-        async function doCheckIn(day) {
-            const rawPhone = getRawPhone('checkinPhone'); // ส่งเบอร์เพียว
-            const cf = await Swal.fire({ title: `เช็คชื่อวันที่ ${day}?`, showCancelButton: true, confirmButtonText: 'ยืนยัน', confirmButtonColor: '#0ea5e9', cancelButtonColor: '#475569', background: '#1e293b', color: '#fff' });
-            
-            if (cf.isConfirmed) {
-                const res = await fetchAPI({ action: 'checkin', phone: rawPhone, day });
-                if (res.status === 'success') { 
-                    checkStatus(); // โหลดหน้าตารางใหม่
-                    
-                    // Trigger Confetti พลุฉลอง!
-                    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#22d3ee', '#3b82f6', '#ffffff'] });
-                    Swal.fire({ icon: 'success', title: 'สำเร็จ', timer: 1500, showConfirmButton: false, background: '#1e293b', color: '#fff' }); 
-                }
+            if(val) { 
+                box.className="bg-[var(--status-passed-bg)] p-2 rounded-lg text-center border border-[var(--status-passed-text)] shadow-inner"; 
+                btn.className="w-full py-1.5 rounded bg-transparent text-[var(--status-passed-text)] cursor-default font-digital text-sm font-bold"; btn.innerHTML= val; btn.onclick=null; 
+            } else { 
+                box.className="bg-theme-panel p-2 rounded-lg text-center border border-theme-border"; 
+                btn.className="w-full py-1.5 rounded bg-[var(--glass-border)] text-theme-muted hover:text-theme-main hover:bg-[var(--accent)] transition"; btn.innerHTML=`<i class="fa-solid fa-check"></i>`; btn.onclick=()=>doCheckIn(day); 
             }
         }
 
-        // --- Admin Data & Date Parsing ---
+        async function doCheckIn(day) {
+            const rawPhone = getRawPhone('checkinPhone');
+            const cf = await Swal.fire({ title: `เช็คชื่อวันที่ ${day}?`, showCancelButton: true, confirmButtonText: 'ยืนยัน', confirmButtonColor: 'var(--accent)', cancelButtonColor: 'var(--text-muted)', background: 'var(--glass-bg)', color: 'var(--text-main)' });
+            if (cf.isConfirmed) {
+                const res = await fetchAPI({ action: 'checkin', phone: rawPhone, day });
+                if (res.status === 'success') { checkStatus(); confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, zIndex: 9999 }); Swal.fire({ icon: 'success', title: 'สำเร็จ', timer: 1500, showConfirmButton: false, background: 'var(--glass-bg)', color: 'var(--text-main)' }); }
+            }
+        }
+
+        // --- Admin Logic ---
         async function adminAccess() {
-            const pass = document.getElementById('adminPass').value;
-            const res = await fetchAPI({ action: 'get_admin', pass });
+            const pass = document.getElementById('adminPass').value; const res = await fetchAPI({ action: 'get_admin', pass });
             if (res.status === 'success') { adminPassCache = pass; document.getElementById('adminLogin').classList.add('hidden'); document.getElementById('adminDashboard').classList.remove('hidden'); adminAllData = res.data; applyAdminFilters(); }
-            else { Swal.fire({ icon: 'error', text: 'รหัสผ่านผิด', background: '#1e293b', color: '#fff' }); }
+            else { Swal.fire({ icon: 'error', text: 'รหัสผ่านผิด', background: 'var(--glass-bg)', color: 'var(--text-main)' }); }
         }
         async function loadAdminData() { if(adminPassCache) { const res = await fetchAPI({ action: 'get_admin', pass: adminPassCache }); if(res.status==='success') { adminAllData = res.data; applyAdminFilters(); } } }
 
         function parseToDateObj(dateStr) {
             if (!dateStr) return null;
-            if (dateStr.includes('/')) {
-                const parts = dateStr.split(' ');
-                const dPart = parts[0].split('/');
-                const tPart = parts[1] ? parts[1].split(':') : ['00','00','00'];
-                if (dPart.length >= 3) return new Date(`${dPart[2]}-${dPart[1]}-${dPart[0]}T${tPart[0]}:${tPart[1]}:${tPart[2]||'00'}`);
-            }
+            if (dateStr.includes('/')) { const parts = dateStr.split(' '); const dPart = parts[0].split('/'); const tPart = parts[1] ? parts[1].split(':') : ['00','00','00']; if (dPart.length >= 3) return new Date(`${dPart[2]}-${dPart[1]}-${dPart[0]}T${tPart[0]}:${tPart[1]}:${tPart[2]||'00'}`); }
             return new Date(dateStr);
         }
 
         function formatPrettyDate(dateString) {
-            if (!dateString) return "-";
-            const date = parseToDateObj(dateString);
-            if (!date || isNaN(date.getTime())) return dateString; 
-            const d = String(date.getDate()).padStart(2, '0'); const m = String(date.getMonth() + 1).padStart(2, '0'); const y = date.getFullYear();
-            const h = String(date.getHours()).padStart(2, '0'); const min = String(date.getMinutes()).padStart(2, '0');
-            return `<div class="inline-flex items-center gap-2 bg-slate-800/80 px-2 py-1 rounded border border-white/5 mt-1 shadow-inner"><i class="fa-regular fa-clock text-[10px] text-slate-500"></i><span class="text-slate-300 font-mono tracking-wider text-[10px]">${d}-${m}-${y}</span><span class="text-cyan-400 font-digital font-bold text-[11px]">${h}:${min}</span></div>`;
+            if (!dateString) return "-"; const date = parseToDateObj(dateString); if (!date || isNaN(date.getTime())) return dateString; 
+            const d = String(date.getDate()).padStart(2, '0'); const m = String(date.getMonth() + 1).padStart(2, '0'); const y = date.getFullYear(); const h = String(date.getHours()).padStart(2, '0'); const min = String(date.getMinutes()).padStart(2, '0');
+            return `<div class="inline-flex items-center gap-2 bg-[var(--glass-bg)] px-2 py-1 rounded border border-theme-border mt-1 shadow-inner"><i class="fa-regular fa-clock text-[10px] text-theme-muted"></i><span class="text-theme-main font-mono tracking-wider text-[10px]">${d}-${m}-${y}</span><span class="text-theme-accent font-digital font-bold text-[11px]">${h}:${min}</span></div>`;
         }
 
         // --- Smart Filters & Sorting ---
         function toggleFilterPanel() { document.getElementById('filterPanel').classList.toggle('hidden'); }
-        function clearFilters() {
-            document.getElementById('filterStart').value = ''; document.getElementById('filterEnd').value = '';
-            document.getElementById('filterName').value = ''; document.getElementById('filterTeam').value = '';
-            document.getElementById('filterStatus').value = 'all';
-            applyAdminFilters();
-        }
-
+        function clearFilters() { document.getElementById('filterStart').value = ''; document.getElementById('filterEnd').value = ''; document.getElementById('filterName').value = ''; document.getElementById('filterTeam').value = ''; document.getElementById('filterStatus').value = 'all'; applyAdminFilters(); }
         function handleSort(key) {
-            if (sortState.key === key) {
-                sortState.asc = !sortState.asc; // สลับหน้า-หลัง
-            } else {
-                sortState.key = key;
-                sortState.asc = true; // ค่าเริ่มต้นเรียงจากน้อยไปมาก
-            }
-            
-            // อัปเดตไอคอน
-            document.querySelectorAll('.sort-icon').forEach(i => i.className = 'fa-solid fa-sort sort-icon');
-            const iconId = `sort-icon-${key}`;
-            if (document.getElementById(iconId)) {
-                document.getElementById(iconId).className = sortState.asc ? 'fa-solid fa-sort-up sort-icon opacity-100' : 'fa-solid fa-sort-down sort-icon opacity-100';
-            }
-            
-            applyAdminFilters();
+            if (sortState.key === key) sortState.asc = !sortState.asc; else { sortState.key = key; sortState.asc = true; }
+            document.querySelectorAll('.sort-icon').forEach(i => i.className = 'fa-solid fa-sort sort-icon'); const iconId = `sort-icon-${key}`; if (document.getElementById(iconId)) document.getElementById(iconId).className = sortState.asc ? 'fa-solid fa-sort-up sort-icon opacity-100' : 'fa-solid fa-sort-down sort-icon opacity-100'; applyAdminFilters();
         }
 
         function applyAdminFilters() {
-            const fStart = document.getElementById('filterStart').value;
-            const fEnd = document.getElementById('filterEnd').value;
-            const fName = document.getElementById('filterName').value.toLowerCase();
-            const fTeam = document.getElementById('filterTeam').value.toLowerCase();
-            const fStatus = document.getElementById('filterStatus').value;
-
-            // 1. กรองข้อมูล (Filter)
+            const fStart = document.getElementById('filterStart').value; const fEnd = document.getElementById('filterEnd').value; const fName = document.getElementById('filterName').value.toLowerCase(); const fTeam = document.getElementById('filterTeam').value.toLowerCase(); const fStatus = document.getElementById('filterStatus').value;
             let filtered = adminAllData.filter(row => {
-                const matchName = row.name.toLowerCase().includes(fName) || (row.nickname||'').toLowerCase().includes(fName);
-                const matchTeam = (row.team||'').toLowerCase().includes(fTeam);
-
-                let attendedDays = 0;
-                if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
+                const matchName = row.name.toLowerCase().includes(fName) || (row.nickname||'').toLowerCase().includes(fName); const matchTeam = (row.team||'').toLowerCase().includes(fTeam);
+                let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
                 const isDropout = (attendedDays > 0 && attendedDays < 3) && ['Resigned', 'New Job'].includes(row.status);
-
-                let matchStatus = true;
-                if (fStatus === 'active') matchStatus = row.status === 'Active';
-                else if (fStatus === 'passed') matchStatus = (row.status === 'Passed' || attendedDays === 3);
-                else if (fStatus === 'dropout') matchStatus = isDropout;
-                else if (fStatus === 'resigned') matchStatus = ['Resigned', 'New Job'].includes(row.status);
-
+                let matchStatus = true; if (fStatus === 'active') matchStatus = row.status === 'Active'; else if (fStatus === 'passed') matchStatus = (row.status === 'Passed' || attendedDays === 3); else if (fStatus === 'dropout') matchStatus = isDropout; else if (fStatus === 'resigned') matchStatus = ['Resigned', 'New Job'].includes(row.status);
                 let matchDate = true;
-                if (fStart || fEnd) {
-                    const rDate = parseToDateObj(row.timestamp);
-                    if (rDate && !isNaN(rDate.getTime())) {
-                        rDate.setHours(0,0,0,0);
-                        if (fStart && rDate < new Date(fStart + "T00:00:00")) matchDate = false;
-                        if (fEnd && rDate > new Date(fEnd + "T00:00:00")) matchDate = false;
-                    }
-                }
+                if (fStart || fEnd) { const rDate = parseToDateObj(row.timestamp); if (rDate && !isNaN(rDate.getTime())) { rDate.setHours(0,0,0,0); if (fStart && rDate < new Date(fStart + "T00:00:00")) matchDate = false; if (fEnd && rDate > new Date(fEnd + "T00:00:00")) matchDate = false; } }
                 return matchName && matchTeam && matchStatus && matchDate;
             });
 
-            // 2. เรียงข้อมูล (Sort)
-            filtered.sort((a, b) => {
-                let valA = a[sortState.key] || '';
-                let valB = b[sortState.key] || '';
-                
-                if (sortState.key === 'timestamp') {
-                    valA = parseToDateObj(a.timestamp) || new Date(0);
-                    valB = parseToDateObj(b.timestamp) || new Date(0);
-                }
-
-                if (valA < valB) return sortState.asc ? -1 : 1;
-                if (valA > valB) return sortState.asc ? 1 : -1;
-                return 0;
-            });
-
+            filtered.sort((a, b) => { let valA = a[sortState.key] || ''; let valB = b[sortState.key] || ''; if (sortState.key === 'timestamp') { valA = parseToDateObj(a.timestamp) || new Date(0); valB = parseToDateObj(b.timestamp) || new Date(0); } if (valA < valB) return sortState.asc ? -1 : 1; if (valA > valB) return sortState.asc ? 1 : -1; return 0; });
             renderAdminTable(filtered);
         }
 
-        // --- Render Table ---
         function renderAdminTable(data) {
-            const tbody = document.getElementById('adminTable'); 
-            tbody.innerHTML = '';
-            
+            const tbody = document.getElementById('adminTable'); tbody.innerHTML = '';
             data.forEach(row => {
-                const tr = document.createElement('tr'); 
-                
-                let attendedDays = 0;
-                if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
-
-                // ตรวจสอบออกกลางคัน
+                const tr = document.createElement('tr'); let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
                 const isDropout = (attendedDays > 0 && attendedDays < 3) && ['Resigned', 'New Job'].includes(row.status);
-
-                tr.className = isDropout ? "transition border-b border-red-500/30 bg-red-900/10 hover:bg-red-900/20" : "hover:bg-white/5 transition border-b border-slate-700/50";
-                
-                const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-emerald-400 text-sm" title="${v}"></i>` : `<i class="fa-regular fa-circle text-slate-600 text-sm"></i>`;
-                
-                // สี Badge ของสถานะ
-                let badge = "bg-slate-800 text-slate-400 border border-slate-600";
-                if(row.status==='Active') badge="bg-blue-500/10 text-blue-400 border border-blue-500/30 shadow-[0_0_8px_rgba(59,130,246,0.3)]"; 
-                if(row.status==='Passed') badge="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-[0_0_8px_rgba(16,185,129,0.3)]"; 
-                if(['Resigned','New Job'].includes(row.status)) badge="bg-red-500/10 text-red-400 border border-red-500/30 shadow-[0_0_8px_rgba(239,68,68,0.3)]";
-
-                let dayColor = attendedDays === 3 ? 'text-emerald-400' : (isDropout ? 'text-red-400' : 'text-amber-400');
-
-                let nameDisplay = `<div class="font-bold text-white text-sm mb-0.5">${row.name}</div>`;
-                if (isDropout) {
-                    nameDisplay = `<div class="font-bold text-red-400 text-sm mb-0.5 flex items-center gap-1.5 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]"><i class="fa-solid fa-circle-exclamation text-red-500 animate-pulse"></i>${row.name}</div>`;
-                }
+                tr.className = isDropout ? "transition border-b border-[var(--status-alert-text)] bg-[var(--status-alert-bg)]" : "hover:bg-[var(--glass-border)] transition border-b border-theme-border";
+                const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-[var(--status-passed-text)] text-sm" title="${v}"></i>` : `<i class="fa-regular fa-circle text-theme-muted text-sm opacity-50"></i>`;
+                let badge = "status-default"; if(row.status==='Active') badge="status-active"; if(row.status==='Passed') badge="status-passed"; if(['Resigned','New Job'].includes(row.status)) badge="status-alert";
+                let dayColor = attendedDays === 3 ? 'var(--status-passed-text)' : (isDropout ? 'var(--status-alert-text)' : 'var(--accent)');
+                let nameDisplay = `<div class="font-bold text-theme-main text-sm mb-0.5">${row.name}</div>`;
+                if (isDropout) { nameDisplay = `<div class="font-bold text-[var(--status-alert-text)] text-sm mb-0.5 flex items-center gap-1.5 drop-shadow-md"><i class="fa-solid fa-circle-exclamation animate-pulse"></i>${row.name}</div>`; }
 
                 tr.innerHTML = `
                     <td class="p-3 text-center align-top pt-5"><input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)"></td>
                     <td class="p-3 align-top">
                         ${nameDisplay}
-                        <div class="text-[10px] text-slate-400 mb-1">${row.nickname} | ${row.dept}</div>
-                        <div class="text-[10px] text-cyan-400 font-bold mb-1">TEAM: ${row.team}</div>
+                        <div class="text-[10px] text-theme-muted mb-1">${row.nickname} | ${row.dept}</div>
+                        <div class="text-[10px] text-theme-accent font-bold mb-1">TEAM: ${row.team}</div>
                         ${formatPrettyDate(row.timestamp)}
                         
-                        <div class="mt-3 flex items-center gap-3 bg-slate-900/50 px-3 py-1.5 rounded-lg border border-white/5 w-fit shadow-inner">
-                            <span class="text-[10px] text-slate-300 font-bold uppercase tracking-wide">เข้าเรียน <span class="text-lg mx-1 ${dayColor} leading-none font-digital drop-shadow-md">${attendedDays}</span>/ 3 วัน</span>
-                            <div class="flex gap-1.5 border-l border-white/10 pl-3">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div>
+                        <div class="mt-3 flex items-center gap-3 bg-theme-panel px-3 py-1.5 rounded-lg border border-theme-border w-fit shadow-inner">
+                            <span class="text-[10px] text-theme-main font-bold uppercase tracking-wide">เข้าเรียน <span class="text-lg mx-1 leading-none font-digital drop-shadow-md" style="color: ${dayColor}">${attendedDays}</span>/ 3 วัน</span>
+                            <div class="flex gap-1.5 border-l border-theme-border pl-3">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div>
                         </div>
                     </td>
                     <td class="p-3 text-center hidden md:table-cell align-middle"><div class="flex justify-center gap-2">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div></td>
                     <td class="p-3 text-center align-top pt-5">
-                        <div class="inline-block px-2.5 py-1.5 rounded-lg text-[10px] uppercase font-bold tracking-wider ${badge} min-w-[75px]">${row.status}</div>
-                        ${isDropout ? `<div class="mt-2 inline-block bg-red-500/20 border border-red-500/50 text-red-400 text-[9px] font-bold px-2 py-1 rounded shadow-lg animate-pulse"><i class="fa-solid fa-user-slash mr-1"></i>ออกระหว่างเทรน</div>` : ''}
-                        ${row.note ? `<div class="text-[9px] text-slate-400 mt-2 max-w-[80px] truncate mx-auto" title="${row.note}"><i class="fa-solid fa-comment-dots mr-1"></i> ${row.note}</div>` : ''}
+                        <div class="status-badge ${badge}">${row.status}</div>
+                        ${isDropout ? `<div class="mt-2 inline-block bg-[var(--status-alert-bg)] border border-[var(--status-alert-text)] text-[var(--status-alert-text)] text-[9px] font-bold px-2 py-1 rounded shadow-lg animate-pulse"><i class="fa-solid fa-user-slash mr-1"></i>ออกระหว่างเทรน</div>` : ''}
+                        ${row.note ? `<div class="text-[9px] text-theme-muted mt-2 max-w-[80px] truncate mx-auto" title="${row.note}"><i class="fa-solid fa-comment-dots mr-1"></i> ${row.note}</div>` : ''}
                     </td>
                     <td class="p-3 text-center align-top pt-5">
                         <div class="flex justify-center gap-1.5">
-                            <button onclick="openEditModal(${row.row}, '${row.status}', '${row.team}', '${row.note||''}')" class="text-cyan-400 bg-cyan-500/10 w-8 h-8 rounded-lg hover:bg-cyan-500/20 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteUser(${row.row})" class="text-red-400 bg-red-500/10 w-8 h-8 rounded-lg hover:bg-red-500/20 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="openEditModal(${row.row}, '${row.status}', '${row.team}', '${row.note||''}')" class="text-theme-accent bg-[var(--glass-border)] w-8 h-8 rounded-lg hover:bg-[var(--accent)] hover:text-white transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteUser(${row.row})" class="text-[var(--status-alert-text)] bg-[var(--status-alert-bg)] w-8 h-8 rounded-lg hover:filter hover:brightness-125 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </td>
-                `;
-                tbody.appendChild(tr);
-            });
-            updateActionBar();
+                `; tbody.appendChild(tr);
+            }); updateActionBar();
         }
 
         // --- Selection & Action Bar ---
         function toggleRowSelection(cb) { if (cb.checked) selectedRows.add(cb.value); else selectedRows.delete(cb.value); updateActionBar(); }
         function toggleSelectAll() { const cbs = document.querySelectorAll('.custom-checkbox'); const all = selectedRows.size === cbs.length; selectedRows.clear(); cbs.forEach(cb => { cb.checked = !all; if (!all) selectedRows.add(cb.value); }); updateActionBar(); }
-        function updateActionBar() { 
-            const count = selectedRows.size; document.getElementById('selectedCount').innerText = count; 
-            const bar = document.getElementById('actionBar');
-            if (count > 0) bar.classList.remove('translate-y-[150%]'); else bar.classList.add('translate-y-[150%]');
-        }
+        function updateActionBar() { const count = selectedRows.size; document.getElementById('selectedCount').innerText = count; const bar = document.getElementById('actionBar'); if (count > 0) bar.classList.remove('translate-y-[150%]'); else bar.classList.add('translate-y-[150%]'); }
 
-        // --- HELPERS ---
-        function copyToClipboard(id) { 
-            let t = document.getElementById(id).value; 
-            navigator.clipboard.writeText(t).then(() => Swal.fire({ icon: 'success', title: 'คัดลอกแล้ว', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000, background: '#1e293b', color: '#fff' })); 
-        }
-        function sendLine(id) { 
-            let t = document.getElementById(id).value; 
-            window.open(`https://line.me/R/msg/text/?${encodeURIComponent(t)}`, '_blank'); 
-        }
-        function formatDateThai(date) { 
-            const m = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; 
-            return `${date.getDate()} ${m[date.getMonth()]} ${date.getFullYear()+543}`; 
-        }
+        // --- Reports & Modals Logic ---
+        function copyToClipboard(id) { let t = document.getElementById(id).value; navigator.clipboard.writeText(t).then(() => Swal.fire({ icon: 'success', title: 'คัดลอกแล้ว', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000, background: 'var(--glass-bg)', color: 'var(--text-main)' })); }
+        function sendLine(id) { let t = document.getElementById(id).value; window.open(`https://line.me/R/msg/text/?${encodeURIComponent(t)}`, '_blank'); }
+        function formatDateThai(date) { const m = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; return `${date.getDate()} ${m[date.getMonth()]} ${date.getFullYear()+543}`; }
 
-        // --- Reports ---
         let reportTotalCount = 0;
-
-        function updateReportDate() {
-            const dateStr = document.getElementById('reportDate').value;
-            if(!dateStr) return;
-            const d = formatDateThai(new Date(dateStr));
-            let currentText = document.getElementById('finalReportText').value;
-            currentText = currentText.replace(/รอบอบรมวันที่ .*\n/, `รอบอบรมวันที่ ${d}\n`);
-            document.getElementById('finalReportText').value = currentText;
-        }
-
-        function openReportModal() {
-            const txt = document.getElementById('finalReportText');
-            
-            if (txt.value.trim() === '') {
-                if (!document.getElementById('reportDate').value) {
-                    document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
-                }
-                const d = formatDateThai(new Date(document.getElementById('reportDate').value || new Date()));
-                reportTotalCount = 0; 
-                txt.value = `เรียน พี่ด้า\nและหัวหน้างานที่เกี่ยวข้อง\nขอนำส่งรายงานการอบรมพนักงานใหม่\nรอบอบรมวันที่ ${d}\n\nอบรมทั้งหมดจำนวน 0 คน\n\nขอบคุณครับ`;
-            }
-            document.getElementById('reportModal').classList.remove('hidden');
-        }
-
-        function resetReport() {
-            Swal.fire({ title: 'เริ่มสร้างรายงานใหม่?', text: "ข้อความทั้งหมดจะถูกล้างและเริ่มนับยอดใหม่", icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', cancelButtonColor: '#475569', confirmButtonText: 'เริ่มใหม่', cancelButtonText: 'ยกเลิก', background: '#1e293b', color: '#fff' }).then((result) => {
-                if (result.isConfirmed) { document.getElementById('finalReportText').value = ''; openReportModal(); }
-            });
-        }
-
+        function updateReportDate() { const dateStr = document.getElementById('reportDate').value; if(!dateStr) return; const d = formatDateThai(new Date(dateStr)); let currentText = document.getElementById('finalReportText').value; currentText = currentText.replace(/รอบอบรมวันที่ .*\n/, `รอบอบรมวันที่ ${d}\n`); document.getElementById('finalReportText').value = currentText; }
+        function openReportModal() { const txt = document.getElementById('finalReportText'); if (txt.value.trim() === '') { if (!document.getElementById('reportDate').value) { document.getElementById('reportDate').value = new Date().toISOString().split('T')[0]; } const d = formatDateThai(new Date(document.getElementById('reportDate').value || new Date())); reportTotalCount = 0; txt.value = `เรียน พี่ด้า\nและหัวหน้างานที่เกี่ยวข้อง\nขอนำส่งรายงานการอบรมพนักงานใหม่\nรอบอบรมวันที่ ${d}\n\nอบรมทั้งหมดจำนวน 0 คน\n\nขอบคุณครับ`; } document.getElementById('reportModal').classList.remove('hidden'); }
+        function resetReport() { Swal.fire({ title: 'เริ่มสร้างรายงานใหม่?', text: "ข้อความทั้งหมดจะถูกล้างและเริ่มนับยอดใหม่", icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', cancelButtonColor: 'var(--text-muted)', confirmButtonText: 'เริ่มใหม่', cancelButtonText: 'ยกเลิก', background: 'var(--glass-bg)', color: 'var(--text-main)' }).then((result) => { if (result.isConfirmed) { document.getElementById('finalReportText').value = ''; openReportModal(); } }); }
         function addSelectionToReport() {
-            const type = document.getElementById('reportDayType').value;
-            const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
-            if (!items.length) return Swal.fire('แจ้งเตือน', 'กรุณาเลือกรายชื่ออย่างน้อย 1 คน', 'warning');
-            
-            reportTotalCount += items.length;
-            
-            const teams = {}; 
-            items.forEach(i => { 
-                const t = i.team || 'ไม่ระบุทีม'; 
-                if (!teams[t]) teams[t] = []; 
-                teams[t].push(i.nickname || i.name); 
-            });
-            
-            let txt = `อบรม${type} ทั้งหมด ${items.length} คน\n\n`;
-            for (const [t, n] of Object.entries(teams)) {
-                txt += `${t}    จำนวน ${n.length} คน (${n.join(' ')})\n`;
-            }
-            txt += `\n`; 
-            
-            let currentText = document.getElementById('finalReportText').value;
-            currentText = currentText.replace(/อบรมทั้งหมดจำนวน \d+ คน/, `อบรมทั้งหมดจำนวน ${reportTotalCount} คน`);
-            
-            if(currentText.includes("ขอบคุณครับ")) currentText = currentText.replace("ขอบคุณครับ", txt + "ขอบคุณครับ");
-            else currentText += txt + "ขอบคุณครับ";
-            
-            document.getElementById('finalReportText').value = currentText;
-            
-            selectedRows.clear(); 
-            document.querySelectorAll('.custom-checkbox').forEach(c => c.checked = false); 
-            updateActionBar();
+            const type = document.getElementById('reportDayType').value; const items = adminAllData.filter(i => selectedRows.has(i.id.toString())); if (!items.length) return Swal.fire('แจ้งเตือน', 'กรุณาเลือกรายชื่ออย่างน้อย 1 คน', 'warning');
+            reportTotalCount += items.length; const teams = {}; items.forEach(i => { const t = i.team || 'ไม่ระบุทีม'; if (!teams[t]) teams[t] = []; teams[t].push(i.nickname || i.name); });
+            let txt = `อบรม${type} ทั้งหมด ${items.length} คน\n\n`; for (const [t, n] of Object.entries(teams)) { txt += `${t}    จำนวน ${n.length} คน (${n.join(' ')})\n`; } txt += `\n`; 
+            let currentText = document.getElementById('finalReportText').value; currentText = currentText.replace(/อบรมทั้งหมดจำนวน \d+ คน/, `อบรมทั้งหมดจำนวน ${reportTotalCount} คน`);
+            if(currentText.includes("ขอบคุณครับ")) currentText = currentText.replace("ขอบคุณครับ", txt + "ขอบคุณครับ"); else currentText += txt + "ขอบคุณครับ";
+            document.getElementById('finalReportText').value = currentText; selectedRows.clear(); document.querySelectorAll('.custom-checkbox').forEach(c => c.checked = false); updateActionBar();
         }
 
-        // --- HR Report ---
-        function openHRModal() { 
-            document.getElementById('hrTrainingDate').value = new Date().toISOString().split('T')[0]; 
-            document.getElementById('hrWorkDate').value = ""; 
-            document.getElementById('hrReportText').value = ""; 
-            document.getElementById('hrModal').classList.remove('hidden'); 
-        }
-        
+        function openHRModal() { document.getElementById('hrTrainingDate').value = new Date().toISOString().split('T')[0]; document.getElementById('hrWorkDate').value = ""; document.getElementById('hrReportText').value = ""; document.getElementById('hrModal').classList.remove('hidden'); }
         function generateHRReport() {
-            const tDate = document.getElementById('hrTrainingDate').value;
-            const wDate = document.getElementById('hrWorkDate').value;
-            if(!tDate || !wDate) return Swal.fire({icon:'warning', title:'เลือกวันที่ให้ครบ', toast:true, position:'top', showConfirmButton:false, timer:1500});
-            const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate));
-            const items = adminAllData.filter(i => selectedRows.has(i.id.toString()));
-            let txt = "";
-            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่เริ่มเทรน ${tStr}\nวันเริ่มงาน ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
-            txt += "ขอบคุณครับ";
-            document.getElementById('hrReportText').value = txt;
+            const tDate = document.getElementById('hrTrainingDate').value; const wDate = document.getElementById('hrWorkDate').value; if(!tDate || !wDate) return Swal.fire({icon:'warning', title:'เลือกวันที่ให้ครบ', toast:true, position:'top', showConfirmButton:false, timer:1500});
+            const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate)); const items = adminAllData.filter(i => selectedRows.has(i.id.toString())); let txt = "";
+            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่เริ่มเทรน ${tStr}\nวันเริ่มงาน ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; }); txt += "ขอบคุณครับ"; document.getElementById('hrReportText').value = txt;
         }
 
-        // --- Payment Report ---
-        function openPaymentModal() {
-            if (!adminAllData || adminAllData.length === 0) {
-                return Swal.fire({ icon: 'warning', text: 'ยังไม่มีข้อมูลพนักงานในระบบ', background: '#1e293b', color: '#fff' });
-            }
-            document.getElementById('paymentStartDate').value = '';
-            document.getElementById('paymentEndDate').value = '';
-            
-            document.getElementById('paymentModal').classList.remove('hidden');
-            generatePaymentReportText();
-        }
-
+        function openPaymentModal() { if (!adminAllData || adminAllData.length === 0) return Swal.fire({ icon: 'warning', text: 'ยังไม่มีข้อมูลพนักงานในระบบ', background: 'var(--glass-bg)', color: 'var(--text-main)' }); document.getElementById('paymentStartDate').value = ''; document.getElementById('paymentEndDate').value = ''; document.getElementById('paymentModal').classList.remove('hidden'); generatePaymentReportText(); }
         function generatePaymentReportText() {
-            const startDateStr = document.getElementById('paymentStartDate').value;
-            const endDateStr = document.getElementById('paymentEndDate').value;
-
+            const startDateStr = document.getElementById('paymentStartDate').value; const endDateStr = document.getElementById('paymentEndDate').value;
             const passedUsers = adminAllData.filter(row => {
-                let attendedDays = 0;
-                if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
-                if (!(attendedDays === 3 && row.status === 'Passed')) return false;
-
-                const rDate = parseToDateObj(row.timestamp);
-                if (rDate && !isNaN(rDate.getTime())) {
-                    rDate.setHours(0,0,0,0);
-                    if (startDateStr && rDate < new Date(startDateStr + "T00:00:00")) return false;
-                    if (endDateStr && rDate > new Date(endDateStr + "T00:00:00")) return false;
-                }
-                return true;
+                let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++; if (!(attendedDays === 3 && row.status === 'Passed')) return false;
+                const rDate = parseToDateObj(row.timestamp); if (rDate && !isNaN(rDate.getTime())) { rDate.setHours(0,0,0,0); if (startDateStr && rDate < new Date(startDateStr + "T00:00:00")) return false; if (endDateStr && rDate > new Date(endDateStr + "T00:00:00")) return false; } return true;
             });
-
-            if (passedUsers.length === 0) {
-                document.getElementById('paymentReportText').value = "ไม่มีข้อมูลพนักงานที่ผ่านเกณฑ์ในช่วงเวลาที่เลือก...";
-                return;
-            }
-
-            passedUsers.sort((a, b) => {
-                const teamA = (a.team || '').toLowerCase(); const teamB = (b.team || '').toLowerCase();
-                if (teamA < teamB) return -1; if (teamA > teamB) return 1;
-                const dateA = parseToDateObj(a.timestamp) || new Date(0); const dateB = parseToDateObj(b.timestamp) || new Date(0);
-                return dateA - dateB;
-            });
-
+            if (passedUsers.length === 0) { document.getElementById('paymentReportText').value = "ไม่มีข้อมูลพนักงานที่ผ่านเกณฑ์ในช่วงเวลาที่เลือก..."; return; }
+            passedUsers.sort((a, b) => { const teamA = (a.team || '').toLowerCase(); const teamB = (b.team || '').toLowerCase(); if (teamA < teamB) return -1; if (teamA > teamB) return 1; const dateA = parseToDateObj(a.timestamp) || new Date(0); const dateB = parseToDateObj(b.timestamp) || new Date(0); return dateA - dateB; });
             let tsvText = "ลำดับที่\tคำนำหน้า\tชื่อนามสกุล\tชื่อเล่น\tทีม\tมี(ประสบการณ์)\tไม่มี(ประสบการณ์)\tวันที่อบรม(วันแรก)\n";
-            passedUsers.forEach((user, index) => {
-                let dateStr = "-";
-                const dateObj = parseToDateObj(user.timestamp);
-                if (dateObj && !isNaN(dateObj.getTime())) {
-                    const d = String(dateObj.getDate()).padStart(2, '0');
-                    const m = String(dateObj.getMonth() + 1).padStart(2, '0');
-                    const y = dateObj.getFullYear() + 543; 
-                    dateStr = `${d}/${m}/${y}`;
-                }
-                tsvText += `${index + 1}\t${user.prefix||""}\t${user.name||""}\t${user.nickname||""}\t${user.team||""}\t\t\t${dateStr}\n`;
-            });
-
-            document.getElementById('paymentReportText').value = tsvText;
+            passedUsers.forEach((user, index) => { let dateStr = "-"; const dateObj = parseToDateObj(user.timestamp); if (dateObj && !isNaN(dateObj.getTime())) { const d = String(dateObj.getDate()).padStart(2, '0'); const m = String(dateObj.getMonth() + 1).padStart(2, '0'); const y = dateObj.getFullYear() + 543; dateStr = `${d}/${m}/${y}`; } tsvText += `${index + 1}\t${user.prefix||""}\t${user.name||""}\t${user.nickname||""}\t${user.team||""}\t\t\t${dateStr}\n`; }); document.getElementById('paymentReportText').value = tsvText;
         }
+        function copyToClipboardPayment() { const text = document.getElementById('paymentReportText').value; if(text.includes('ไม่มีข้อมูล')) return Swal.fire({ icon: 'warning', text: 'ไม่มีข้อมูลให้คัดลอก', background: 'var(--glass-bg)', color: 'var(--text-main)' }); navigator.clipboard.writeText(text).then(() => { Swal.fire({ icon: 'success', title: 'คัดลอกสำเร็จ!', html: '<p class="text-sm mt-2">สลับไปที่ Google Sheet คลิกขวาที่เซลล์บนสุดแล้วกด <b>Paste (วาง)</b> ข้อมูลจะถูกแบ่งคอลัมน์ให้ทันที</p>', confirmButtonColor: '#10b981', background: 'var(--glass-bg)', color: 'var(--text-main)' }); document.getElementById('paymentModal').classList.add('hidden'); }).catch(err => { Swal.fire('Error', 'ไม่สามารถคัดลอกได้', 'error'); }); }
 
-        function copyToClipboardPayment() {
-            const text = document.getElementById('paymentReportText').value;
-            if(text.includes('ไม่มีข้อมูล')) return Swal.fire({ icon: 'warning', text: 'ไม่มีข้อมูลให้คัดลอก', background: '#1e293b', color: '#fff' });
-            
-            navigator.clipboard.writeText(text).then(() => {
-                Swal.fire({ icon: 'success', title: 'คัดลอกสำเร็จ!', html: '<p class="text-sm text-slate-300 mt-2">สลับไปที่ Google Sheet คลิกขวาที่เซลล์บนสุดแล้วกด <b>Paste (วาง)</b> ข้อมูลจะถูกแบ่งคอลัมน์ให้ทันที</p>', confirmButtonColor: '#10b981', background: '#1e293b', color: '#fff' });
-                document.getElementById('paymentModal').classList.add('hidden');
-            }).catch(err => { Swal.fire('Error', 'ไม่สามารถคัดลอกได้ กรุณาคัดลอกด้วยตัวเอง', 'error'); });
-        }
-
-        // --- Actions ---
+        // --- Data Mutators ---
         function toggleTeamInput(s) { const i = document.getElementById('editTeamInput'); if (s.value === 'OTHER') { i.classList.remove('hidden'); i.focus(); } else { i.classList.add('hidden'); } }
         function openEditModal(row, st, tm, nt) {
             document.getElementById('editRowId').value = row; document.getElementById('editStatus').value = st; document.getElementById('editNote').value = nt;
-            const s = document.getElementById('editTeamSelect'); const i = document.getElementById('editTeamInput');
-            const opts = Array.from(s.options).map(o => o.value);
-            if (opts.includes(tm)) { s.value = tm; i.classList.add('hidden'); i.value = ""; } 
-            else { s.value = 'OTHER'; i.classList.remove('hidden'); i.value = tm; }
-            document.getElementById('editModal').classList.remove('hidden');
+            const s = document.getElementById('editTeamSelect'); const i = document.getElementById('editTeamInput'); const opts = Array.from(s.options).map(o => o.value);
+            if (opts.includes(tm)) { s.value = tm; i.classList.add('hidden'); i.value = ""; } else { s.value = 'OTHER'; i.classList.remove('hidden'); i.value = tm; } document.getElementById('editModal').classList.remove('hidden');
         }
-        async function saveAdminEdit() {
-            document.getElementById('editModal').classList.add('hidden');
-            const s = document.getElementById('editTeamSelect'); const i = document.getElementById('editTeamInput');
-            const tm = s.value === 'OTHER' ? i.value : s.value;
-            await fetchAPI({ action: 'admin_update', row: document.getElementById('editRowId').value, team: tm, status: document.getElementById('editStatus').value, note: document.getElementById('editNote').value });
-            loadAdminData();
-        }
-        async function deleteUser(row) {
-            const c = await Swal.fire({ title: 'ลบข้อมูล?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', background: '#1e293b', color: '#fff' });
-            if (c.isConfirmed) { await fetchAPI({ action: 'admin_delete', row }); loadAdminData(); }
-        }
+        async function saveAdminEdit() { document.getElementById('editModal').classList.add('hidden'); const s = document.getElementById('editTeamSelect'); const i = document.getElementById('editTeamInput'); const tm = s.value === 'OTHER' ? i.value : s.value; await fetchAPI({ action: 'admin_update', row: document.getElementById('editRowId').value, team: tm, status: document.getElementById('editStatus').value, note: document.getElementById('editNote').value }); loadAdminData(); }
+        async function deleteUser(row) { const c = await Swal.fire({ title: 'ลบข้อมูล?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', background: 'var(--glass-bg)', color: 'var(--text-main)' }); if (c.isConfirmed) { await fetchAPI({ action: 'admin_delete', row }); loadAdminData(); } }
     </script>
 </body>
 </html>
