@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&family=Prompt:wght@300;400;500;600&family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -51,9 +52,15 @@
         .font-digital { font-family: 'Chakra Petch', sans-serif; }
         .text-glow { text-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
         .custom-checkbox { width: 20px; height: 20px; accent-color: #0ea5e9; cursor: pointer; border-radius: 4px; }
+        
+        /* Style สำหรับจัดเรียงหัวตาราง */
+        .sort-icon { transition: transform 0.2s; display: inline-block; margin-left: 4px; opacity: 0.5; }
+        th.sortable { cursor: pointer; transition: background 0.2s; }
+        th.sortable:hover { background: rgba(255,255,255,0.05); }
+        th.sortable:hover .sort-icon { opacity: 1; }
     </style>
 </head>
-<body class="flex flex-col h-screen overflow-hidden text-slate-200" onload="startTime()">
+<body class="flex flex-col h-screen overflow-hidden text-slate-200" onload="initApp()">
 
     <header class="glass-panel sticky top-0 z-50 rounded-b-3xl mx-2 mt-2 px-6 py-4 shadow-glow mb-4">
         <div class="flex justify-between items-center">
@@ -89,11 +96,11 @@
                 <form id="regForm" onsubmit="handleRegister(event)" class="space-y-4 relative z-10">
                     <div class="grid grid-cols-3 gap-3">
                         <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">คำนำหน้า</label><select name="prefix" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm focus:ring-0"><option class="text-slate-900">นาย</option><option class="text-slate-900">นาง</option><option class="text-slate-900">นางสาว</option></select></div>
-                        <div class="col-span-2"><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ชื่อ-นามสกุล</label><input type="text" name="name" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm placeholder-slate-600" placeholder="ภาษาไทย"></div>
+                        <div class="col-span-2"><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ชื่อ-นามสกุล</label><input type="text" name="name" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm placeholder-slate-600" placeholder="เว้นวรรคระหว่างชื่อ-สกุล"></div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ชื่อเล่น</label><input type="text" name="nickname" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
-                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">เบอร์โทร</label><input type="tel" name="phone" required pattern="[0-9]{10}" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm" placeholder="08xxxxxxxx"></div>
+                        <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">เบอร์โทร</label><input type="tel" id="regPhone" name="phone" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm" placeholder="08X-XXX-XXXX"></div>
                     </div>
                     <div>
                         <label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">แผนก</label>
@@ -105,7 +112,7 @@
                         <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ทีม</label><input type="text" name="team" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
                         <div><label class="text-[10px] text-slate-400 font-bold mb-1.5 block ml-1">ผู้แนะนำ</label><input type="text" name="recruiter" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
                     </div>
-                    <button type="submit" class="w-full mt-4 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-header font-medium rounded-xl shadow-lg shadow-cyan-900/20 transition-all transform active:scale-[0.98]">ยืนยันข้อมูล</button>
+                    <button type="submit" id="btnRegister" class="w-full mt-4 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-header font-medium rounded-xl shadow-lg shadow-cyan-900/20 transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed">ยืนยันข้อมูล</button>
                 </form>
             </div>
         </section>
@@ -119,10 +126,10 @@
                 <h2 class="text-xl font-header font-bold text-white mb-2">ลงชื่อเข้าอบรม</h2>
                 <p class="text-xs text-slate-400 mb-8 font-light">กรอกเบอร์โทรศัพท์เพื่อยืนยันตัวตน</p>
                 <div class="relative max-w-xs mx-auto mb-6 group">
-                    <input type="tel" id="checkinPhone" class="w-full pl-12 pr-4 py-3.5 rounded-xl glass-input text-lg tracking-[0.2em] text-center font-digital group-focus-within:border-cyan-500 transition-colors" placeholder="08XXXXXXXX">
+                    <input type="tel" id="checkinPhone" class="w-full pl-12 pr-4 py-3.5 rounded-xl glass-input text-lg tracking-widest text-center font-digital group-focus-within:border-cyan-500 transition-colors" placeholder="08X-XXX-XXXX">
                     <i class="fa-solid fa-mobile-screen absolute left-4 top-4 text-slate-500 text-lg group-focus-within:text-cyan-400 transition-colors"></i>
                 </div>
-                <button onclick="checkStatus()" class="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-header font-medium transition border border-slate-600 hover:border-slate-500">ตรวจสอบสถานะ</button>
+                <button onclick="checkStatus()" id="btnCheckStatus" class="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-header font-medium transition border border-slate-600 hover:border-slate-500 disabled:opacity-50 disabled:cursor-not-allowed">ตรวจสอบสถานะ</button>
 
                 <div id="profileCard" class="hidden mt-8 text-left bg-slate-800/40 rounded-xl p-5 border border-slate-700/50 animate-float">
                     <div class="flex justify-between items-start mb-4 pb-4 border-b border-white/5">
@@ -199,9 +206,9 @@
                         <thead class="bg-slate-900/80 backdrop-blur text-slate-400 text-[10px] font-bold uppercase sticky top-0 z-10 shadow-md">
                             <tr>
                                 <th class="p-3 w-10 text-center">#</th>
-                                <th class="p-3">ข้อมูล & การเข้าเรียน</th>
+                                <th class="p-3 sortable" onclick="handleSort('name')">ข้อมูล & การเข้าเรียน <i class="fa-solid fa-sort sort-icon" id="sort-icon-name"></i></th>
                                 <th class="p-3 text-center hidden md:table-cell">Check-in</th>
-                                <th class="p-3 text-center w-24">สถานะ</th>
+                                <th class="p-3 text-center w-24 sortable" onclick="handleSort('status')">สถานะ <i class="fa-solid fa-sort sort-icon" id="sort-icon-status"></i></th>
                                 <th class="p-3 text-center w-20">จัดการ</th>
                             </tr>
                         </thead>
@@ -253,16 +260,8 @@
             </div>
             <div class="flex-1 overflow-y-auto space-y-4 pr-1">
                 <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-[10px] text-slate-400 font-bold mb-1 block">วันที่รอบอบรม</label>
-                        <input type="date" id="reportDate" class="w-full p-2 rounded-lg glass-input text-xs" onchange="updateReportDate()">
-                    </div>
-                    <div>
-                        <label class="text-[10px] text-slate-400 font-bold mb-1 block">ครั้งที่</label>
-                        <select id="reportDayType" class="w-full p-2 rounded-lg glass-input text-xs">
-                            <option value="วันแรก">วันแรก</option><option value="วันที่สอง">วันที่สอง</option><option value="วันที่สาม">วันที่สาม</option>
-                        </select>
-                    </div>
+                    <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">วันที่รอบอบรม</label><input type="date" id="reportDate" class="w-full p-2 rounded-lg glass-input text-xs" onchange="updateReportDate()"></div>
+                    <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">ครั้งที่</label><select id="reportDayType" class="w-full p-2 rounded-lg glass-input text-xs"><option value="วันแรก">วันแรก</option><option value="วันที่สอง">วันที่สอง</option><option value="วันที่สาม">วันที่สาม</option></select></div>
                 </div>
                 <div class="flex gap-2">
                     <button onclick="addSelectionToReport()" class="flex-1 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl text-white font-bold text-xs shadow hover:brightness-110"><i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการ</button>
@@ -270,10 +269,7 @@
                 </div>
                 <textarea id="finalReportText" class="w-full h-40 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
             </div>
-            <div class="flex gap-3 mt-4">
-                <button onclick="copyToClipboard('finalReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
-                <button onclick="sendLine('finalReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs hover:brightness-110"><i class="fa-brands fa-line mr-1"></i> Line</button>
-            </div>
+            <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('finalReportText')" class="flex-1 py-2.5 bg-slate-700 rounded-xl text-white font-bold text-xs hover:bg-slate-600"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('finalReportText')" class="flex-1 py-2.5 bg-[#06C755] rounded-xl text-white font-bold text-xs hover:brightness-110"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
         </div>
     </div>
 
@@ -305,14 +301,8 @@
                 </div>
                 
                 <div class="grid grid-cols-2 gap-3 mb-2">
-                    <div>
-                        <label class="text-[10px] text-slate-400 font-bold mb-1 block">ตั้งแต่วันที่ (ลงทะเบียน)</label>
-                        <input type="date" id="paymentStartDate" class="w-full p-2 rounded-lg glass-input text-xs text-slate-300" onchange="generatePaymentReportText()">
-                    </div>
-                    <div>
-                        <label class="text-[10px] text-slate-400 font-bold mb-1 block">ถึงวันที่</label>
-                        <input type="date" id="paymentEndDate" class="w-full p-2 rounded-lg glass-input text-xs text-slate-300" onchange="generatePaymentReportText()">
-                    </div>
+                    <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">ตั้งแต่วันที่ (ลงทะเบียน)</label><input type="date" id="paymentStartDate" class="w-full p-2 rounded-lg glass-input text-xs text-slate-300" onchange="generatePaymentReportText()"></div>
+                    <div><label class="text-[10px] text-slate-400 font-bold mb-1 block">ถึงวันที่</label><input type="date" id="paymentEndDate" class="w-full p-2 rounded-lg glass-input text-xs text-slate-300" onchange="generatePaymentReportText()"></div>
                 </div>
 
                 <textarea id="paymentReportText" class="w-full h-56 p-3 rounded-xl glass-input text-xs leading-relaxed font-sans whitespace-pre overflow-x-auto text-slate-300 bg-slate-900/80" spellcheck="false" readonly></textarea>
@@ -333,6 +323,16 @@
         let adminPassCache = "";
         let adminAllData = []; 
         let selectedRows = new Set(); 
+        
+        // ตัวแปรสำหรับจัดเรียงหน้า Admin
+        let sortState = { key: 'timestamp', asc: false };
+
+        // Function ทำงานเมื่อโหลดหน้าเว็บ
+        function initApp() {
+            startTime();
+            setupPhoneFormatting();
+            loadSavedPhone();
+        }
 
         // --- Clock ---
         function startTime() {
@@ -342,6 +342,35 @@
             document.getElementById('clockDate').innerText = `${thaiDays[today.getDay()]}ที่ ${today.getDate()} ${thaiMonths[today.getMonth()]} ${today.getFullYear() + 543}`;
             document.getElementById('clockTime').innerText = `${String(today.getHours()).padStart(2,'0')}:${String(today.getMinutes()).padStart(2,'0')}`;
             setTimeout(startTime, 1000);
+        }
+
+        // --- ระบบฟอร์แมตเบอร์โทร & LocalStorage ---
+        function setupPhoneFormatting() {
+            const formatInput = function(e) {
+                let val = e.target.value.replace(/\D/g, ''); // ลบตัวอักษรที่ไม่ใช่ตัวเลขออก
+                let match = val.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
+                if (match) {
+                    e.target.value = !match[2] ? match[1] : `${match[1]}-${match[2]}` + (match[3] ? `-${match[3]}` : '');
+                }
+            };
+            document.getElementById('regPhone').addEventListener('input', formatInput);
+            document.getElementById('checkinPhone').addEventListener('input', formatInput);
+        }
+
+        function loadSavedPhone() {
+            const savedPhone = localStorage.getItem('hr_saved_phone');
+            if(savedPhone) {
+                // ดึงจาก Local มาจัดฟอร์แมตโชว์
+                let match = savedPhone.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
+                if(match) {
+                    document.getElementById('checkinPhone').value = `${match[1]}-${match[2]}-${match[3]}`;
+                }
+            }
+        }
+        
+        // ฟังก์ชันดึงเบอร์เพียวๆ ไว้ส่ง API (ถอดขีดออก)
+        function getRawPhone(inputId) {
+            return document.getElementById(inputId).value.replace(/-/g, '');
         }
 
         // --- Core API ---
@@ -360,21 +389,92 @@
         // --- Register & Checkin ---
         async function handleRegister(e) {
             e.preventDefault();
-            const res = await fetchAPI({ action: 'register', ...Object.fromEntries(new FormData(e.target)) });
-            if (res.status === 'success') { Swal.fire({ icon: 'success', title: 'ลงทะเบียนสำเร็จ', confirmButtonColor: '#38bdf8', background: '#1e293b', color: '#fff' }); e.target.reset(); switchTab('checkin'); }
+            
+            // --- [NEW] Form Validation (ตรวจสอบความถูกต้องของข้อมูล) ---
+            // 1. จัดการช่องว่าง (Trim Space) และแทนที่การเว้นวรรคหลายๆ ครั้งให้เหลือครั้งเดียว
+            let cleanName = e.target.name.value.trim().replace(/\s+/g, ' '); 
+            let cleanNickname = e.target.nickname.value.trim();
+            let cleanTeam = e.target.team.value.trim();
+            let cleanRecruiter = e.target.recruiter.value.trim();
+            
+            // อัปเดตค่ากลับเข้าไปในช่องเผื่อให้ผู้ใช้เห็นว่าฟอร์แมตถูกจัดเรียงแล้ว
+            e.target.name.value = cleanName;
+            e.target.nickname.value = cleanNickname;
+            e.target.team.value = cleanTeam;
+            e.target.recruiter.value = cleanRecruiter;
+
+            // 2. ตรวจสอบความถูกต้องของ ชื่อ-นามสกุล (ต้องมีเว้นวรรค 1 ที และยาวพอสมควร)
+            if (cleanName.split(' ').length < 2 || cleanName.length < 5) {
+                return Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณากรอกทั้ง "ชื่อ" และ "นามสกุล" โดยเว้นวรรคตรงกลางครับ', background: '#1e293b', color: '#fff' });
+            }
+
+            // 3. ตรวจสอบเบอร์โทร (ต้องขึ้นต้นด้วยเลข 0 และเป็นตัวเลข 10 หลักเป๊ะๆ)
+            let rawPhone = getRawPhone('regPhone');
+            if (!/^0\d{9}$/.test(rawPhone)) {
+                return Swal.fire({ icon: 'warning', title: 'เบอร์โทรศัพท์ไม่ถูกต้อง', text: 'เบอร์โทรศัพท์ต้องขึ้นต้นด้วยเลข 0 และมีจำนวน 10 หลักพอดีครับ', background: '#1e293b', color: '#fff' });
+            }
+            // ---------------------------------------------------------
+
+            // ระบบ Anti-Spam
+            const btn = document.getElementById('btnRegister');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังบันทึก...';
+            
+            // ดึงข้อมูลไปทำ Payload (โครงสร้างเดิมเป๊ะ 100%)
+            let formData = Object.fromEntries(new FormData(e.target));
+            // นำข้อมูลที่ผ่านการคลีนแล้วทับลงไป
+            formData.name = cleanName;
+            formData.nickname = cleanNickname;
+            formData.team = cleanTeam;
+            formData.recruiter = cleanRecruiter;
+            formData.phone = rawPhone; // ส่งเบอร์เพียวๆ กลับไปที่ Google Sheet
+
+            const res = await fetchAPI({ action: 'register', ...formData });
+            
+            // คืนค่าปุ่ม
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+
+            if (res.status === 'success') { 
+                Swal.fire({ icon: 'success', title: 'ลงทะเบียนสำเร็จ', confirmButtonColor: '#38bdf8', background: '#1e293b', color: '#fff' }); 
+                e.target.reset(); 
+                
+                // สลับไปหน้าเช็คชื่อพร้อมยัดเบอร์ลงไปให้เลย
+                document.getElementById('checkinPhone').value = document.getElementById('regPhone').value; 
+                switchTab('checkin'); 
+            }
             else { Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: res.message, background: '#1e293b', color: '#fff' }); }
         }
 
         async function checkStatus() {
-            const phone = document.getElementById('checkinPhone').value;
-            if (!phone) return Swal.fire({ icon: 'warning', text: 'กรุณากรอกเบอร์โทร', background: '#1e293b', color: '#fff' });
-            const res = await fetchAPI({ action: 'login', phone });
+            const rawPhone = getRawPhone('checkinPhone');
+            
+            // --- [NEW] ตรวจสอบเบอร์โทร (Phone Validation) สำหรับหน้าเช็คชื่อ ---
+            if (!/^0\d{9}$/.test(rawPhone)) {
+                return Swal.fire({ icon: 'warning', text: 'เบอร์โทรศัพท์ต้องขึ้นต้นด้วยเลข 0 และมีจำนวน 10 หลักพอดีครับ', background: '#1e293b', color: '#fff' });
+            }
+            
+            // Anti-Spam
+            const btn = document.getElementById('btnCheckStatus');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังตรวจสอบ...';
+
+            const res = await fetchAPI({ action: 'login', phone: rawPhone }); // ส่งเบอร์เพียว
+            
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+
             if (res.status === 'success') {
+                // จำเบอร์ลงเครื่อง
+                localStorage.setItem('hr_saved_phone', rawPhone);
+
                 const d = res.data;
                 document.getElementById('uiName').innerText = d.name; document.getElementById('uiNick').innerText = d.nickname; document.getElementById('uiDept').innerText = d.dept; document.getElementById('uiStatus').innerText = d.status;
                 document.getElementById('profileCard').classList.remove('hidden');
                 ['1','2','3'].forEach(i => updateCheckBtn(`boxD${i}`, i, d[`d${i}`]));
-            } else { Swal.fire({ icon: 'error', text: 'ไม่พบข้อมูล', background: '#1e293b', color: '#fff' }); document.getElementById('profileCard').classList.add('hidden'); }
+            } else { Swal.fire({ icon: 'error', text: 'ไม่พบข้อมูล หรือคุณยังไม่ได้ลงทะเบียน', background: '#1e293b', color: '#fff' }); document.getElementById('profileCard').classList.add('hidden'); }
         }
 
         function updateCheckBtn(id, day, val) {
@@ -384,11 +484,18 @@
         }
 
         async function doCheckIn(day) {
-            const phone = document.getElementById('checkinPhone').value;
+            const rawPhone = getRawPhone('checkinPhone'); // ส่งเบอร์เพียว
             const cf = await Swal.fire({ title: `เช็คชื่อวันที่ ${day}?`, showCancelButton: true, confirmButtonText: 'ยืนยัน', confirmButtonColor: '#0ea5e9', cancelButtonColor: '#475569', background: '#1e293b', color: '#fff' });
+            
             if (cf.isConfirmed) {
-                const res = await fetchAPI({ action: 'checkin', phone, day });
-                if (res.status === 'success') { checkStatus(); Swal.fire({ icon: 'success', title: 'สำเร็จ', timer: 1500, showConfirmButton: false, background: '#1e293b', color: '#fff' }); }
+                const res = await fetchAPI({ action: 'checkin', phone: rawPhone, day });
+                if (res.status === 'success') { 
+                    checkStatus(); // โหลดหน้าตารางใหม่
+                    
+                    // Trigger Confetti พลุฉลอง!
+                    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#22d3ee', '#3b82f6', '#ffffff'] });
+                    Swal.fire({ icon: 'success', title: 'สำเร็จ', timer: 1500, showConfirmButton: false, background: '#1e293b', color: '#fff' }); 
+                }
             }
         }
 
@@ -421,12 +528,30 @@
             return `<div class="inline-flex items-center gap-2 bg-slate-800/80 px-2 py-1 rounded border border-white/5 mt-1 shadow-inner"><i class="fa-regular fa-clock text-[10px] text-slate-500"></i><span class="text-slate-300 font-mono tracking-wider text-[10px]">${d}-${m}-${y}</span><span class="text-cyan-400 font-digital font-bold text-[11px]">${h}:${min}</span></div>`;
         }
 
-        // --- Smart Filters ---
+        // --- Smart Filters & Sorting ---
         function toggleFilterPanel() { document.getElementById('filterPanel').classList.toggle('hidden'); }
         function clearFilters() {
             document.getElementById('filterStart').value = ''; document.getElementById('filterEnd').value = '';
             document.getElementById('filterName').value = ''; document.getElementById('filterTeam').value = '';
             document.getElementById('filterStatus').value = 'all';
+            applyAdminFilters();
+        }
+
+        function handleSort(key) {
+            if (sortState.key === key) {
+                sortState.asc = !sortState.asc; // สลับหน้า-หลัง
+            } else {
+                sortState.key = key;
+                sortState.asc = true; // ค่าเริ่มต้นเรียงจากน้อยไปมาก
+            }
+            
+            // อัปเดตไอคอน
+            document.querySelectorAll('.sort-icon').forEach(i => i.className = 'fa-solid fa-sort sort-icon');
+            const iconId = `sort-icon-${key}`;
+            if (document.getElementById(iconId)) {
+                document.getElementById(iconId).className = sortState.asc ? 'fa-solid fa-sort-up sort-icon opacity-100' : 'fa-solid fa-sort-down sort-icon opacity-100';
+            }
+            
             applyAdminFilters();
         }
 
@@ -437,7 +562,8 @@
             const fTeam = document.getElementById('filterTeam').value.toLowerCase();
             const fStatus = document.getElementById('filterStatus').value;
 
-            const filtered = adminAllData.filter(row => {
+            // 1. กรองข้อมูล (Filter)
+            let filtered = adminAllData.filter(row => {
                 const matchName = row.name.toLowerCase().includes(fName) || (row.nickname||'').toLowerCase().includes(fName);
                 const matchTeam = (row.team||'').toLowerCase().includes(fTeam);
 
@@ -462,6 +588,22 @@
                 }
                 return matchName && matchTeam && matchStatus && matchDate;
             });
+
+            // 2. เรียงข้อมูล (Sort)
+            filtered.sort((a, b) => {
+                let valA = a[sortState.key] || '';
+                let valB = b[sortState.key] || '';
+                
+                if (sortState.key === 'timestamp') {
+                    valA = parseToDateObj(a.timestamp) || new Date(0);
+                    valB = parseToDateObj(b.timestamp) || new Date(0);
+                }
+
+                if (valA < valB) return sortState.asc ? -1 : 1;
+                if (valA > valB) return sortState.asc ? 1 : -1;
+                return 0;
+            });
+
             renderAdminTable(filtered);
         }
 
@@ -483,10 +625,11 @@
                 
                 const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-emerald-400 text-sm" title="${v}"></i>` : `<i class="fa-regular fa-circle text-slate-600 text-sm"></i>`;
                 
+                // สี Badge ของสถานะ
                 let badge = "bg-slate-800 text-slate-400 border border-slate-600";
-                if(row.status==='Active') badge="bg-blue-500/10 text-blue-400 border border-blue-500/30"; 
-                if(row.status==='Passed') badge="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"; 
-                if(['Resigned','New Job'].includes(row.status)) badge="bg-red-500/10 text-red-400 border border-red-500/30";
+                if(row.status==='Active') badge="bg-blue-500/10 text-blue-400 border border-blue-500/30 shadow-[0_0_8px_rgba(59,130,246,0.3)]"; 
+                if(row.status==='Passed') badge="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shadow-[0_0_8px_rgba(16,185,129,0.3)]"; 
+                if(['Resigned','New Job'].includes(row.status)) badge="bg-red-500/10 text-red-400 border border-red-500/30 shadow-[0_0_8px_rgba(239,68,68,0.3)]";
 
                 let dayColor = attendedDays === 3 ? 'text-emerald-400' : (isDropout ? 'text-red-400' : 'text-amber-400');
 
@@ -510,7 +653,7 @@
                     </td>
                     <td class="p-3 text-center hidden md:table-cell align-middle"><div class="flex justify-center gap-2">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div></td>
                     <td class="p-3 text-center align-top pt-5">
-                        <div class="inline-block px-2.5 py-1.5 rounded-lg text-[10px] uppercase font-bold tracking-wider ${badge} min-w-[75px] shadow-sm">${row.status}</div>
+                        <div class="inline-block px-2.5 py-1.5 rounded-lg text-[10px] uppercase font-bold tracking-wider ${badge} min-w-[75px]">${row.status}</div>
                         ${isDropout ? `<div class="mt-2 inline-block bg-red-500/20 border border-red-500/50 text-red-400 text-[9px] font-bold px-2 py-1 rounded shadow-lg animate-pulse"><i class="fa-solid fa-user-slash mr-1"></i>ออกระหว่างเทรน</div>` : ''}
                         ${row.note ? `<div class="text-[9px] text-slate-400 mt-2 max-w-[80px] truncate mx-auto" title="${row.note}"><i class="fa-solid fa-comment-dots mr-1"></i> ${row.note}</div>` : ''}
                     </td>
@@ -549,7 +692,7 @@
             return `${date.getDate()} ${m[date.getMonth()]} ${date.getFullYear()+543}`; 
         }
 
-        // --- Reports (อัปเดตระบบคำนวณและเก็บข้อมูล) ---
+        // --- Reports ---
         let reportTotalCount = 0;
 
         function updateReportDate() {
@@ -572,27 +715,12 @@
                 reportTotalCount = 0; 
                 txt.value = `เรียน พี่ด้า\nและหัวหน้างานที่เกี่ยวข้อง\nขอนำส่งรายงานการอบรมพนักงานใหม่\nรอบอบรมวันที่ ${d}\n\nอบรมทั้งหมดจำนวน 0 คน\n\nขอบคุณครับ`;
             }
-            
             document.getElementById('reportModal').classList.remove('hidden');
         }
 
         function resetReport() {
-            Swal.fire({
-                title: 'เริ่มสร้างรายงานใหม่?',
-                text: "ข้อความทั้งหมดจะถูกล้างและเริ่มนับยอดใหม่",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#ef4444',
-                cancelButtonColor: '#475569',
-                confirmButtonText: 'เริ่มใหม่',
-                cancelButtonText: 'ยกเลิก',
-                background: '#1e293b', 
-                color: '#fff'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('finalReportText').value = '';
-                    openReportModal(); 
-                }
+            Swal.fire({ title: 'เริ่มสร้างรายงานใหม่?', text: "ข้อความทั้งหมดจะถูกล้างและเริ่มนับยอดใหม่", icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', cancelButtonColor: '#475569', confirmButtonText: 'เริ่มใหม่', cancelButtonText: 'ยกเลิก', background: '#1e293b', color: '#fff' }).then((result) => {
+                if (result.isConfirmed) { document.getElementById('finalReportText').value = ''; openReportModal(); }
             });
         }
 
@@ -612,20 +740,15 @@
             
             let txt = `อบรม${type} ทั้งหมด ${items.length} คน\n\n`;
             for (const [t, n] of Object.entries(teams)) {
-                // เปลี่ยนรูปแบบเป็น "ทีม จำนวน ... คน (ชื่อเล่น1 ชื่อเล่น2)" ตามต้องการเป๊ะๆ
                 txt += `${t}    จำนวน ${n.length} คน (${n.join(' ')})\n`;
             }
             txt += `\n`; 
             
             let currentText = document.getElementById('finalReportText').value;
-            
             currentText = currentText.replace(/อบรมทั้งหมดจำนวน \d+ คน/, `อบรมทั้งหมดจำนวน ${reportTotalCount} คน`);
             
-            if(currentText.includes("ขอบคุณครับ")) {
-                currentText = currentText.replace("ขอบคุณครับ", txt + "ขอบคุณครับ");
-            } else {
-                currentText += txt + "ขอบคุณครับ";
-            }
+            if(currentText.includes("ขอบคุณครับ")) currentText = currentText.replace("ขอบคุณครับ", txt + "ขอบคุณครับ");
+            else currentText += txt + "ขอบคุณครับ";
             
             document.getElementById('finalReportText').value = currentText;
             
@@ -654,12 +777,11 @@
             document.getElementById('hrReportText').value = txt;
         }
 
-        // --- Payment Report (เพิ่มระบบกรองวันที่) ---
+        // --- Payment Report ---
         function openPaymentModal() {
             if (!adminAllData || adminAllData.length === 0) {
                 return Swal.fire({ icon: 'warning', text: 'ยังไม่มีข้อมูลพนักงานในระบบ', background: '#1e293b', color: '#fff' });
             }
-            // ล้างวันที่เพื่อให้แสดงทั้งหมดก่อนเมื่อเปิดหน้าต่างขึ้นมา
             document.getElementById('paymentStartDate').value = '';
             document.getElementById('paymentEndDate').value = '';
             
@@ -673,14 +795,9 @@
 
             const passedUsers = adminAllData.filter(row => {
                 let attendedDays = 0;
-                if (row.d1) attendedDays++;
-                if (row.d2) attendedDays++;
-                if (row.d3) attendedDays++;
-                
-                // กรองเฉพาะคนผ่านและครบ 3 วัน
+                if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
                 if (!(attendedDays === 3 && row.status === 'Passed')) return false;
 
-                // กรองวันที่ (ถ้ามีการเลือก)
                 const rDate = parseToDateObj(row.timestamp);
                 if (rDate && !isNaN(rDate.getTime())) {
                     rDate.setHours(0,0,0,0);
@@ -690,26 +807,19 @@
                 return true;
             });
 
-            // ถ้าไม่มีข้อมูลตรงกับวันที่ค้นหา
             if (passedUsers.length === 0) {
                 document.getElementById('paymentReportText').value = "ไม่มีข้อมูลพนักงานที่ผ่านเกณฑ์ในช่วงเวลาที่เลือก...";
                 return;
             }
 
-            // จัดเรียงตามทีมและวันที่
             passedUsers.sort((a, b) => {
-                const teamA = (a.team || '').toLowerCase();
-                const teamB = (b.team || '').toLowerCase();
-                if (teamA < teamB) return -1;
-                if (teamA > teamB) return 1;
-                
-                const dateA = parseToDateObj(a.timestamp) || new Date(0);
-                const dateB = parseToDateObj(b.timestamp) || new Date(0);
+                const teamA = (a.team || '').toLowerCase(); const teamB = (b.team || '').toLowerCase();
+                if (teamA < teamB) return -1; if (teamA > teamB) return 1;
+                const dateA = parseToDateObj(a.timestamp) || new Date(0); const dateB = parseToDateObj(b.timestamp) || new Date(0);
                 return dateA - dateB;
             });
 
             let tsvText = "ลำดับที่\tคำนำหน้า\tชื่อนามสกุล\tชื่อเล่น\tทีม\tมี(ประสบการณ์)\tไม่มี(ประสบการณ์)\tวันที่อบรม(วันแรก)\n";
-            
             passedUsers.forEach((user, index) => {
                 let dateStr = "-";
                 const dateObj = parseToDateObj(user.timestamp);
@@ -719,13 +829,7 @@
                     const y = dateObj.getFullYear() + 543; 
                     dateStr = `${d}/${m}/${y}`;
                 }
-
-                const prefix = user.prefix || "";
-                const name = user.name || "";
-                const nickname = user.nickname || "";
-                const team = user.team || "";
-                
-                tsvText += `${index + 1}\t${prefix}\t${name}\t${nickname}\t${team}\t\t\t${dateStr}\n`;
+                tsvText += `${index + 1}\t${user.prefix||""}\t${user.name||""}\t${user.nickname||""}\t${user.team||""}\t\t\t${dateStr}\n`;
             });
 
             document.getElementById('paymentReportText').value = tsvText;
@@ -733,24 +837,12 @@
 
         function copyToClipboardPayment() {
             const text = document.getElementById('paymentReportText').value;
-            // ตรวจสอบว่ามีข้อมูลให้คัดลอกไหม
-            if(text.includes('ไม่มีข้อมูล')) {
-                return Swal.fire({ icon: 'warning', text: 'ไม่มีข้อมูลให้คัดลอก', background: '#1e293b', color: '#fff' });
-            }
+            if(text.includes('ไม่มีข้อมูล')) return Swal.fire({ icon: 'warning', text: 'ไม่มีข้อมูลให้คัดลอก', background: '#1e293b', color: '#fff' });
             
             navigator.clipboard.writeText(text).then(() => {
-                Swal.fire({ 
-                    icon: 'success', 
-                    title: 'คัดลอกสำเร็จ!', 
-                    html: '<p class="text-sm text-slate-300 mt-2">สลับไปที่ Google Sheet คลิกขวาที่เซลล์บนสุดแล้วกด <b>Paste (วาง)</b> ข้อมูลจะถูกแบ่งคอลัมน์ให้ทันที</p>',
-                    confirmButtonColor: '#10b981', 
-                    background: '#1e293b', 
-                    color: '#fff' 
-                });
+                Swal.fire({ icon: 'success', title: 'คัดลอกสำเร็จ!', html: '<p class="text-sm text-slate-300 mt-2">สลับไปที่ Google Sheet คลิกขวาที่เซลล์บนสุดแล้วกด <b>Paste (วาง)</b> ข้อมูลจะถูกแบ่งคอลัมน์ให้ทันที</p>', confirmButtonColor: '#10b981', background: '#1e293b', color: '#fff' });
                 document.getElementById('paymentModal').classList.add('hidden');
-            }).catch(err => {
-                Swal.fire('Error', 'ไม่สามารถคัดลอกได้ กรุณาคัดลอกด้วยตัวเอง', 'error');
-            });
+            }).catch(err => { Swal.fire('Error', 'ไม่สามารถคัดลอกได้ กรุณาคัดลอกด้วยตัวเอง', 'error'); });
         }
 
         // --- Actions ---
@@ -777,5 +869,3 @@
     </script>
 </body>
 </html>
-
-
