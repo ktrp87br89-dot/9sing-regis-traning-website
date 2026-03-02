@@ -682,7 +682,7 @@
         function generateHRReport() {
             const tDate = document.getElementById('hrTrainingDate').value; const wDate = document.getElementById('hrWorkDate').value; if(!tDate || !wDate) return Swal.fire({icon:'warning', title:'เลือกวันที่ให้ครบ', toast:true, position:'top', showConfirmButton:false, timer:1500});
             const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate)); const items = adminAllData.filter(i => selectedRows.has(i.id.toString())); let txt = "";
-            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันที่เริ่มเทรน ${tStr}\nวันเริ่มงาน ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; }); txt += "ขอบคุณครับ"; document.getElementById('hrReportText').value = txt;
+            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันเริ่มเทรน ${tStr}\nวันเริ่มงาน ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; }); txt += "ขอบคุณครับ"; document.getElementById('hrReportText').value = txt;
         }
 
         function openPaymentModal() { if (!adminAllData || adminAllData.length === 0) return Swal.fire({ icon: 'warning', text: 'ยังไม่มีข้อมูลพนักงานในระบบ', background: 'var(--glass-bg)', color: 'var(--text-main)' }); document.getElementById('paymentStartDate').value = ''; document.getElementById('paymentEndDate').value = ''; document.getElementById('paymentModal').classList.remove('hidden'); generatePaymentReportText(); }
@@ -711,3 +711,4 @@
     </script>
 </body>
 </html>
+
