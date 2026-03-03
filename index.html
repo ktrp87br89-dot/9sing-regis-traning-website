@@ -133,7 +133,7 @@
         .status-default { background-color: var(--glass-bg); color: var(--text-muted); border-color: var(--glass-border); }
         
         /* Scrollbar & Misc */
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
@@ -270,7 +270,7 @@
                 </div>
                 
                 <div class="flex-1 overflow-auto glass-panel rounded-xl mb-20 border-0 shadow-lg">
-                    <table class="w-full text-left border-collapse">
+                    <table class="w-full text-left border-collapse min-w-max">
                         <thead class="bg-theme-panel backdrop-blur text-theme-muted text-[10px] font-bold uppercase sticky top-0 z-10 shadow-md border-b border-theme-border">
                             <tr>
                                 <th class="p-3 w-10 text-center">#</th>
@@ -359,7 +359,7 @@
             <div class="flex-1 overflow-y-auto space-y-4 pr-1">
                 <div class="space-y-3">
                     <div><label class="text-[10px] text-theme-muted font-bold mb-1 block">วันเริ่มอบรม</label><input type="date" id="hrTrainingDate" class="w-full p-2.5 rounded-xl glass-input text-sm"></div>
-                    <div><label class="text-[10px] text-theme-accent font-bold mb-1 block">วันเริ่มงานจริง</label><input type="date" id="hrWorkDate" class="w-full p-2.5 rounded-xl glass-input text-sm"></div>
+                    <div><label class="text-[10px] text-theme-accent font-bold mb-1 block">วันเริ่มงานจริง</label><input type="date" id="hrWorkDate" class="w-full p-2.5 rounded-xl glass-input text-sm border-theme-accent"></div>
                 </div>
                 <button onclick="generateHRReport()" class="w-full py-2.5 btn-primary rounded-xl font-bold text-xs shadow mt-2"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> สร้างข้อความ</button>
                 <textarea id="hrReportText" class="w-full h-40 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
@@ -369,26 +369,32 @@
     </div>
 
     <div id="paymentModal" class="hidden fixed inset-0 z-[80] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-3xl rounded-2xl p-6 flex flex-col max-h-[90vh]">
+        <div class="glass-panel w-full max-w-2xl rounded-2xl p-6 flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center mb-4 border-b border-theme-border pb-3">
                 <h3 class="text-theme-main font-header font-bold text-lg"><i class="fa-solid fa-money-bill-wave mr-2 text-[#10b981]"></i>สรุปทำจ่ายค่าอบรม</h3>
                 <button onclick="document.getElementById('paymentModal').classList.add('hidden')" class="text-theme-muted hover:text-theme-main"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto space-y-4 pr-1">
-                <div class="bg-theme-panel p-3 rounded-xl border border-theme-border text-[11px] text-[#10b981] mb-2 flex items-start gap-2">
+                <div class="bg-[rgba(16,185,129,0.1)] p-3 rounded-xl border border-[#10b981] text-[11px] text-[#34d399] mb-2 flex items-start gap-2">
                     <i class="fa-solid fa-circle-info mt-0.5"></i> 
-                    <div>ระบบคัดกรองเฉพาะผู้ที่ <b>"เข้าอบรมครบ 3 วัน"</b> และมีสถานะเป็น <b>"Passed"</b> เท่านั้น<br><span class="text-theme-muted text-[10px]">จัดเรียงลำดับตาม 'ทีม' และ 'วันที่ลงทะเบียน' พร้อมแยกคอลัมน์อัตโนมัติสำหรับ Google Sheet</span></div>
+                    <div>ระบบคัดกรองเฉพาะผู้ที่ <b>"ติ๊กเลือก + เข้าอบรมครบ 3 วัน + สถานะ Passed"</b> เท่านั้น<br></div>
                 </div>
                 
                 <div class="grid grid-cols-2 gap-3 mb-2">
                     <div><label class="text-[10px] text-theme-muted font-bold mb-1 block">ตั้งแต่วันที่ (ลงทะเบียน)</label><input type="date" id="paymentStartDate" class="w-full p-2 rounded-lg glass-input text-xs" onchange="generatePaymentReportText()"></div>
                     <div><label class="text-[10px] text-theme-muted font-bold mb-1 block">ถึงวันที่</label><input type="date" id="paymentEndDate" class="w-full p-2 rounded-lg glass-input text-xs" onchange="generatePaymentReportText()"></div>
                 </div>
+                
+                <div class="mb-2">
+                    <label class="text-[10px] text-theme-accent font-bold mb-1 block">ระบุวันที่อบรม (แสดงบน Excel/Sheet)</label>
+                    <input type="text" id="paymentCustomDate" class="w-full p-2 rounded-lg glass-input text-xs font-mono text-theme-accent" placeholder="เช่น 19และ20และ23 ก.พ. 69" onkeyup="generatePaymentReportText()">
+                    <p class="text-[9px] text-theme-muted mt-1">*หากปล่อยว่าง ระบบจะดึง "วันที่ลงทะเบียนวันแรก" มาให้</p>
+                </div>
 
-                <textarea id="paymentReportText" class="w-full h-56 p-3 rounded-xl glass-input text-xs leading-relaxed font-sans whitespace-pre overflow-x-auto" spellcheck="false" readonly></textarea>
+                <textarea id="paymentReportText" class="w-full h-40 p-3 rounded-xl glass-input text-xs leading-relaxed font-sans whitespace-pre overflow-x-auto" spellcheck="false" readonly></textarea>
             </div>
-            <div class="mt-4 pt-3 border-t border-theme-border">
-                <button onclick="copyToClipboardPayment()" class="w-full py-3 bg-[#10b981] text-white rounded-xl font-bold text-sm shadow-lg transition transform active:scale-[0.98]"><i class="fa-regular fa-copy mr-2"></i> คัดลอกนำไปวางในเซลล์ A1 ของ Google Sheet</button>
+            <div class="mt-4 pt-3 border-t border-theme-border text-center">
+                <button onclick="copyToClipboardPayment()" class="w-full py-3 bg-[#10b981] text-white rounded-xl font-bold text-sm shadow-lg transition transform hover:bg-[#059669] active:scale-[0.98]"><i class="fa-regular fa-copy mr-2"></i> คัดลอกนำไปวางในเซลล์ A1 ของ Google Sheet</button>
             </div>
         </div>
     </div>
@@ -400,13 +406,7 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbyYYauRspNoRvkhUWKZh4c5Hp1TzhxWGu_T96TvPPMZ6p1DHJqh30Azzi_PrEcGn9dy/exec"; 
         // **********************************************
 
-        // =========================================================
-        // ⚙️ ADMIN CONFIGURATION (การตั้งค่าโดยแอดมิน)
-        // =========================================================
-        // เปลี่ยนค่าตรงนี้เป็น 'cyber', 'gold', หรือ 'pearl' 
-        // เพื่อตั้งเป็นค่า Default ของระบบให้พนักงานทุกคนที่เพิ่งเปิดเว็บครั้งแรก
         const ADMIN_DEFAULT_THEME = 'gold'; 
-        // =========================================================
         
         let adminPassCache = "";
         let adminAllData = []; 
@@ -414,52 +414,35 @@
         let sortState = { key: 'timestamp', asc: false };
 
         function initApp() {
-            // ระบบเช็ค URL Parameter ถ้า Admin ส่งลิงก์แชร์มา (เช่น ?theme=gold) จะบังคับเปลี่ยนทันที
             const urlParams = new URLSearchParams(window.location.search);
-            let themeToSet = ADMIN_DEFAULT_THEME; // ค่าพื้นฐานจากโค้ดด้านบน
-
+            let themeToSet = ADMIN_DEFAULT_THEME; 
             if (urlParams.get('theme') && ['cyber', 'gold', 'pearl'].includes(urlParams.get('theme'))) {
-                themeToSet = urlParams.get('theme'); // สิทธิ์สูงสุด: ลิงก์จาก Admin
+                themeToSet = urlParams.get('theme'); 
             } else if (localStorage.getItem('hr_theme')) {
-                themeToSet = localStorage.getItem('hr_theme'); // สิทธิ์รอง: สิ่งที่พนักงานเคยเลือกไว้
+                themeToSet = localStorage.getItem('hr_theme'); 
             }
-
             setTheme(themeToSet);
-            
             startTime();
             setupPhoneFormatting();
             loadSavedPhone();
         }
 
-        // --- Theme Switcher Logic ---
         function setTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('hr_theme', theme);
             document.getElementById('themeMenu').classList.add('hidden');
         }
-        document.getElementById('themeMenuBtn').addEventListener('click', () => {
-            document.getElementById('themeMenu').classList.toggle('hidden');
-        });
+        document.getElementById('themeMenuBtn').addEventListener('click', () => { document.getElementById('themeMenu').classList.toggle('hidden'); });
 
-        // [NEW] ฟังก์ชันคัดลอกลิงก์พร้อมธีมที่ใช้งานอยู่
         function copyThemeLink() {
-            let currentUrl = window.location.href.split('?')[0]; // ลบพารามิเตอร์เก่าออก
+            let currentUrl = window.location.href.split('?')[0]; 
             let currentTheme = document.documentElement.getAttribute('data-theme') || ADMIN_DEFAULT_THEME;
             let shareLink = currentUrl + "?theme=" + currentTheme;
-
             navigator.clipboard.writeText(shareLink).then(() => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'คัดลอกลิงก์สำเร็จ!',
-                    html: `<p class="text-sm">นำลิงก์นี้ไปให้พนักงาน<br>เมื่อเขาเปิดเว็บ ระบบจะเปลี่ยนเป็นธีม <b>${currentTheme.toUpperCase()}</b> ทันที</p>`,
-                    background: 'var(--glass-bg)',
-                    color: 'var(--text-main)',
-                    confirmButtonColor: 'var(--accent)'
-                });
+                Swal.fire({ icon: 'success', title: 'คัดลอกลิงก์สำเร็จ!', html: `<p class="text-sm">นำลิงก์นี้ไปให้พนักงาน<br>เมื่อเขาเปิดเว็บ ระบบจะเปลี่ยนเป็นธีม <b>${currentTheme.toUpperCase()}</b> ทันที</p>`, background: 'var(--glass-bg)', color: 'var(--text-main)', confirmButtonColor: 'var(--accent)' });
             });
         }
 
-        // --- Clock ---
         function startTime() {
             const today = new Date();
             const thaiDays = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
@@ -469,7 +452,6 @@
             setTimeout(startTime, 1000);
         }
 
-        // --- Phone Formatting & LocalStorage ---
         function setupPhoneFormatting() {
             const formatInput = function(e) {
                 let val = e.target.value.replace(/\D/g, '');
@@ -490,10 +472,13 @@
         
         function getRawPhone(inputId) { return document.getElementById(inputId).value.replace(/-/g, ''); }
 
-        // --- Core API ---
+        // --- Core API (Safe Mode) ---
         async function fetchAPI(payload) {
             document.getElementById('loadingOverlay').classList.remove('hidden');
-            try { const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) }); return await response.json(); } 
+            try { 
+                const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) }); 
+                return await response.json(); 
+            } 
             catch (error) { return { status: 'error', message: 'Connection Error' }; }
             finally { document.getElementById('loadingOverlay').classList.add('hidden'); }
         }
@@ -503,7 +488,6 @@
             document.getElementById(`page-${tab}`).classList.remove('hidden'); document.getElementById(`nav-${tab}`).classList.add('active');
         }
 
-        // --- Register & Checkin ---
         async function handleRegister(e) {
             e.preventDefault();
             let cleanName = e.target.name.value.trim().replace(/\s+/g, ' '); let cleanNickname = e.target.nickname.value.trim();
@@ -573,26 +557,50 @@
         // --- Admin Logic ---
         async function adminAccess() {
             const pass = document.getElementById('adminPass').value; const res = await fetchAPI({ action: 'get_admin', pass });
-            if (res.status === 'success') { adminPassCache = pass; document.getElementById('adminLogin').classList.add('hidden'); document.getElementById('adminDashboard').classList.remove('hidden'); adminAllData = res.data; applyAdminFilters(); }
+            if (res.status === 'success') { 
+                adminPassCache = pass; 
+                document.getElementById('adminLogin').classList.add('hidden'); 
+                document.getElementById('adminDashboard').classList.remove('hidden'); 
+                adminAllData = Array.isArray(res.data) ? res.data : []; // Safe array assign
+                applyAdminFilters(); 
+            }
             else { Swal.fire({ icon: 'error', text: 'รหัสผ่านผิด', background: 'var(--glass-bg)', color: 'var(--text-main)' }); }
         }
-        async function loadAdminData() { if(adminPassCache) { const res = await fetchAPI({ action: 'get_admin', pass: adminPassCache }); if(res.status==='success') { adminAllData = res.data; applyAdminFilters(); } } }
+
+        async function loadAdminData() { 
+            if(adminPassCache) { 
+                const res = await fetchAPI({ action: 'get_admin', pass: adminPassCache }); 
+                if(res.status==='success') { 
+                    adminAllData = Array.isArray(res.data) ? res.data : []; 
+                    applyAdminFilters(); 
+                } 
+            } 
+        }
 
         function parseToDateObj(dateStr) {
             if (!dateStr) return null;
-            if (dateStr.includes('/')) { const parts = dateStr.split(' '); const dPart = parts[0].split('/'); const tPart = parts[1] ? parts[1].split(':') : ['00','00','00']; if (dPart.length >= 3) return new Date(`${dPart[2]}-${dPart[1]}-${dPart[0]}T${tPart[0]}:${tPart[1]}:${tPart[2]||'00'}`); }
-            return new Date(dateStr);
+            let str = String(dateStr).trim();
+            if (str === "") return null;
+            if (str.includes('/')) { 
+                const parts = str.split(' '); const dPart = parts[0].split('/'); const tPart = parts[1] ? parts[1].split(':') : ['00','00','00']; 
+                if (dPart.length >= 3) return new Date(`${dPart[2]}-${dPart[1]}-${dPart[0]}T${tPart[0]}:${tPart[1]}:${tPart[2]||'00'}`); 
+            }
+            const parsed = new Date(str);
+            if (!isNaN(parsed.getTime())) return parsed;
+            return null;
         }
 
         function formatPrettyDate(dateString) {
-            if (!dateString) return "-"; const date = parseToDateObj(dateString); if (!date || isNaN(date.getTime())) return dateString; 
+            const date = parseToDateObj(dateString); 
+            if (!date) return "-"; 
             const d = String(date.getDate()).padStart(2, '0'); const m = String(date.getMonth() + 1).padStart(2, '0'); const y = date.getFullYear(); const h = String(date.getHours()).padStart(2, '0'); const min = String(date.getMinutes()).padStart(2, '0');
             return `<div class="inline-flex items-center gap-2 bg-[var(--glass-bg)] px-2 py-1 rounded border border-theme-border mt-1 shadow-inner"><i class="fa-regular fa-clock text-[10px] text-theme-muted"></i><span class="text-theme-main font-mono tracking-wider text-[10px]">${d}-${m}-${y}</span><span class="text-theme-accent font-digital font-bold text-[11px]">${h}:${min}</span></div>`;
         }
 
-        // --- Smart Filters & Sorting ---
+        // --- Filters & Sorting ---
         function toggleFilterPanel() { document.getElementById('filterPanel').classList.toggle('hidden'); }
         function clearFilters() { document.getElementById('filterStart').value = ''; document.getElementById('filterEnd').value = ''; document.getElementById('filterName').value = ''; document.getElementById('filterTeam').value = ''; document.getElementById('filterStatus').value = 'all'; applyAdminFilters(); }
+        
         function handleSort(key) {
             if (sortState.key === key) sortState.asc = !sortState.asc; else { sortState.key = key; sortState.asc = true; }
             document.querySelectorAll('.sort-icon').forEach(i => i.className = 'fa-solid fa-sort sort-icon'); const iconId = `sort-icon-${key}`; if (document.getElementById(iconId)) document.getElementById(iconId).className = sortState.asc ? 'fa-solid fa-sort-up sort-icon opacity-100' : 'fa-solid fa-sort-down sort-icon opacity-100'; applyAdminFilters();
@@ -600,77 +608,131 @@
 
         function applyAdminFilters() {
             const fStart = document.getElementById('filterStart').value; const fEnd = document.getElementById('filterEnd').value; const fName = document.getElementById('filterName').value.toLowerCase(); const fTeam = document.getElementById('filterTeam').value.toLowerCase(); const fStatus = document.getElementById('filterStatus').value;
+            
+            if(!Array.isArray(adminAllData)) return renderAdminTable([]);
+
             let filtered = adminAllData.filter(row => {
-                const matchName = row.name.toLowerCase().includes(fName) || (row.nickname||'').toLowerCase().includes(fName); const matchTeam = (row.team||'').toLowerCase().includes(fTeam);
+                if (!row || typeof row !== 'object') return false; 
+
+                const safeName = String(row.name || '').toLowerCase();
+                const safeNick = String(row.nickname || '').toLowerCase();
+                const safeTeam = String(row.team || '').toLowerCase();
+                const safeStatus = String(row.status || '');
+
+                const matchName = safeName.includes(fName) || safeNick.includes(fName); 
+                const matchTeam = safeTeam.includes(fTeam);
+                
                 let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
-                const isDropout = (attendedDays > 0 && attendedDays < 3) && ['Resigned', 'New Job'].includes(row.status);
-                let matchStatus = true; if (fStatus === 'active') matchStatus = row.status === 'Active'; else if (fStatus === 'passed') matchStatus = (row.status === 'Passed' || attendedDays === 3); else if (fStatus === 'dropout') matchStatus = isDropout; else if (fStatus === 'resigned') matchStatus = ['Resigned', 'New Job'].includes(row.status);
+                const isDropout = (attendedDays > 0 && attendedDays < 3) && ['Resigned', 'New Job'].includes(safeStatus);
+                
+                let matchStatus = true; 
+                if (fStatus === 'active') matchStatus = safeStatus === 'Active'; 
+                else if (fStatus === 'passed') matchStatus = (safeStatus === 'Passed' || attendedDays === 3); 
+                else if (fStatus === 'dropout') matchStatus = isDropout; 
+                else if (fStatus === 'resigned') matchStatus = ['Resigned', 'New Job'].includes(safeStatus);
+                
                 let matchDate = true;
-                if (fStart || fEnd) { const rDate = parseToDateObj(row.timestamp); if (rDate && !isNaN(rDate.getTime())) { rDate.setHours(0,0,0,0); if (fStart && rDate < new Date(fStart + "T00:00:00")) matchDate = false; if (fEnd && rDate > new Date(fEnd + "T00:00:00")) matchDate = false; } }
+                if (fStart || fEnd) { 
+                    const rDate = parseToDateObj(row.timestamp); 
+                    if (rDate) { 
+                        rDate.setHours(0,0,0,0); 
+                        if (fStart && rDate < new Date(fStart + "T00:00:00")) matchDate = false; 
+                        if (fEnd && rDate > new Date(fEnd + "T00:00:00")) matchDate = false; 
+                    } else {
+                        matchDate = false;
+                    }
+                }
                 return matchName && matchTeam && matchStatus && matchDate;
             });
 
-            filtered.sort((a, b) => { let valA = a[sortState.key] || ''; let valB = b[sortState.key] || ''; if (sortState.key === 'timestamp') { valA = parseToDateObj(a.timestamp) || new Date(0); valB = parseToDateObj(b.timestamp) || new Date(0); } if (valA < valB) return sortState.asc ? -1 : 1; if (valA > valB) return sortState.asc ? 1 : -1; return 0; });
+            // Thai string sorting support
+            filtered.sort((a, b) => { 
+                let valA = a[sortState.key] || ''; 
+                let valB = b[sortState.key] || ''; 
+                if (sortState.key === 'timestamp') { 
+                    valA = parseToDateObj(a.timestamp) || new Date(0); 
+                    valB = parseToDateObj(b.timestamp) || new Date(0); 
+                    return sortState.asc ? valA - valB : valB - valA;
+                } else {
+                    return sortState.asc ? String(valA).localeCompare(String(valB), 'th') : String(valB).localeCompare(String(valA), 'th');
+                }
+            });
             renderAdminTable(filtered);
         }
 
         function renderAdminTable(data) {
             const tbody = document.getElementById('adminTable'); tbody.innerHTML = '';
-            data.forEach(row => {
-                const tr = document.createElement('tr'); let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
-                const isDropout = (attendedDays > 0 && attendedDays < 3) && ['Resigned', 'New Job'].includes(row.status);
-                tr.className = isDropout ? "transition border-b border-[var(--status-alert-text)] bg-[var(--status-alert-bg)]" : "hover:bg-[var(--glass-border)] transition border-b border-theme-border";
-                const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-[var(--status-passed-text)] text-sm" title="${v}"></i>` : `<i class="fa-regular fa-circle text-theme-muted text-sm opacity-50"></i>`;
-                let badge = "status-default"; if(row.status==='Active') badge="status-active"; if(row.status==='Passed') badge="status-passed"; if(['Resigned','New Job'].includes(row.status)) badge="status-alert";
-                let dayColor = attendedDays === 3 ? 'var(--status-passed-text)' : (isDropout ? 'var(--status-alert-text)' : 'var(--accent)');
-                let nameDisplay = `<div class="font-bold text-theme-main text-sm mb-0.5">${row.name}</div>`;
-                if (isDropout) { nameDisplay = `<div class="font-bold text-[var(--status-alert-text)] text-sm mb-0.5 flex items-center gap-1.5 drop-shadow-md"><i class="fa-solid fa-circle-exclamation animate-pulse"></i>${row.name}</div>`; }
+            if(!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-theme-muted">ไม่พบข้อมูล</td></tr>';
+                updateActionBar(); return;
+            }
 
-                tr.innerHTML = `
-                    <td class="p-3 text-center align-top pt-5"><input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)"></td>
-                    <td class="p-3 align-top">
-                        ${nameDisplay}
-                        <div class="text-[10px] text-theme-muted mb-1">${row.nickname} | ${row.dept}</div>
-                        <div class="text-[10px] text-theme-accent font-bold mb-1">TEAM: ${row.team}</div>
-                        ${formatPrettyDate(row.timestamp)}
-                        
-                        <div class="mt-3 flex items-center gap-3 bg-theme-panel px-3 py-1.5 rounded-lg border border-theme-border w-fit shadow-inner">
-                            <span class="text-[10px] text-theme-main font-bold uppercase tracking-wide">เข้าเรียน <span class="text-lg mx-1 leading-none font-digital drop-shadow-md" style="color: ${dayColor}">${attendedDays}</span>/ 3 วัน</span>
-                            <div class="flex gap-1.5 border-l border-theme-border pl-3">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div>
-                        </div>
-                    </td>
-                    <td class="p-3 text-center hidden md:table-cell align-middle"><div class="flex justify-center gap-2">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div></td>
-                    <td class="p-3 text-center align-top pt-5">
-                        <div class="status-badge ${badge}">${row.status}</div>
-                        ${isDropout ? `<div class="mt-2 inline-block bg-[var(--status-alert-bg)] border border-[var(--status-alert-text)] text-[var(--status-alert-text)] text-[9px] font-bold px-2 py-1 rounded shadow-lg animate-pulse"><i class="fa-solid fa-user-slash mr-1"></i>ออกระหว่างเทรน</div>` : ''}
-                        ${row.note ? `<div class="text-[9px] text-theme-muted mt-2 max-w-[80px] truncate mx-auto" title="${row.note}"><i class="fa-solid fa-comment-dots mr-1"></i> ${row.note}</div>` : ''}
-                    </td>
-                    <td class="p-3 text-center align-top pt-5">
-                        <div class="flex justify-center gap-1.5">
-                            <button onclick="openEditModal(${row.row}, '${row.status}', '${row.team}', '${row.note||''}')" class="text-theme-accent bg-[var(--glass-border)] w-8 h-8 rounded-lg hover:bg-[var(--accent)] hover:text-white transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteUser(${row.row})" class="text-[var(--status-alert-text)] bg-[var(--status-alert-bg)] w-8 h-8 rounded-lg hover:filter hover:brightness-125 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </td>
-                `; tbody.appendChild(tr);
+            data.forEach(row => {
+                try {
+                    const tr = document.createElement('tr'); 
+                    let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
+                    const safeStatus = String(row.status || '');
+                    const isDropout = (attendedDays > 0 && attendedDays < 3) && ['Resigned', 'New Job'].includes(safeStatus);
+                    
+                    tr.className = isDropout ? "transition border-b border-[var(--status-alert-text)] bg-[var(--status-alert-bg)]" : "hover:bg-[var(--glass-border)] transition border-b border-theme-border";
+                    const icon = (v) => v ? `<i class="fa-solid fa-circle-check text-[var(--status-passed-text)] text-sm" title="${v}"></i>` : `<i class="fa-regular fa-circle text-theme-muted text-sm opacity-50"></i>`;
+                    
+                    let badge = "status-default"; if(safeStatus==='Active') badge="status-active"; if(safeStatus==='Passed') badge="status-passed"; if(['Resigned','New Job'].includes(safeStatus)) badge="status-alert";
+                    let dayColor = attendedDays === 3 ? 'var(--status-passed-text)' : (isDropout ? 'var(--status-alert-text)' : 'var(--accent)');
+                    
+                    let nameDisplay = `<div class="font-bold text-theme-main text-sm mb-0.5">${row.name || '-'}</div>`;
+                    if (isDropout) { nameDisplay = `<div class="font-bold text-[var(--status-alert-text)] text-sm mb-0.5 flex items-center gap-1.5 drop-shadow-md"><i class="fa-solid fa-circle-exclamation animate-pulse"></i>${row.name}</div>`; }
+
+                    // 🔴 Fix: จำสถานะ Checkbox 
+                    const isChecked = selectedRows.has(String(row.id)) ? 'checked' : '';
+
+                    tr.innerHTML = `
+                        <td class="p-3 text-center align-top pt-5"><input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)" ${isChecked}></td>
+                        <td class="p-3 align-top">
+                            ${nameDisplay}
+                            <div class="text-[10px] text-theme-muted mb-1">${row.nickname || '-'} | ${row.dept || '-'}</div>
+                            <div class="text-[10px] text-theme-accent font-bold mb-1">TEAM: ${row.team || '-'}</div>
+                            ${formatPrettyDate(row.timestamp)}
+                            
+                            <div class="mt-3 flex items-center gap-3 bg-theme-panel px-3 py-1.5 rounded-lg border border-theme-border w-fit shadow-inner">
+                                <span class="text-[10px] text-theme-main font-bold uppercase tracking-wide">เข้าเรียน <span class="text-lg mx-1 leading-none font-digital drop-shadow-md" style="color: ${dayColor}">${attendedDays}</span>/ 3 วัน</span>
+                                <div class="flex gap-1.5 border-l border-theme-border pl-3">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div>
+                            </div>
+                        </td>
+                        <td class="p-3 text-center hidden md:table-cell align-middle"><div class="flex justify-center gap-2">${icon(row.d1)}${icon(row.d2)}${icon(row.d3)}</div></td>
+                        <td class="p-3 text-center align-top pt-5">
+                            <div class="status-badge ${badge}">${safeStatus || '-'}</div>
+                            ${isDropout ? `<div class="mt-2 inline-block bg-[var(--status-alert-bg)] border border-[var(--status-alert-text)] text-[var(--status-alert-text)] text-[9px] font-bold px-2 py-1 rounded shadow-lg animate-pulse"><i class="fa-solid fa-user-slash mr-1"></i>ออกระหว่างเทรน</div>` : ''}
+                            ${row.note ? `<div class="text-[9px] text-theme-muted mt-2 max-w-[80px] truncate mx-auto" title="${row.note}"><i class="fa-solid fa-comment-dots mr-1"></i> ${row.note}</div>` : ''}
+                        </td>
+                        <td class="p-3 text-center align-top pt-5">
+                            <div class="flex justify-center gap-1.5">
+                                <button onclick="openEditModal(${row.row}, '${safeStatus}', '${row.team||''}', '${row.note||''}')" class="text-theme-accent bg-[var(--glass-border)] w-8 h-8 rounded-lg hover:bg-[var(--accent)] hover:text-white transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteUser(${row.row})" class="text-[var(--status-alert-text)] bg-[var(--status-alert-bg)] w-8 h-8 rounded-lg hover:filter hover:brightness-125 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                    `; tbody.appendChild(tr);
+                } catch(e) {}
             }); updateActionBar();
         }
 
         // --- Selection & Action Bar ---
-        function toggleRowSelection(cb) { if (cb.checked) selectedRows.add(cb.value); else selectedRows.delete(cb.value); updateActionBar(); }
-        function toggleSelectAll() { const cbs = document.querySelectorAll('.custom-checkbox'); const all = selectedRows.size === cbs.length; selectedRows.clear(); cbs.forEach(cb => { cb.checked = !all; if (!all) selectedRows.add(cb.value); }); updateActionBar(); }
+        function toggleRowSelection(cb) { if (cb.checked) selectedRows.add(String(cb.value)); else selectedRows.delete(String(cb.value)); updateActionBar(); }
+        function toggleSelectAll() { const cbs = document.querySelectorAll('.custom-checkbox'); const all = selectedRows.size === cbs.length; selectedRows.clear(); cbs.forEach(cb => { cb.checked = !all; if (!all) selectedRows.add(String(cb.value)); }); updateActionBar(); }
         function updateActionBar() { const count = selectedRows.size; document.getElementById('selectedCount').innerText = count; const bar = document.getElementById('actionBar'); if (count > 0) bar.classList.remove('translate-y-[150%]'); else bar.classList.add('translate-y-[150%]'); }
 
-        // --- Reports & Modals Logic ---
+        // --- General Utilities ---
         function copyToClipboard(id) { let t = document.getElementById(id).value; navigator.clipboard.writeText(t).then(() => Swal.fire({ icon: 'success', title: 'คัดลอกแล้ว', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000, background: 'var(--glass-bg)', color: 'var(--text-main)' })); }
         function sendLine(id) { let t = document.getElementById(id).value; window.open(`https://line.me/R/msg/text/?${encodeURIComponent(t)}`, '_blank'); }
         function formatDateThai(date) { const m = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; return `${date.getDate()} ${m[date.getMonth()]} ${date.getFullYear()+543}`; }
 
+        // --- 1. Training Report ---
         let reportTotalCount = 0;
         function updateReportDate() { const dateStr = document.getElementById('reportDate').value; if(!dateStr) return; const d = formatDateThai(new Date(dateStr)); let currentText = document.getElementById('finalReportText').value; currentText = currentText.replace(/รอบอบรมวันที่ .*\n/, `รอบอบรมวันที่ ${d}\n`); document.getElementById('finalReportText').value = currentText; }
         function openReportModal() { const txt = document.getElementById('finalReportText'); if (txt.value.trim() === '') { if (!document.getElementById('reportDate').value) { document.getElementById('reportDate').value = new Date().toISOString().split('T')[0]; } const d = formatDateThai(new Date(document.getElementById('reportDate').value || new Date())); reportTotalCount = 0; txt.value = `เรียน พี่ด้า\nและหัวหน้างานที่เกี่ยวข้อง\nขอนำส่งรายงานการอบรมพนักงานใหม่\nรอบอบรมวันที่ ${d}\n\nอบรมทั้งหมดจำนวน 0 คน\n\nขอบคุณครับ`; } document.getElementById('reportModal').classList.remove('hidden'); }
         function resetReport() { Swal.fire({ title: 'เริ่มสร้างรายงานใหม่?', text: "ข้อความทั้งหมดจะถูกล้างและเริ่มนับยอดใหม่", icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', cancelButtonColor: 'var(--text-muted)', confirmButtonText: 'เริ่มใหม่', cancelButtonText: 'ยกเลิก', background: 'var(--glass-bg)', color: 'var(--text-main)' }).then((result) => { if (result.isConfirmed) { document.getElementById('finalReportText').value = ''; openReportModal(); } }); }
         function addSelectionToReport() {
-            const type = document.getElementById('reportDayType').value; const items = adminAllData.filter(i => selectedRows.has(i.id.toString())); if (!items.length) return Swal.fire('แจ้งเตือน', 'กรุณาเลือกรายชื่ออย่างน้อย 1 คน', 'warning');
+            const type = document.getElementById('reportDayType').value; const items = adminAllData.filter(i => selectedRows.has(String(i.id))); if (!items.length) return Swal.fire('แจ้งเตือน', 'กรุณาเลือกรายชื่ออย่างน้อย 1 คน', 'warning');
             reportTotalCount += items.length; const teams = {}; items.forEach(i => { const t = i.team || 'ไม่ระบุทีม'; if (!teams[t]) teams[t] = []; teams[t].push(i.nickname || i.name); });
             let txt = `อบรม${type} ทั้งหมด ${items.length} คน\n\n`; for (const [t, n] of Object.entries(teams)) { txt += `${t}    จำนวน ${n.length} คน (${n.join(' ')})\n`; } txt += `\n`; 
             let currentText = document.getElementById('finalReportText').value; currentText = currentText.replace(/อบรมทั้งหมดจำนวน \d+ คน/, `อบรมทั้งหมดจำนวน ${reportTotalCount} คน`);
@@ -678,26 +740,85 @@
             document.getElementById('finalReportText').value = currentText; selectedRows.clear(); document.querySelectorAll('.custom-checkbox').forEach(c => c.checked = false); updateActionBar();
         }
 
+        // --- 2. HR Report ---
         function openHRModal() { document.getElementById('hrTrainingDate').value = new Date().toISOString().split('T')[0]; document.getElementById('hrWorkDate').value = ""; document.getElementById('hrReportText').value = ""; document.getElementById('hrModal').classList.remove('hidden'); }
         function generateHRReport() {
             const tDate = document.getElementById('hrTrainingDate').value; const wDate = document.getElementById('hrWorkDate').value; if(!tDate || !wDate) return Swal.fire({icon:'warning', title:'เลือกวันที่ให้ครบ', toast:true, position:'top', showConfirmButton:false, timer:1500});
-            const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate)); const items = adminAllData.filter(i => selectedRows.has(i.id.toString())); let txt = "";
+            const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate)); const items = adminAllData.filter(i => selectedRows.has(String(i.id))); let txt = "";
             items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันเริ่มเทรน ${tStr}\nวันเริ่มงาน ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; }); txt += "ขอบคุณครับ"; document.getElementById('hrReportText').value = txt;
         }
 
-        function openPaymentModal() { if (!adminAllData || adminAllData.length === 0) return Swal.fire({ icon: 'warning', text: 'ยังไม่มีข้อมูลพนักงานในระบบ', background: 'var(--glass-bg)', color: 'var(--text-main)' }); document.getElementById('paymentStartDate').value = ''; document.getElementById('paymentEndDate').value = ''; document.getElementById('paymentModal').classList.remove('hidden'); generatePaymentReportText(); }
-        function generatePaymentReportText() {
-            const startDateStr = document.getElementById('paymentStartDate').value; const endDateStr = document.getElementById('paymentEndDate').value;
-            const passedUsers = adminAllData.filter(row => {
-                let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++; if (!(attendedDays === 3 && row.status === 'Passed')) return false;
-                const rDate = parseToDateObj(row.timestamp); if (rDate && !isNaN(rDate.getTime())) { rDate.setHours(0,0,0,0); if (startDateStr && rDate < new Date(startDateStr + "T00:00:00")) return false; if (endDateStr && rDate > new Date(endDateStr + "T00:00:00")) return false; } return true;
-            });
-            if (passedUsers.length === 0) { document.getElementById('paymentReportText').value = "ไม่มีข้อมูลพนักงานที่ผ่านเกณฑ์ในช่วงเวลาที่เลือก..."; return; }
-            passedUsers.sort((a, b) => { const teamA = (a.team || '').toLowerCase(); const teamB = (b.team || '').toLowerCase(); if (teamA < teamB) return -1; if (teamA > teamB) return 1; const dateA = parseToDateObj(a.timestamp) || new Date(0); const dateB = parseToDateObj(b.timestamp) || new Date(0); return dateA - dateB; });
-            let tsvText = "ลำดับที่\tคำนำหน้า\tชื่อนามสกุล\tชื่อเล่น\tทีม\tมี(ประสบการณ์)\tไม่มี(ประสบการณ์)\tวันที่อบรม(วันแรก)\n";
-            passedUsers.forEach((user, index) => { let dateStr = "-"; const dateObj = parseToDateObj(user.timestamp); if (dateObj && !isNaN(dateObj.getTime())) { const d = String(dateObj.getDate()).padStart(2, '0'); const m = String(dateObj.getMonth() + 1).padStart(2, '0'); const y = dateObj.getFullYear() + 543; dateStr = `${d}/${m}/${y}`; } tsvText += `${index + 1}\t${user.prefix||""}\t${user.name||""}\t${user.nickname||""}\t${user.team||""}\t\t\t${dateStr}\n`; }); document.getElementById('paymentReportText').value = tsvText;
+        // --- 🔴 3. PAYMENT REPORT LOGIC (อัปเกรดเรียงทีม และ คอลัมน์) ---
+        function getTeamPriority(teamName) {
+            if (!teamName) return 999;
+            const t = String(teamName).toUpperCase();
+            const order = ["RETAIL 1", "RETAIL 2", "RETAIL 3", "RETAIL 4", "PA 1A", "PA 1B", "PA 1C", "PA 1D", "PA 2A", "PA 2B", "PA 2C"];
+            const index = order.indexOf(t);
+            return index !== -1 ? index : 999;
         }
-        function copyToClipboardPayment() { const text = document.getElementById('paymentReportText').value; if(text.includes('ไม่มีข้อมูล')) return Swal.fire({ icon: 'warning', text: 'ไม่มีข้อมูลให้คัดลอก', background: 'var(--glass-bg)', color: 'var(--text-main)' }); navigator.clipboard.writeText(text).then(() => { Swal.fire({ icon: 'success', title: 'คัดลอกสำเร็จ!', html: '<p class="text-sm mt-2">สลับไปที่ Google Sheet คลิกขวาที่เซลล์บนสุดแล้วกด <b>Paste (วาง)</b> ข้อมูลจะถูกแบ่งคอลัมน์ให้ทันที</p>', confirmButtonColor: '#10b981', background: 'var(--glass-bg)', color: 'var(--text-main)' }); document.getElementById('paymentModal').classList.add('hidden'); }).catch(err => { Swal.fire('Error', 'ไม่สามารถคัดลอกได้', 'error'); }); }
+
+        function openPaymentModal() {
+            // ดึงคนที่ติ๊ก
+            let items = adminAllData.filter(i => selectedRows.has(String(i.id)));
+            if (items.length === 0) return Swal.fire({ icon: 'warning', text: 'กรุณาติ๊กเลือกรายชื่อที่ต้องการทำจ่ายก่อน', background: 'var(--glass-bg)', color: 'var(--text-main)' });
+
+            // คัดกรอง (มา 3 วัน + Passed)
+            const passedUsers = items.filter(row => {
+                let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++; 
+                return attendedDays === 3 && row.status === 'Passed';
+            });
+
+            if (passedUsers.length === 0) { 
+                return Swal.fire({icon:'error', title:'ไม่พบผู้มีสิทธิ์', text:'รายชื่อที่เลือก ไม่มีคนเทรนครบ 3 วัน หรือ ไม่มีคนสถานะ Passed', background: 'var(--glass-bg)', color: 'var(--text-main)'}); 
+            }
+
+            // เรียงทีม 
+            passedUsers.sort((a, b) => getTeamPriority(a.team) - getTeamPriority(b.team) || (String(a.team || '')).localeCompare(String(b.team || ''), 'th'));
+
+            // จัดเตรียมข้อความลง Textarea
+            // กำหนด Date Range เริ่มต้นจากคนแรก (ถ้ามี)
+            let dateStr = "-";
+            if (passedUsers.length > 0) {
+                const firstDateObj = parseToDateObj(passedUsers[0].timestamp);
+                if (firstDateObj) {
+                    const shortMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+                    const d1 = firstDateObj.getDate();
+                    const d2 = new Date(firstDateObj); d2.setDate(d2.getDate() + 1);
+                    const d3 = new Date(firstDateObj); d3.setDate(d3.getDate() + 2);
+                    dateStr = `${d1}และ${d2.getDate()}และ${d3.getDate()} ${shortMonths[firstDateObj.getMonth()]} ${(firstDateObj.getFullYear() + 543).toString().slice(-2)}`;
+                }
+            }
+
+            document.getElementById('paymentCustomDate').value = dateStr;
+            window.currentPaymentItems = passedUsers; // เก็บไว้ใช้ตอนพิมพ์
+            generatePaymentReportText();
+            document.getElementById('paymentModal').classList.remove('hidden'); 
+        }
+
+        function generatePaymentReportText() {
+            const passedUsers = window.currentPaymentItems || [];
+            if (passedUsers.length === 0) return;
+            
+            const customDate = document.getElementById('paymentCustomDate').value || '-';
+
+            // 🔴 Format ใหม่เป๊ะๆ: ลำดับ > คำนำหน้า > ชื่อ-สกุล > ชื่อเล่น > ทีม > มี > ไม่มี > วันที่อบรม
+            let tsvText = "ลำดับ\tคำนำหน้า\tชื่อ - นามสกุล\tชื่อเล่น\tทีม\tมี(ประสบการณ์)\tไม่มี(ประสบการณ์)\tวันที่อบรม\n";
+            
+            passedUsers.forEach((user, index) => { 
+                // Default ให้ติ๊ก / ที่ ไม่มีประสบการณ์ (Excel column G)
+                tsvText += `${index + 1}\t${user.prefix||""}\t${user.name||""}\t${user.nickname||""}\t${user.team||""}\t\t/\t${customDate}\n`; 
+            }); 
+            document.getElementById('paymentReportText').value = tsvText;
+        }
+
+        function copyToClipboardPayment() { 
+            const text = document.getElementById('paymentReportText').value; 
+            if(!text.trim()) return Swal.fire({ icon: 'warning', text: 'ไม่มีข้อมูลให้คัดลอก', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
+            navigator.clipboard.writeText(text).then(() => { 
+                Swal.fire({ icon: 'success', title: 'คัดลอกสำเร็จ!', html: '<p class="text-sm mt-2">สลับไปที่ Google Sheet คลิกขวาที่เซลล์บนสุดแล้วกด <b>Paste (วาง)</b> ข้อมูลจะถูกแบ่งคอลัมน์ให้ทันที</p>', confirmButtonColor: '#10b981', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
+                document.getElementById('paymentModal').classList.add('hidden'); 
+            }); 
+        }
 
         // --- Data Mutators ---
         function toggleTeamInput(s) { const i = document.getElementById('editTeamInput'); if (s.value === 'OTHER') { i.classList.remove('hidden'); i.focus(); } else { i.classList.add('hidden'); } }
@@ -711,4 +832,3 @@
     </script>
 </body>
 </html>
-
