@@ -775,22 +775,10 @@
             // เรียงทีม 
             passedUsers.sort((a, b) => getTeamPriority(a.team) - getTeamPriority(b.team) || (String(a.team || '')).localeCompare(String(b.team || ''), 'th'));
 
-            // จัดเตรียมข้อความลง Textarea
-            // กำหนด Date Range เริ่มต้นจากคนแรก (ถ้ามี)
-            let dateStr = "-";
-            if (passedUsers.length > 0) {
-                const firstDateObj = parseToDateObj(passedUsers[0].timestamp);
-                if (firstDateObj) {
-                    const shortMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-                    const d1 = firstDateObj.getDate();
-                    const d2 = new Date(firstDateObj); d2.setDate(d2.getDate() + 1);
-                    const d3 = new Date(firstDateObj); d3.setDate(d3.getDate() + 2);
-                    dateStr = `${d1}และ${d2.getDate()}และ${d3.getDate()} ${shortMonths[firstDateObj.getMonth()]} ${(firstDateObj.getFullYear() + 543).toString().slice(-2)}`;
-                }
-            }
-
-            document.getElementById('paymentCustomDate').value = dateStr;
-            window.currentPaymentItems = passedUsers; // เก็บไว้ใช้ตอนพิมพ์
+            // เคลียร์ช่อง Input วันที่ให้ว่าง เพื่อให้ระบบคำนวณวันเช็คชื่อของแต่ละคนโดยอัตโนมัติ
+            document.getElementById('paymentCustomDate').value = "";
+            
+            window.currentPaymentItems = passedUsers; 
             generatePaymentReportText();
             document.getElementById('paymentModal').classList.remove('hidden'); 
         }
@@ -799,14 +787,40 @@
             const passedUsers = window.currentPaymentItems || [];
             if (passedUsers.length === 0) return;
             
-            const customDate = document.getElementById('paymentCustomDate').value || '-';
+            const customDate = document.getElementById('paymentCustomDate').value.trim();
+            const shortMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
 
-            // 🔴 Format ใหม่เป๊ะๆ: ลำดับ > คำนำหน้า > ชื่อ-สกุล > ชื่อเล่น > ทีม > มี > ไม่มี > วันที่อบรม
             let tsvText = "ลำดับ\tคำนำหน้า\tชื่อ - นามสกุล\tชื่อเล่น\tทีม\tมี(ประสบการณ์)\tไม่มี(ประสบการณ์)\tวันที่อบรม\n";
             
             passedUsers.forEach((user, index) => { 
-                // Default ให้ติ๊ก / ที่ ไม่มีประสบการณ์ (Excel column G)
-                tsvText += `${index + 1}\t${user.prefix||""}\t${user.name||""}\t${user.nickname||""}\t${user.team||""}\t\t/\t${customDate}\n`; 
+                let userDateStr = "-";
+
+                // ถ้า Admin พิมพ์ระบุวันที่ในช่อง Input ระบบจะใช้วันที่นั้นแทน
+                if (customDate !== "") {
+                    userDateStr = customDate;
+                } else {
+                    // ดึงข้อมูลวันที่เช็คชื่อจาก d1, d2, d3 ของพนักงานแต่ละคนมาประมวลผล
+                    let dates = [];
+                    let finalYearMonth = "";
+
+                    [user.d1, user.d2, user.d3].forEach(d => {
+                        if (d) {
+                            const dateObj = parseToDateObj(d);
+                            if (dateObj) {
+                                dates.push(dateObj.getDate());
+                                // เก็บเดือนและปีของวันสุดท้ายไว้ต่อท้าย
+                                finalYearMonth = ` ${shortMonths[dateObj.getMonth()]} ${(dateObj.getFullYear() + 543).toString().slice(-2)}`;
+                            }
+                        }
+                    });
+
+                    // นำวันที่มารวมกัน เช่น "19และ20และ23 ก.พ. 69"
+                    if (dates.length > 0) {
+                        userDateStr = dates.join('และ') + finalYearMonth;
+                    }
+                }
+
+                tsvText += `${index + 1}\t${user.prefix||""}\t${user.name||""}\t${user.nickname||""}\t${user.team||""}\t\t/\t${userDateStr}\n`; 
             }); 
             document.getElementById('paymentReportText').value = tsvText;
         }
