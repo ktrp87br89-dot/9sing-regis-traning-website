@@ -239,7 +239,7 @@
             <div id="adminLogin" class="max-w-xs mx-auto glass-panel p-8 rounded-2xl text-center mt-10 border border-red-500/20">
                 <div class="w-14 h-14 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20"><i class="fa-solid fa-shield-cat text-2xl text-red-400"></i></div>
                 <h3 class="text-theme-main font-header font-bold mb-6">Restricted Area</h3>
-                <input type="password" id="adminPass" class="w-full px-4 py-3 rounded-xl glass-input text-center mb-4 text-sm" placeholder="Admin Password">
+                <input type="password" id="adminPass" onkeypress="if(event.key === 'Enter') adminAccess()" class="w-full px-4 py-3 rounded-xl glass-input text-center mb-4 text-sm" placeholder="Admin Password">
                 <button onclick="adminAccess()" class="w-full py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold text-sm transition shadow-lg">เข้าสู่ระบบ</button>
             </div>
 
@@ -412,6 +412,7 @@
         let adminAllData = []; 
         let selectedRows = new Set(); 
         let sortState = { key: 'timestamp', asc: false };
+        let currentAdminRole = 'master'; // เพิ่มตัวแปรเก็บระดับสิทธิ์ของ Admin
 
         function initApp() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -556,12 +557,16 @@
 
         // --- Admin Logic ---
         async function adminAccess() {
-            const pass = document.getElementById('adminPass').value; const res = await fetchAPI({ action: 'get_admin', pass });
+            const pass = document.getElementById('adminPass').value; 
+            const res = await fetchAPI({ action: 'get_admin', pass });
             if (res.status === 'success') { 
                 adminPassCache = pass; 
+                // ตั้งค่า Role ว่าเป็น master หรือ hr
+                currentAdminRole = (pass === 'adminhr0208') ? 'hr' : 'master';
+
                 document.getElementById('adminLogin').classList.add('hidden'); 
                 document.getElementById('adminDashboard').classList.remove('hidden'); 
-                adminAllData = Array.isArray(res.data) ? res.data : []; // Safe array assign
+                adminAllData = Array.isArray(res.data) ? res.data : []; 
                 applyAdminFilters(); 
             }
             else { Swal.fire({ icon: 'error', text: 'รหัสผ่านผิด', background: 'var(--glass-bg)', color: 'var(--text-main)' }); }
@@ -683,8 +688,13 @@
                     let nameDisplay = `<div class="font-bold text-theme-main text-sm mb-0.5">${row.name || '-'}</div>`;
                     if (isDropout) { nameDisplay = `<div class="font-bold text-[var(--status-alert-text)] text-sm mb-0.5 flex items-center gap-1.5 drop-shadow-md"><i class="fa-solid fa-circle-exclamation animate-pulse"></i>${row.name}</div>`; }
 
-                    // 🔴 Fix: จำสถานะ Checkbox 
                     const isChecked = selectedRows.has(String(row.id)) ? 'checked' : '';
+
+                    // ซ่อนและปิดการทำงานของปุ่มลบ ถ้าเป็น HR สำรอง
+                    let deleteBtn = `<button onclick="deleteUser(${row.row})" class="text-[var(--status-alert-text)] bg-[var(--status-alert-bg)] w-8 h-8 rounded-lg hover:filter hover:brightness-125 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-trash"></i></button>`;
+                    if (currentAdminRole === 'hr') {
+                        deleteBtn = `<button onclick="Swal.fire({icon:'error', title:'ไม่มีสิทธิ์', text:'สิทธิ์ HR สำรอง ไม่สามารถลบข้อมูลได้ครับ', background:'var(--glass-bg)', color:'var(--text-main)'})" class="text-theme-muted bg-[var(--glass-border)] w-8 h-8 rounded-lg opacity-50 cursor-not-allowed flex items-center justify-center shadow-lg"><i class="fa-solid fa-trash"></i></button>`;
+                    }
 
                     tr.innerHTML = `
                         <td class="p-3 text-center align-top pt-5"><input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)" ${isChecked}></td>
@@ -708,7 +718,7 @@
                         <td class="p-3 text-center align-top pt-5">
                             <div class="flex justify-center gap-1.5">
                                 <button onclick="openEditModal(${row.row}, '${safeStatus}', '${row.team||''}', '${row.note||''}')" class="text-theme-accent bg-[var(--glass-border)] w-8 h-8 rounded-lg hover:bg-[var(--accent)] hover:text-white transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="deleteUser(${row.row})" class="text-[var(--status-alert-text)] bg-[var(--status-alert-bg)] w-8 h-8 rounded-lg hover:filter hover:brightness-125 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-trash"></i></button>
+                                ${deleteBtn}
                             </div>
                         </td>
                     `; tbody.appendChild(tr);
@@ -841,8 +851,24 @@
             const s = document.getElementById('editTeamSelect'); const i = document.getElementById('editTeamInput'); const opts = Array.from(s.options).map(o => o.value);
             if (opts.includes(tm)) { s.value = tm; i.classList.add('hidden'); i.value = ""; } else { s.value = 'OTHER'; i.classList.remove('hidden'); i.value = tm; } document.getElementById('editModal').classList.remove('hidden');
         }
-        async function saveAdminEdit() { document.getElementById('editModal').classList.add('hidden'); const s = document.getElementById('editTeamSelect'); const i = document.getElementById('editTeamInput'); const tm = s.value === 'OTHER' ? i.value : s.value; await fetchAPI({ action: 'admin_update', row: document.getElementById('editRowId').value, team: tm, status: document.getElementById('editStatus').value, note: document.getElementById('editNote').value }); loadAdminData(); }
-        async function deleteUser(row) { const c = await Swal.fire({ title: 'ลบข้อมูล?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', background: 'var(--glass-bg)', color: 'var(--text-main)' }); if (c.isConfirmed) { await fetchAPI({ action: 'admin_delete', row }); loadAdminData(); } }
+        
+        async function saveAdminEdit() { 
+            document.getElementById('editModal').classList.add('hidden'); 
+            const s = document.getElementById('editTeamSelect'); 
+            const i = document.getElementById('editTeamInput'); 
+            const tm = s.value === 'OTHER' ? i.value : s.value; 
+            await fetchAPI({ action: 'admin_update', row: document.getElementById('editRowId').value, team: tm, status: document.getElementById('editStatus').value, note: document.getElementById('editNote').value }); 
+            loadAdminData(); 
+        }
+
+        async function deleteUser(row) { 
+            // เช็คสิทธิ์ก่อนลบ (ป้องกันการแฮ็กเรียกฟังก์ชันตรงๆ)
+            if (currentAdminRole === 'hr') {
+                return Swal.fire({ icon: 'error', title: 'ไม่อนุญาต', text: 'สิทธิ์ HR สำรอง ไม่สามารถลบข้อมูลได้ครับ', background: 'var(--glass-bg)', color: 'var(--text-main)' });
+            }
+            const c = await Swal.fire({ title: 'ลบข้อมูล?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
+            if (c.isConfirmed) { await fetchAPI({ action: 'admin_delete', row }); loadAdminData(); } 
+        }
     </script>
 </body>
 </html>
