@@ -671,28 +671,44 @@
                 updateActionBar(); return;
             }
 
-            // 🟢 ปรับฟอร์แมตให้ออกมาเป็น "04-03-2026 09:13" ตรงๆ แบบไม่มีข้อความไทยเลย
+            // 🟢 อัปเกรดฟังก์ชันจัดรูปแบบเวลา ให้จับการแปลง Date อัตโนมัติจาก Google Sheets ได้เป๊ะ 100%
             const formatCheckinHover = (val, timestamp) => {
                 if (!val) return "";
                 try {
-                    const parts = String(val).trim().split(/\s+/);
-                    if (parts.length === 2 && parts[0].includes('/')) {
-                        const dParts = parts[0].split('/');
-                        
-                        // ดึง ปี ค.ศ. จาก timestamp ตอนลงทะเบียน
-                        let year = new Date().getFullYear();
-                        if (timestamp) {
-                            const rDate = parseToDateObj(timestamp);
-                            if (rDate) year = rDate.getFullYear();
-                        }
-                        
-                        const dd = String(dParts[0]).padStart(2, '0');
-                        const mm = String(dParts[1]).padStart(2, '0');
-                        
-                        // คืนค่าแบบ 04-03-2026 09:13
-                        return `${dd}-${mm}-${year} ${parts[1]}`;
+                    let vStr = String(val).trim();
+                    let fallbackYear = new Date().getFullYear();
+                    
+                    if (timestamp) {
+                        const rDate = parseToDateObj(timestamp);
+                        if (rDate) fallbackYear = rDate.getFullYear();
                     }
-                    return val; 
+
+                    // 1. กรณีที่ 1: ข้อมูลยังคงเป็น String ดิบๆ แบบ "04/03 09:13"
+                    const slashParts = vStr.split('/');
+                    if (slashParts.length === 2 && vStr.includes(' ')) {
+                        const spaceParts = vStr.split(' ');
+                        const dParts = spaceParts[0].split('/');
+                        if (dParts.length === 2) {
+                            const dd = String(dParts[0]).padStart(2, '0');
+                            const mm = String(dParts[1]).padStart(2, '0');
+                            return `${dd}-${mm}-${fallbackYear} ${spaceParts[1]}`;
+                        }
+                    }
+
+                    // 2. กรณีที่ 2: Google Sheets แปลงค่าในเซลล์เป็น Date Object (ส่งมาเป็น ISO String ยาวๆ)
+                    const parsedDate = new Date(vStr);
+                    if (!isNaN(parsedDate.getTime())) {
+                        const dd = String(parsedDate.getDate()).padStart(2, '0');
+                        const mm = String(parsedDate.getMonth() + 1).padStart(2, '0');
+                        let yy = parsedDate.getFullYear();
+                        if (yy < 2000) yy = fallbackYear; // ป้องกันบั๊กกรณีชีตมองเป็นแค่เวลา (ปี 1899)
+                        
+                        const hh = String(parsedDate.getHours()).padStart(2, '0');
+                        const min = String(parsedDate.getMinutes()).padStart(2, '0');
+                        return `${dd}-${mm}-${yy} ${hh}:${min}`;
+                    }
+
+                    return vStr; 
                 } catch(e) { return val; }
             };
 
@@ -705,7 +721,6 @@
                     
                     tr.className = isDropout ? "transition border-b border-[var(--status-alert-text)] bg-[var(--status-alert-bg)]" : "hover:bg-[var(--glass-border)] transition border-b border-theme-border";
                     
-                    // 🟢 เรียกใช้ title ฟังก์ชันที่จะโชว์แค่ตัวเลข 04-03-2026 09:13 และส่งค่า row.timestamp เข้าไปคำนวณด้วย
                     const icon = (v, ts) => v ? `<i class="fa-solid fa-circle-check text-[var(--status-passed-text)] text-sm cursor-help hover:scale-125 transition-transform" title="${formatCheckinHover(v, ts)}"></i>` : `<i class="fa-regular fa-circle text-theme-muted text-sm opacity-50 cursor-not-allowed" title="-"></i>`;
                     
                     let badge = "status-default"; if(safeStatus==='Active') badge="status-active"; if(safeStatus==='Passed') badge="status-passed"; if(['Resigned','New Job'].includes(safeStatus)) badge="status-alert";
