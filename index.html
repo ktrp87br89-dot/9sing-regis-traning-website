@@ -539,7 +539,44 @@
             const btn = document.querySelector(`#${id} button`); const box = document.getElementById(id);
             if(val) { 
                 box.className="bg-[var(--status-passed-bg)] p-2 rounded-lg text-center border border-[var(--status-passed-text)] shadow-inner"; 
-                btn.className="w-full py-1.5 rounded bg-transparent text-[var(--status-passed-text)] cursor-default font-digital text-sm font-bold"; btn.innerHTML= val; btn.onclick=null; 
+                
+                // --- ระบบจัดฟอร์แมตวันที่ให้สวยงาม (05/03/2026 15:19:25) ---
+                let displayVal = val;
+                try {
+                    let vStr = String(val).trim();
+                    let pd = new Date(vStr); // แปลงค่าเป็น Date Object
+                    
+                    // ดักจับกรณีข้อมูลมาเป็น String แบบ dd/MM/yyyy หรือ dd/MM
+                    if (vStr.includes('/')) {
+                        const pts = vStr.split(' '); 
+                        const dPts = pts[0].split('/'); 
+                        const tPts = pts[1] ? pts[1].split(':') : ['00','00','00'];
+                        
+                        let yy = dPts.length >= 3 ? dPts[2] : new Date().getFullYear();
+                        if(String(yy).length === 2) yy = '20' + yy; // เติม 20 ถ้าปีมาแค่ 2 หลัก
+                        
+                        pd = new Date(`${yy}-${dPts[1]}-${dPts[0]}T${tPts[0]}:${tPts[1]}:${tPts[2]||'00'}`);
+                    }
+                    
+                    // จัดเรียงฟอร์แมตใหม่
+                    if (pd && !isNaN(pd.getTime())) {
+                        const dd = String(pd.getDate()).padStart(2, '0'); 
+                        const mm = String(pd.getMonth() + 1).padStart(2, '0'); 
+                        const yy = pd.getFullYear();
+                        const hh = String(pd.getHours()).padStart(2, '0'); 
+                        const min = String(pd.getMinutes()).padStart(2, '0'); 
+                        const ss = String(pd.getSeconds()).padStart(2, '0');
+                        
+                        // ใช้ <br> คั่นระหว่างวันที่และเวลา เพื่อให้ข้อความไม่ล้นกล่อง UI
+                        displayVal = `${dd}/${mm}/${yy}<br>${hh}:${min}:${ss}`;
+                    }
+                } catch(e) {}
+                // --------------------------------------------------
+
+                // ปรับคลาส CSS เล็กน้อย (text-[10px], leading-tight) เพื่อให้ 2 บรรทัดอยู่ตรงกลางพอดี
+                btn.className="w-full py-0.5 rounded bg-transparent text-[var(--status-passed-text)] cursor-default font-digital text-[10px] leading-tight font-bold tracking-wide"; 
+                btn.innerHTML= displayVal; 
+                btn.onclick=null; 
             } else { 
                 box.className="bg-theme-panel p-2 rounded-lg text-center border border-theme-border"; 
                 btn.className="w-full py-1.5 rounded bg-[var(--glass-border)] text-theme-muted hover:text-theme-main hover:bg-[var(--accent)] transition"; btn.innerHTML=`<i class="fa-solid fa-check"></i>`; btn.onclick=()=>doCheckIn(day); 
@@ -611,7 +648,12 @@
         }
 
         function applyAdminFilters() {
-            const fStart = document.getElementById('filterStart').value; const fEnd = document.getElementById('filterEnd').value; const fName = document.getElementById('filterName').value.toLowerCase(); const fTeam = document.getElementById('filterTeam').value.toLowerCase(); const fStatus = document.getElementById('filterStatus').value;
+            // ใช้ .trim() เพื่อป้องกันการกด Spacebar เกินมาโดยไม่ตั้งใจ
+            const fStart = document.getElementById('filterStart').value; 
+            const fEnd = document.getElementById('filterEnd').value; 
+            const fName = document.getElementById('filterName').value.trim().toLowerCase(); 
+            const fTeam = document.getElementById('filterTeam').value.trim().toLowerCase(); 
+            const fStatus = document.getElementById('filterStatus').value;
             
             if(!Array.isArray(adminAllData)) return renderAdminTable([]);
 
@@ -635,21 +677,38 @@
                 else if (fStatus === 'dropout') matchStatus = isDropout; 
                 else if (fStatus === 'resigned') matchStatus = ['Resigned', 'New Job'].includes(safeStatus);
                 
+                // --- ส่วนที่ปรับปรุงการเปรียบเทียบวันที่แบบ 100% แม่นยำ ---
                 let matchDate = true;
                 if (fStart || fEnd) { 
                     const rDate = parseToDateObj(row.timestamp); 
                     if (rDate) { 
-                        rDate.setHours(0,0,0,0); 
-                        if (fStart && rDate < new Date(fStart + "T00:00:00")) matchDate = false; 
-                        if (fEnd && rDate > new Date(fEnd + "T00:00:00")) matchDate = false; 
+                        // เซ็ตเวลาของข้อมูลแถวนี้ให้เป็นเที่ยงคืนตรง (00:00:00.000)
+                        rDate.setHours(0, 0, 0, 0); 
+                        
+                        if (fStart) {
+                            // สร้าง Date Object ของวันเริ่มต้น และเซ็ตเป็นเที่ยงคืนตรง
+                            const startDate = new Date(fStart);
+                            startDate.setHours(0, 0, 0, 0);
+                            if (rDate < startDate) matchDate = false;
+                        }
+                        
+                        if (fEnd) {
+                            // สร้าง Date Object ของวันสิ้นสุด และเซ็ตเป็นเที่ยงคืนตรง
+                            const endDate = new Date(fEnd);
+                            endDate.setHours(0, 0, 0, 0);
+                            if (rDate > endDate) matchDate = false;
+                        }
                     } else {
+                        // ถ้าแถวนั้นไม่มีข้อมูลวันที่ที่ถูกต้อง จะถูกซ่อนไปเมื่อเปิดใช้ตัวกรองวันที่
                         matchDate = false;
                     }
                 }
+                // --------------------------------------------------
+
                 return matchName && matchTeam && matchStatus && matchDate;
             });
 
-            // Thai string sorting support
+            // Thai string sorting support (คงไว้เหมือนเดิม)
             filtered.sort((a, b) => { 
                 let valA = a[sortState.key] || ''; 
                 let valB = b[sortState.key] || ''; 
