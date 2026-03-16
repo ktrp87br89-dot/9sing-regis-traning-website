@@ -244,40 +244,85 @@
             </div>
 
             <div id="adminDashboard" class="hidden flex-1 flex flex-col">
-                <div class="flex justify-between items-center mb-3 px-1">
-                    <h2 class="text-theme-main font-header font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-database text-theme-accent"></i> ฐานข้อมูล</h2>
-                    <div class="flex gap-2 flex-wrap justify-end">
-                        <button onclick="copyThemeLink()" class="text-[10px] bg-purple-600/20 text-purple-400 border border-purple-500/50 hover:bg-purple-600/40 px-3 py-1.5 rounded-lg transition flex items-center gap-1 shadow-md" title="สร้างลิงก์สำหรับบังคับให้พนักงานใช้ธีมนี้"><i class="fa-solid fa-link"></i> แชร์ลิงก์ธีม</button>
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 px-1 gap-3">
+                    <h2 class="text-theme-main font-header font-bold text-xl flex items-center gap-2">
+                        <i class="fa-solid fa-database text-theme-accent"></i> ฐานข้อมูล
+                        <button onclick="copyThemeLink()" class="text-sm text-theme-muted hover:text-purple-400 transition ml-1" title="แชร์ลิงก์บังคับใช้ธีมนี้"><i class="fa-solid fa-link"></i></button>
+                    </h2>
+                    <div class="flex gap-2 flex-wrap justify-end w-full md:w-auto">
+                        <div class="flex bg-[var(--glass-bg)] border border-theme-border rounded-xl p-1 shadow-inner gap-1">
+                            <button onclick="toggleFilterPanel()" class="text-xs text-theme-main hover:bg-[var(--glass-border)] hover:text-theme-accent px-3 py-2 rounded-lg transition flex items-center gap-1.5 font-medium"><i class="fa-solid fa-filter"></i> <span class="hidden sm:inline">ตัวกรอง</span></button>
+                            <button onclick="toggleSelectAll()" class="text-xs text-theme-main hover:bg-[var(--glass-border)] px-3 py-2 rounded-lg transition font-medium">เลือกทั้งหมด</button>
+                            <button onclick="loadAdminData()" class="text-xs text-theme-main hover:bg-[var(--glass-border)] px-3 py-2 rounded-lg transition" title="รีเฟรชข้อมูล"><i class="fa-solid fa-rotate-right"></i></button>
+                        </div>
                         
-                        <button onclick="toggleFilterPanel()" class="text-[10px] bg-theme-panel border border-theme-border hover:border-theme-accent text-theme-main px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-filter"></i> ตัวกรอง</button>
-                        <button onclick="toggleSelectAll()" class="text-[10px] bg-theme-panel border border-theme-border text-theme-main px-3 py-1.5 rounded-lg transition">Select All</button>
-                        <button onclick="loadAdminData()" class="text-[10px] bg-theme-panel border border-theme-border text-theme-main px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-rotate"></i></button>
-                        <button onclick="openPaymentModal()" class="text-[10px] bg-[#10b981] text-white px-3 py-1.5 rounded-lg transition shadow-md"><i class="fa-solid fa-money-bill-wave"></i> สรุปทำจ่าย</button>
+                        <button onclick="openPaymentModal()" class="text-xs bg-gradient-to-r from-[#10b981] to-[#059669] hover:from-[#059669] hover:to-[#047857] text-white px-5 py-2 rounded-xl transition shadow-[0_4px_15px_rgba(16,185,129,0.3)] font-bold flex items-center gap-2 transform active:scale-95">
+                            <i class="fa-solid fa-file-invoice-dollar"></i> สรุปทำจ่าย
+                        </button>
                     </div>
                 </div>
 
-                <div id="filterPanel" class="hidden glass-panel p-4 rounded-xl mb-4 border-t-2 border-theme-accent animate-fade-in">
-                    <div class="grid grid-cols-2 gap-3 mb-3">
-                        <div><label class="text-[10px] text-theme-accent font-bold mb-1.5 block uppercase">ตั้งแต่วันที่</label><input type="date" id="filterStart" class="w-full p-2.5 rounded-lg glass-input text-xs" onchange="applyAdminFilters()"></div>
-                        <div><label class="text-[10px] text-theme-accent font-bold mb-1.5 block uppercase">ถึงวันที่</label><input type="date" id="filterEnd" class="w-full p-2.5 rounded-lg glass-input text-xs" onchange="applyAdminFilters()"></div>
+                <div id="filterPanel" class="hidden glass-panel p-5 rounded-xl mb-4 border-t-4 border-theme-accent animate-fade-in shadow-lg">
+                    <div class="flex items-center gap-2 mb-4 border-b border-theme-border pb-2">
+                        <i class="fa-solid fa-sliders text-theme-accent"></i>
+                        <span class="text-sm font-bold text-theme-main tracking-wide">ตั้งค่าตัวกรองข้อมูล</span>
                     </div>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div class="col-span-2 md:col-span-1"><label class="text-[10px] text-theme-muted font-bold mb-1.5 block">ค้นหาชื่อ/ชื่อเล่น</label><input type="text" id="filterName" class="w-full p-2.5 rounded-lg glass-input text-xs" placeholder="พิมพ์ชื่อ..." onkeyup="applyAdminFilters()"></div>
-                        <div><label class="text-[10px] text-theme-muted font-bold mb-1.5 block">ทีม</label><input type="text" id="filterTeam" class="w-full p-2.5 rounded-lg glass-input text-xs" placeholder="พิมพ์ทีม..." onkeyup="applyAdminFilters()"></div>
-                        <div class="col-span-2"><label class="text-[10px] text-theme-muted font-bold mb-1.5 block">สถานะ</label><select id="filterStatus" class="w-full p-2.5 rounded-lg glass-input text-xs" onchange="applyAdminFilters()"><option value="all" class="bg-white text-black">ทั้งหมด (All)</option><option value="active" class="bg-white text-black">กำลังเทรน (Active)</option><option value="passed" class="bg-white text-black">เทรนครบ 3 วัน (Passed)</option><option value="dropout" class="bg-white text-black">🔴 ออกระหว่างเทรน</option><option value="resigned" class="bg-white text-black">ออก/สละสิทธิ์ (Resigned)</option></select></div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="text-xs text-theme-accent font-bold mb-2 block uppercase tracking-wider">ตั้งแต่วันที่</label>
+                            <input type="date" id="filterStart" class="w-full p-3 rounded-xl glass-input text-sm" onchange="applyAdminFilters()">
+                        </div>
+                        <div>
+                            <label class="text-xs text-theme-accent font-bold mb-2 block uppercase tracking-wider">ถึงวันที่</label>
+                            <input type="date" id="filterEnd" class="w-full p-3 rounded-xl glass-input text-sm" onchange="applyAdminFilters()">
+                        </div>
                     </div>
-                    <div class="text-right mt-3"><button onclick="clearFilters()" class="text-[10px] text-theme-muted hover:text-theme-main transition underline"><i class="fa-solid fa-eraser mr-1"></i>ล้างตัวกรอง</button></div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="md:col-span-2">
+                            <label class="text-xs text-theme-muted font-bold mb-2 block tracking-wide">ค้นหาชื่อ / ชื่อเล่น</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-theme-muted opacity-70"></i>
+                                <input type="text" id="filterName" class="w-full pl-10 pr-3 py-3 rounded-xl glass-input text-sm" placeholder="พิมพ์ชื่อ หรือ ชื่อเล่น..." onkeyup="applyAdminFilters()">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs text-theme-muted font-bold mb-2 block tracking-wide">ทีม</label>
+                            <input type="text" id="filterTeam" class="w-full p-3 rounded-xl glass-input text-sm" placeholder="ค้นหาทีม..." onkeyup="applyAdminFilters()">
+                        </div>
+                        <div>
+                            <label class="text-xs text-theme-muted font-bold mb-2 block tracking-wide">สถานะ</label>
+                            <select id="filterStatus" class="w-full p-3 rounded-xl glass-input text-sm font-medium" onchange="applyAdminFilters()">
+                                <option value="all" class="bg-white text-black">ทั้งหมด (All)</option>
+                                <option value="active" class="bg-white text-black">กำลังเทรน (Active)</option>
+                                <option value="passed" class="bg-white text-black">เทรนครบ 3 วัน (Passed)</option>
+                                <option value="dropout" class="bg-white text-black">🔴 ออกระหว่างเทรน</option>
+                                <option value="resigned" class="bg-white text-black">ออก/สละสิทธิ์ (Resigned)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end mt-5 pt-3 border-t border-theme-border">
+                        <button onclick="clearFilters()" class="text-xs text-theme-muted hover:text-red-400 hover:bg-red-400/10 px-4 py-2.5 rounded-lg transition-all flex items-center gap-2 font-bold tracking-wide">
+                            <i class="fa-solid fa-eraser"></i> ล้างตัวกรอง
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="flex-1 overflow-auto glass-panel rounded-xl mb-20 border-0 shadow-lg">
                     <table class="w-full text-left border-collapse min-w-max">
-                        <thead class="bg-theme-panel backdrop-blur text-theme-muted text-[10px] font-bold uppercase sticky top-0 z-10 shadow-md border-b border-theme-border">
+                        <thead class="bg-theme-panel backdrop-blur-xl text-theme-muted text-xs font-bold uppercase tracking-wider sticky top-0 z-10 shadow-md border-b-2 border-theme-border">
                             <tr>
-                                <th class="p-3 w-10 text-center">#</th>
-                                <th class="p-3 sortable" onclick="handleSort('name')">ข้อมูล & การเข้าเรียน <i class="fa-solid fa-sort sort-icon" id="sort-icon-name"></i></th>
-                                <th class="p-3 text-center hidden md:table-cell">Check-in</th>
-                                <th class="p-3 text-center w-24 sortable" onclick="handleSort('status')">สถานะ <i class="fa-solid fa-sort sort-icon" id="sort-icon-status"></i></th>
-                                <th class="p-3 text-center w-20">จัดการ</th>
+                                <th class="px-4 py-4 w-12 text-center">#</th>
+                                <th class="px-4 py-4 sortable transition-colors hover:text-theme-main hover:bg-[var(--glass-border)] cursor-pointer" onclick="handleSort('name')">
+                                    ข้อมูล & การเข้าเรียน <i class="fa-solid fa-sort sort-icon" id="sort-icon-name"></i>
+                                </th>
+                                <th class="px-4 py-4 text-center hidden md:table-cell">Check-in</th>
+                                <th class="px-4 py-4 text-center w-28 sortable transition-colors hover:text-theme-main hover:bg-[var(--glass-border)] cursor-pointer" onclick="handleSort('status')">
+                                    สถานะ <i class="fa-solid fa-sort sort-icon" id="sort-icon-status"></i>
+                                </th>
+                                <th class="px-4 py-4 text-center w-24">จัดการ</th>
                             </tr>
                         </thead>
                         <tbody id="adminTable" class="divide-y divide-[var(--glass-border)] text-sm">
@@ -896,11 +941,11 @@
                     }
 
                     tr.innerHTML = `
-                        <td class="p-3 text-center align-top pt-5"><input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)" ${isChecked}></td>
-                        <td class="p-3 align-top">
+                        <td class="px-4 py-5 text-center align-top"><input type="checkbox" class="custom-checkbox mt-1" value="${row.id}" onchange="toggleRowSelection(this)" ${isChecked}></td>
+                        <td class="px-4 py-5 align-top">
                             ${nameDisplay}
                             
-                            <div class="flex flex-wrap items-center gap-2 mb-2.5">
+                            <div class="flex flex-wrap items-center gap-2 mb-3">
                                 <span class="bg-[var(--glass-border)] text-theme-main px-2.5 py-1 rounded-md text-sm font-medium shadow-sm border border-theme-border">
                                     <i class="fa-regular fa-face-smile text-theme-muted mr-1 opacity-70"></i>${row.nickname || '-'}
                                 </span>
@@ -917,15 +962,15 @@
                                 <div class="flex gap-1.5 border-l border-theme-border pl-3">${icon(row.d1, row.timestamp)}${icon(row.d2, row.timestamp)}${icon(row.d3, row.timestamp)}</div>
                             </div>
                         </td>
-                        <td class="p-3 text-center hidden md:table-cell align-middle"><div class="flex justify-center gap-2">${icon(row.d1, row.timestamp)}${icon(row.d2, row.timestamp)}${icon(row.d3, row.timestamp)}</div></td>
-                        <td class="p-3 text-center align-top pt-5">
+                        <td class="px-4 py-5 text-center hidden md:table-cell align-middle"><div class="flex justify-center gap-2">${icon(row.d1, row.timestamp)}${icon(row.d2, row.timestamp)}${icon(row.d3, row.timestamp)}</div></td>
+                        <td class="px-4 py-5 text-center align-top">
                             <div class="status-badge ${badge}">${displayStatus}</div>
-                            ${overdueWarning} ${isDropout ? `<div class="mt-2 inline-block bg-[var(--status-alert-bg)] border border-[var(--status-alert-text)] text-[var(--status-alert-text)] text-[9px] font-bold px-2 py-1 rounded shadow-lg animate-pulse"><i class="fa-solid fa-user-slash mr-1"></i>ออกระหว่างเทรน</div>` : ''}
-                            ${row.note ? `<div class="text-[9px] text-theme-muted mt-2 max-w-[80px] truncate mx-auto" title="${row.note}"><i class="fa-solid fa-comment-dots mr-1"></i> ${row.note}</div>` : ''}
+                            ${overdueWarning} ${isDropout ? `<div class="mt-3 block bg-[var(--status-alert-bg)] border border-[var(--status-alert-text)] text-[var(--status-alert-text)] text-xs font-bold px-2 py-1.5 rounded shadow-lg animate-pulse"><i class="fa-solid fa-user-slash mr-1"></i>ออกระหว่างเทรน</div>` : ''}
+                            ${row.note ? `<div class="text-[11px] text-theme-muted mt-3 max-w-[120px] truncate mx-auto bg-[var(--glass-bg)] px-2 py-1 rounded border border-theme-border" title="${row.note}"><i class="fa-solid fa-comment-dots mr-1"></i> ${row.note}</div>` : ''}
                         </td>
-                        <td class="p-3 text-center align-top pt-5">
-                            <div class="flex justify-center gap-1.5">
-                                <button onclick="openEditModal(${row.row}, '${safeStatus}', '${row.team||''}', '${row.note||''}', '${row.name||'-'}', '${row.nickname||'-'}')" class="text-theme-accent bg-[var(--glass-border)] w-8 h-8 rounded-lg hover:bg-[var(--accent)] hover:text-white transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-pen"></i></button>
+                        <td class="px-4 py-5 text-center align-top">
+                            <div class="flex justify-center gap-2">
+                                <button onclick="openEditModal(${row.row}, '${safeStatus}', '${row.team||''}', '${row.note||''}', '${row.name||'-'}', '${row.nickname||'-'}')" class="text-theme-accent bg-[var(--glass-border)] w-9 h-9 rounded-xl hover:bg-[var(--accent)] hover:text-white transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-pen"></i></button>
                                 ${deleteBtn}
                             </div>
                         </td>
