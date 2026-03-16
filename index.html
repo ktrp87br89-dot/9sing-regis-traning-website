@@ -884,8 +884,9 @@
                     
                     let dayColor = attendedDays === 3 ? 'var(--status-passed-text)' : (isDropout ? 'var(--status-alert-text)' : 'var(--accent)');
                     
-                    let nameDisplay = `<div class="font-bold text-theme-main text-sm mb-0.5">${row.name || '-'}</div>`;
-                    if (isDropout) { nameDisplay = `<div class="font-bold text-[var(--status-alert-text)] text-sm mb-0.5 flex items-center gap-1.5 drop-shadow-md"><i class="fa-solid fa-circle-exclamation animate-pulse"></i>${row.name}</div>`; }
+                    // ปรับขนาดชื่อจริงให้ใหญ่ขึ้นเป็น text-base (16px) และเพิ่มระยะห่าง
+                    let nameDisplay = `<div class="font-bold text-theme-main text-base mb-1.5">${row.name || '-'}</div>`;
+                    if (isDropout) { nameDisplay = `<div class="font-bold text-[var(--status-alert-text)] text-base mb-1.5 flex items-center gap-1.5 drop-shadow-md"><i class="fa-solid fa-circle-exclamation animate-pulse"></i>${row.name}</div>`; }
 
                     const isChecked = selectedRows.has(String(row.id)) ? 'checked' : '';
 
@@ -898,8 +899,17 @@
                         <td class="p-3 text-center align-top pt-5"><input type="checkbox" class="custom-checkbox" value="${row.id}" onchange="toggleRowSelection(this)" ${isChecked}></td>
                         <td class="p-3 align-top">
                             ${nameDisplay}
-                            <div class="text-[10px] text-theme-muted mb-1">${row.nickname || '-'} | ${row.dept || '-'}</div>
-                            <div class="text-[10px] text-theme-accent font-bold mb-1">TEAM: ${row.team || '-'}</div>
+                            
+                            <div class="flex flex-wrap items-center gap-2 mb-2.5">
+                                <span class="bg-[var(--glass-border)] text-theme-main px-2.5 py-1 rounded-md text-sm font-medium shadow-sm border border-theme-border">
+                                    <i class="fa-regular fa-face-smile text-theme-muted mr-1 opacity-70"></i>${row.nickname || '-'}
+                                </span>
+                                <span class="bg-theme-panel border border-theme-accent text-theme-accent px-2.5 py-1 rounded-md text-sm font-bold shadow-sm">
+                                    <i class="fa-solid fa-users mr-1 opacity-80"></i>TEAM: ${row.team || '-'}
+                                </span>
+                                <span class="text-xs text-theme-muted font-medium ml-1 bg-black/20 px-2 py-1 rounded-md">${row.dept || '-'}</span>
+                            </div>
+                            
                             ${formatPrettyDate(row.timestamp)}
                             
                             <div class="mt-3 flex items-center gap-3 bg-theme-panel px-3 py-1.5 rounded-lg border border-theme-border w-fit shadow-inner">
