@@ -799,6 +799,7 @@
                     
                     let badge = "status-default"; 
                     let displayStatus = safeStatus || '-';
+                    let overdueWarning = ''; // 🟢 ตัวแปรสำหรับเก็บป้ายแจ้งเตือนค้างสถานะ
                     
                     if (safeStatus === 'Active') {
                         displayStatus = `ACTIVE (${attendedDays} วัน)`;
@@ -810,6 +811,24 @@
                             badge = "status-active !bg-purple-500/20 !text-purple-400 !border-purple-400";
                         } else if (attendedDays >= 3) {
                             badge = "status-active !bg-teal-500/20 !text-teal-400 !border-teal-400";
+                        }
+
+                        // 🟢 ระบบคำนวณวัน: นับจาก "เช็คชื่อวันแรก" ถึง "วันนี้" ผ่านมากี่วันแล้ว
+                        let firstCheckin = row.d1 || row.d2 || row.d3;
+                        if (firstCheckin) {
+                            let startDate = parseToDateObj(firstCheckin);
+                            if (startDate) {
+                                let today = new Date();
+                                startDate.setHours(0, 0, 0, 0); // ตัดเวลาทิ้ง เทียบแค่วันที่
+                                today.setHours(0, 0, 0, 0);
+                                
+                                let diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+                                
+                                // ถ้าผ่านมา 3 วันขึ้นไป (เช่น เทรนจบแล้ว หรือ หายไปเฉยๆ) ให้ขึ้นป้ายเตือน Admin
+                                if (diffDays >= 3) {
+                                    overdueWarning = `<div class="mt-2 inline-block bg-orange-500/20 border border-orange-500/50 text-orange-400 text-[9px] font-bold px-2 py-1 rounded shadow-lg animate-pulse" title="ค้างสถานะ Active มา ${diffDays} วัน นับจากเช็คชื่อวันแรก"><i class="fa-solid fa-bell mr-1"></i>ผ่านมา ${diffDays} วัน (รอเปลี่ยนสถานะ)</div>`;
+                                }
+                            }
                         }
                     } 
                     else if (safeStatus === 'Passed') { badge = "status-passed"; } 
@@ -843,7 +862,7 @@
                         <td class="p-3 text-center hidden md:table-cell align-middle"><div class="flex justify-center gap-2">${icon(row.d1, row.timestamp)}${icon(row.d2, row.timestamp)}${icon(row.d3, row.timestamp)}</div></td>
                         <td class="p-3 text-center align-top pt-5">
                             <div class="status-badge ${badge}">${displayStatus}</div>
-                            ${isDropout ? `<div class="mt-2 inline-block bg-[var(--status-alert-bg)] border border-[var(--status-alert-text)] text-[var(--status-alert-text)] text-[9px] font-bold px-2 py-1 rounded shadow-lg animate-pulse"><i class="fa-solid fa-user-slash mr-1"></i>ออกระหว่างเทรน</div>` : ''}
+                            ${overdueWarning} ${isDropout ? `<div class="mt-2 inline-block bg-[var(--status-alert-bg)] border border-[var(--status-alert-text)] text-[var(--status-alert-text)] text-[9px] font-bold px-2 py-1 rounded shadow-lg animate-pulse"><i class="fa-solid fa-user-slash mr-1"></i>ออกระหว่างเทรน</div>` : ''}
                             ${row.note ? `<div class="text-[9px] text-theme-muted mt-2 max-w-[80px] truncate mx-auto" title="${row.note}"><i class="fa-solid fa-comment-dots mr-1"></i> ${row.note}</div>` : ''}
                         </td>
                         <td class="p-3 text-center align-top pt-5">
