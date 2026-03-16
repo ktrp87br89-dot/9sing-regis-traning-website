@@ -622,10 +622,25 @@
             if (!dateStr) return null;
             let str = String(dateStr).trim();
             if (str === "") return null;
-            if (str.includes('/')) { 
-                const parts = str.split(' '); const dPart = parts[0].split('/'); const tPart = parts[1] ? parts[1].split(':') : ['00','00','00']; 
-                if (dPart.length >= 3) return new Date(`${dPart[2]}-${dPart[1]}-${dPart[0]}T${tPart[0]}:${tPart[1]}:${tPart[2]||'00'}`); 
+            
+            if (str.includes('/')) {
+                const parts = str.split(' '); 
+                const dPart = parts[0].split('/'); 
+                const tPart = parts[1] ? parts[1].split(':') : ['00','00','00'];
+                
+                // 🟢 เพิ่มการดักจับฟอร์แมต "dd/MM" จากระบบเช็คชื่อ (ไม่มีปีระบุมา)
+                if (dPart.length === 2) {
+                    const currentYear = new Date().getFullYear();
+                    // แปลงเป็นฟอร์แมต ISO (YYYY-MM-DDTHH:mm:ss) เพื่อให้ทำงานได้ชัวร์ 100% บนทุก Browser
+                    return new Date(`${currentYear}-${dPart[1]}-${dPart[0]}T${tPart[0]}:${tPart[1]}:${tPart[2]||'00'}`);
+                }
+                
+                // กรณีมีปีระบุมาด้วย (dd/MM/yyyy)
+                if (dPart.length >= 3) {
+                    return new Date(`${dPart[2]}-${dPart[1]}-${dPart[0]}T${tPart[0]}:${tPart[1]}:${tPart[2]||'00'}`);
+                }
             }
+            
             const parsed = new Date(str);
             if (!isNaN(parsed.getTime())) return parsed;
             return null;
