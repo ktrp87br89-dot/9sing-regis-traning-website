@@ -176,9 +176,20 @@
     </header>
 
     <main class="flex-1 overflow-y-auto px-4 pb-24 scroll-smooth">
-        <div id="loadingOverlay" class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center">
-            <div class="loader mb-4"></div>
-            <p class="text-xs text-theme-accent font-header tracking-widest animate-pulse">PROCESSING...</p>
+        <div id="loadingOverlay" class="hidden fixed inset-0 z-[100] bg-[var(--bg-color)]/80 backdrop-blur-md flex flex-col items-center justify-center transition-all duration-300">
+            <div class="bg-[var(--glass-bg)] border border-theme-border p-8 rounded-[2rem] shadow-[0_0_50px_var(--shadow-glow)] flex flex-col items-center relative overflow-hidden transform scale-100 animate-fade-in">
+                <div class="absolute inset-0 bg-gradient-to-tr from-[var(--accent)] to-transparent opacity-[0.05] animate-pulse"></div>
+                
+                <div class="relative w-20 h-20 flex items-center justify-center mb-6">
+                    <div class="absolute inset-0 border-4 border-[var(--glass-border)] rounded-full"></div>
+                    <div class="absolute inset-0 border-4 border-[var(--accent)] rounded-full border-t-transparent animate-spin" style="animation-duration: 1.5s;"></div>
+                    <div class="absolute inset-2 border-4 border-blue-500/30 rounded-full border-b-transparent animate-spin" style="animation-direction: reverse; animation-duration: 2s;"></div>
+                    <i class="fa-solid fa-fingerprint text-2xl text-[var(--accent)] animate-pulse drop-shadow-[0_0_8px_var(--accent)]"></i>
+                </div>
+                
+                <h3 class="text-theme-main font-header font-bold tracking-widest text-lg mb-1 drop-shadow-md">PROCESSING</h3>
+                <p class="text-[10px] text-theme-muted font-mono tracking-widest uppercase">Securing Data Connection...</p>
+            </div>
         </div>
 
         <section id="page-register" class="max-w-md mx-auto animate-fade-in">
@@ -221,15 +232,42 @@
                 </div>
                 <button onclick="checkStatus()" id="btnCheckStatus" class="w-full py-3 bg-theme-panel text-theme-main rounded-xl font-header font-medium transition border border-theme-border hover:border-theme-accent disabled:opacity-50">ตรวจสอบสถานะ</button>
 
-                <div id="profileCard" class="hidden mt-8 text-left bg-theme-panel rounded-xl p-5 border border-theme-border animate-float">
-                    <div class="flex justify-between items-start mb-4 pb-4 border-b border-theme-border">
-                        <div><h3 class="text-lg font-header font-bold text-theme-main" id="uiName">...</h3><p class="text-xs text-theme-muted mt-1 font-mono"><span id="uiNick">...</span> | <span id="uiDept" class="text-theme-accent">...</span></p></div>
-                        <span id="uiStatus" class="status-badge status-active">Active</span>
+                <div id="profileCard" class="hidden mt-8 text-left relative overflow-hidden bg-gradient-to-br from-[var(--glass-bg)] to-transparent rounded-2xl p-6 border border-theme-border shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-xl animate-float">
+                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-[var(--accent)] opacity-10 rounded-full blur-2xl"></div>
+                    <div class="absolute -left-6 -bottom-6 w-32 h-32 bg-blue-500 opacity-10 rounded-full blur-2xl"></div>
+
+                    <div class="flex justify-between items-start mb-6 pb-5 border-b border-theme-border/50 relative z-10">
+                        <div class="flex gap-4 items-center">
+                            <div class="w-12 h-12 min-w-[3rem] rounded-full bg-gradient-to-tr from-[var(--accent)] to-blue-500 flex items-center justify-center shadow-lg text-white font-bold text-xl ring-2 ring-[var(--glass-border)]">
+                                <i class="fa-regular fa-user"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-header font-bold text-theme-main drop-shadow-sm leading-tight" id="uiName">...</h3>
+                                <div class="flex flex-wrap items-center gap-2 mt-1.5">
+                                    <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-[var(--glass-border)] border border-[var(--glass-input-border)] text-theme-muted" id="uiNick">...</span>
+                                    <span class="text-[10px] font-mono tracking-widest text-theme-accent uppercase font-bold bg-[var(--status-active-bg)] px-2 py-0.5 rounded" id="uiDept">...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end pl-2">
+                            <span id="uiStatus" class="status-badge status-active shadow-sm scale-110 origin-top-right">Active</span>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-3 gap-3">
-                        <div id="boxD1" class="bg-theme-panel p-2 rounded-lg text-center border border-theme-border"><span class="text-[10px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 1</span><button onclick="doCheckIn(1)" class="w-full py-1.5 rounded text-theme-muted hover:text-theme-main transition"><i class="fa-solid fa-check"></i></button></div>
-                        <div id="boxD2" class="bg-theme-panel p-2 rounded-lg text-center border border-theme-border"><span class="text-[10px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 2</span><button onclick="doCheckIn(2)" class="w-full py-1.5 rounded text-theme-muted hover:text-theme-main transition"><i class="fa-solid fa-check"></i></button></div>
-                        <div id="boxD3" class="bg-theme-panel p-2 rounded-lg text-center border border-theme-border"><span class="text-[10px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 3</span><button onclick="doCheckIn(3)" class="w-full py-1.5 rounded text-theme-muted hover:text-theme-main transition"><i class="fa-solid fa-check"></i></button></div>
+
+                    <h4 class="text-[10px] font-bold text-theme-muted mb-3 uppercase tracking-widest flex items-center gap-2"><i class="fa-regular fa-calendar-check text-theme-accent"></i> Timeline Record</h4>
+                    <div class="grid grid-cols-3 gap-3 relative z-10">
+                        <div id="boxD1" class="bg-[var(--glass-bg)] p-3 rounded-xl text-center border border-theme-border shadow-sm transition-all duration-300">
+                            <span class="text-[10px] text-theme-muted uppercase font-bold block mb-2 tracking-widest opacity-80">Day 1</span>
+                            <button onclick="doCheckIn(1)" class="w-full h-10 rounded-lg bg-[var(--glass-border)] text-theme-muted flex items-center justify-center"><i class="fa-solid fa-fingerprint text-lg"></i></button>
+                        </div>
+                        <div id="boxD2" class="bg-[var(--glass-bg)] p-3 rounded-xl text-center border border-theme-border shadow-sm transition-all duration-300">
+                            <span class="text-[10px] text-theme-muted uppercase font-bold block mb-2 tracking-widest opacity-80">Day 2</span>
+                            <button onclick="doCheckIn(2)" class="w-full h-10 rounded-lg bg-[var(--glass-border)] text-theme-muted flex items-center justify-center"><i class="fa-solid fa-fingerprint text-lg"></i></button>
+                        </div>
+                        <div id="boxD3" class="bg-[var(--glass-bg)] p-3 rounded-xl text-center border border-theme-border shadow-sm transition-all duration-300">
+                            <span class="text-[10px] text-theme-muted uppercase font-bold block mb-2 tracking-widest opacity-80">Day 3</span>
+                            <button onclick="doCheckIn(3)" class="w-full h-10 rounded-lg bg-[var(--glass-border)] text-theme-muted flex items-center justify-center"><i class="fa-solid fa-fingerprint text-lg"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -644,50 +682,46 @@
         }
 
         function updateCheckBtn(id, day, val) {
-            const btn = document.querySelector(`#${id} button`); const box = document.getElementById(id);
+            const btn = document.querySelector(`#${id} button`); 
+            const box = document.getElementById(id);
+            
             if(val) { 
-                box.className="bg-[var(--status-passed-bg)] p-2 rounded-lg text-center border border-[var(--status-passed-text)] shadow-inner"; 
+                // ✅ สไตล์ตอน "เช็คชื่อผ่านแล้ว" (Premium Passed State) - กล่องเด้งนูนขึ้นและเรืองแสง
+                box.className="bg-gradient-to-b from-[var(--status-passed-bg)] to-transparent p-3 rounded-xl text-center border border-[var(--status-passed-text)] shadow-[0_0_15px_var(--status-passed-bg)] transform scale-105 transition-all duration-500 z-20 relative"; 
                 
-                // --- ระบบจัดฟอร์แมตวันที่ให้สวยงาม (05/03/2026 15:19:25) ---
                 let displayVal = val;
                 try {
                     let vStr = String(val).trim();
-                    let pd = new Date(vStr); // แปลงค่าเป็น Date Object
-                    
-                    // ดักจับกรณีข้อมูลมาเป็น String แบบ dd/MM/yyyy หรือ dd/MM
+                    let pd = new Date(vStr);
                     if (vStr.includes('/')) {
                         const pts = vStr.split(' '); 
                         const dPts = pts[0].split('/'); 
                         const tPts = pts[1] ? pts[1].split(':') : ['00','00','00'];
-                        
                         let yy = dPts.length >= 3 ? dPts[2] : new Date().getFullYear();
-                        if(String(yy).length === 2) yy = '20' + yy; // เติม 20 ถ้าปีมาแค่ 2 หลัก
-                        
+                        if(String(yy).length === 2) yy = '20' + yy;
                         pd = new Date(`${yy}-${dPts[1]}-${dPts[0]}T${tPts[0]}:${tPts[1]}:${tPts[2]||'00'}`);
                     }
-                    
-                    // จัดเรียงฟอร์แมตใหม่
                     if (pd && !isNaN(pd.getTime())) {
                         const dd = String(pd.getDate()).padStart(2, '0'); 
                         const mm = String(pd.getMonth() + 1).padStart(2, '0'); 
                         const yy = pd.getFullYear();
                         const hh = String(pd.getHours()).padStart(2, '0'); 
                         const min = String(pd.getMinutes()).padStart(2, '0'); 
-                        const ss = String(pd.getSeconds()).padStart(2, '0');
                         
-                        // ใช้ <br> คั่นระหว่างวันที่และเวลา เพื่อให้ข้อความไม่ล้นกล่อง UI
-                        displayVal = `${dd}/${mm}/${yy}<br>${hh}:${min}:${ss}`;
+                        // ปรับให้ตัวเวลาใหญ่ขึ้นกว่าวันที่ เพื่อให้ดูเป็น Digital Clock
+                        displayVal = `${dd}/${mm}/${yy}<br><span class="text-xs mt-1 block drop-shadow-md text-[var(--status-passed-text)]"><i class="fa-regular fa-circle-check mr-1"></i>${hh}:${min}</span>`;
                     }
                 } catch(e) {}
-                // --------------------------------------------------
 
-                // ปรับคลาส CSS เล็กน้อย (text-[10px], leading-tight) เพื่อให้ 2 บรรทัดอยู่ตรงกลางพอดี
-                btn.className="w-full py-0.5 rounded bg-transparent text-[var(--status-passed-text)] cursor-default font-digital text-[10px] leading-tight font-bold tracking-wide"; 
+                btn.className="w-full h-10 rounded bg-transparent text-[var(--status-passed-text)] cursor-default font-digital text-[10px] leading-tight font-bold tracking-wide flex flex-col items-center justify-center opacity-90"; 
                 btn.innerHTML= displayVal; 
                 btn.onclick=null; 
             } else { 
-                box.className="bg-theme-panel p-2 rounded-lg text-center border border-theme-border"; 
-                btn.className="w-full py-1.5 rounded bg-[var(--glass-border)] text-theme-muted hover:text-theme-main hover:bg-[var(--accent)] transition"; btn.innerHTML=`<i class="fa-solid fa-check"></i>`; btn.onclick=()=>doCheckIn(day); 
+                // ⏳ สไตล์ตอน "ยังไม่เช็คชื่อ" (Premium Pending State) - กล่องปกติ แต่มี Hover Effect เรืองแสง
+                box.className="bg-[var(--glass-bg)] p-3 rounded-xl text-center border border-theme-border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-[var(--accent)] group cursor-pointer"; 
+                btn.className="w-full h-10 rounded-lg bg-[var(--glass-border)] text-theme-muted group-hover:text-white group-hover:bg-gradient-to-br group-hover:from-[var(--accent)] group-hover:to-blue-600 transition-all duration-300 flex items-center justify-center shadow-inner group-hover:shadow-[0_0_15px_var(--accent)]"; 
+                btn.innerHTML=`<i class="fa-solid fa-fingerprint text-xl group-hover:scale-110 transition-transform"></i>`; 
+                btn.onclick=()=>doCheckIn(day); 
             }
         }
 
