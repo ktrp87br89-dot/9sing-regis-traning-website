@@ -467,7 +467,17 @@
             const savedPhone = localStorage.getItem('hr_saved_phone');
             if(savedPhone) {
                 let match = savedPhone.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
-                if(match) document.getElementById('checkinPhone').value = `${match[1]}-${match[2]}-${match[3]}`;
+                if(match) {
+                    document.getElementById('checkinPhone').value = `${match[1]}-${match[2]}-${match[3]}`;
+                }
+                
+                // สลับไปหน้าเช็คชื่ออัตโนมัติ
+                switchTab('checkin');
+                
+                // หน่วงเวลาเล็กน้อยให้ UI โหลดเสร็จ แล้วสั่งเช็คสถานะอัตโนมัติ
+                setTimeout(() => {
+                    checkStatus(true); // ส่งค่า true ไปบอกว่าเป็น Auto-login
+                }, 300);
             }
         }
         
@@ -514,25 +524,63 @@
             } else { Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: res.message, background: 'var(--glass-bg)', color: 'var(--text-main)' }); }
         }
 
-        async function checkStatus() {
+        async function checkStatus(isAuto = false) {
             const rawPhone = getRawPhone('checkinPhone');
-            if (!/^0\d{9}$/.test(rawPhone)) return Swal.fire({ icon: 'warning', text: 'เบอร์โทรศัพท์ต้องขึ้นต้นด้วยเลข 0 และมีจำนวน 10 หลัก', background: 'var(--glass-bg)', color: 'var(--text-main)' });
+            if (!/^0\d{9}$/.test(rawPhone)) {
+                if(!isAuto) return Swal.fire({ icon: 'warning', text: 'เบอร์โทรศัพท์ต้องขึ้นต้นด้วยเลข 0 และมีจำนวน 10 หลัก', background: 'var(--glass-bg)', color: 'var(--text-main)' });
+                return;
+            }
             
-            const btn = document.getElementById('btnCheckStatus'); const originalText = btn.innerHTML;
-            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังตรวจสอบ...';
+            const btn = document.getElementById('btnCheckStatus'); 
+            const originalText = btn.innerHTML;
+            btn.disabled = true; 
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังตรวจสอบ...';
 
             const res = await fetchAPI({ action: 'login', phone: rawPhone });
-            btn.disabled = false; btn.innerHTML = originalText;
+            btn.disabled = false; 
+            btn.innerHTML = originalText;
 
             if (res.status === 'success') {
-                localStorage.setItem('hr_saved_phone', rawPhone);
                 const d = res.data;
-                document.getElementById('uiName').innerText = d.name; document.getElementById('uiNick').innerText = d.nickname; document.getElementById('uiDept').innerText = d.dept; document.getElementById('uiStatus').innerText = d.status;
-                let bCls = 'status-default'; if(d.status==='Active') bCls='status-active'; else if(d.status==='Passed') bCls='status-passed'; else if(['Resigned','New Job'].includes(d.status)) bCls='status-alert';
+                
+                // 🔴 [ส่วนที่เพิ่มใหม่] เช็คว่าเป็นพนักงานที่ออกไปแล้วและกลับมา Retrain หรือไม่
+                if (['Resigned', 'New Job'].includes(d.status)) {
+                    localStorage.removeItem('hr_saved_phone'); // ล้างเบอร์เดิมที่จำไว้
+                    document.getElementById('checkinPhone').value = '';
+                    switchTab('register'); // เตะกลับหน้าลงทะเบียน
+                    
+                    return Swal.fire({ 
+                        icon: 'info', 
+                        title: 'พบประวัติเก่า (Retrain)', 
+                        text: 'เนื่องจากสถานะเดิมของคุณคือออกจากการอบรม หากกลับมาเริ่มใหม่ กรุณาลงทะเบียนใหม่อีกครั้งครับ', 
+                        background: 'var(--glass-bg)', 
+                        color: 'var(--text-main)',
+                        confirmButtonColor: 'var(--accent)'
+                    });
+                }
+
+                // 🟢 ถ้าปกติ (Active/Passed) ให้เข้าหน้าเช็คชื่อตามปกติ
+                localStorage.setItem('hr_saved_phone', rawPhone);
+                document.getElementById('uiName').innerText = d.name; 
+                document.getElementById('uiNick').innerText = d.nickname; 
+                document.getElementById('uiDept').innerText = d.dept; 
+                document.getElementById('uiStatus').innerText = d.status;
+                
+                let bCls = 'status-default'; 
+                if(d.status==='Active') bCls='status-active'; 
+                else if(d.status==='Passed') bCls='status-passed'; 
+                
                 document.getElementById('uiStatus').className = `status-badge ${bCls}`;
                 document.getElementById('profileCard').classList.remove('hidden');
                 ['1','2','3'].forEach(i => updateCheckBtn(`boxD${i}`, i, d[`d${i}`]));
-            } else { Swal.fire({ icon: 'error', text: 'ไม่พบข้อมูล หรือคุณยังไม่ได้ลงทะเบียน', background: 'var(--glass-bg)', color: 'var(--text-main)' }); document.getElementById('profileCard').classList.add('hidden'); }
+                
+            } else { 
+                // กรณีค้นหาไม่เจอ
+                localStorage.removeItem('hr_saved_phone');
+                if(!isAuto) Swal.fire({ icon: 'error', text: 'ไม่พบข้อมูล หรือคุณยังไม่ได้ลงทะเบียน', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
+                document.getElementById('profileCard').classList.add('hidden'); 
+                if(isAuto) switchTab('register'); // ถ้าจำเบอร์มาผิดให้เด้งกลับไปหน้าลงทะเบียน
+            }
         }
 
         function updateCheckBtn(id, day, val) {
