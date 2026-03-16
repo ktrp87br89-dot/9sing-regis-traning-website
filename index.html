@@ -908,9 +908,36 @@
         }
 
         function generatePaymentReportText() {
-            const passedUsers = window.currentPaymentItems || [];
-            if (passedUsers.length === 0) return;
+            let passedUsers = window.currentPaymentItems || [];
             
+            // --- 🟢 ส่วนที่แก้ไขเพิ่ม: นำค่าจาก Input วันที่มากรองข้อมูล ---
+            const startDateStr = document.getElementById('paymentStartDate').value;
+            const endDateStr = document.getElementById('paymentEndDate').value;
+
+            if (startDateStr || endDateStr) {
+                passedUsers = passedUsers.filter(user => {
+                    const uDate = parseToDateObj(user.timestamp);
+                    if (!uDate) return false; 
+                    
+                    // เซ็ตเวลาเป็นเที่ยงคืนตรงเพื่อเทียบแค่วันที่
+                    uDate.setHours(0, 0, 0, 0);
+                    
+                    let match = true;
+                    if (startDateStr) {
+                        const sDate = new Date(startDateStr);
+                        sDate.setHours(0, 0, 0, 0);
+                        if (uDate < sDate) match = false;
+                    }
+                    if (endDateStr) {
+                        const eDate = new Date(endDateStr);
+                        eDate.setHours(0, 0, 0, 0);
+                        if (uDate > eDate) match = false;
+                    }
+                    return match;
+                });
+            }
+            // -----------------------------------------------------
+
             const customDate = document.getElementById('paymentCustomDate').value.trim();
             const shortMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
 
@@ -946,9 +973,9 @@
 
                 tsvText += `${index + 1}\t${user.prefix||""}\t${user.name||""}\t${user.nickname||""}\t${user.team||""}\t\t/\t${userDateStr}\n`; 
             }); 
+            
             document.getElementById('paymentReportText').value = tsvText;
         }
-
         function copyToClipboardPayment() { 
             const text = document.getElementById('paymentReportText').value; 
             if(!text.trim()) return Swal.fire({ icon: 'warning', text: 'ไม่มีข้อมูลให้คัดลอก', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
