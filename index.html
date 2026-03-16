@@ -797,7 +797,24 @@
                     
                     const icon = (v, ts) => v ? `<i class="fa-solid fa-circle-check text-[var(--status-passed-text)] text-sm cursor-help hover:scale-125 transition-transform" title="${formatCheckinHover(v, ts)}"></i>` : `<i class="fa-regular fa-circle text-theme-muted text-sm opacity-50 cursor-not-allowed" title="-"></i>`;
                     
-                    let badge = "status-default"; if(safeStatus==='Active') badge="status-active"; if(safeStatus==='Passed') badge="status-passed"; if(['Resigned','New Job'].includes(safeStatus)) badge="status-alert";
+                    let badge = "status-default"; 
+                    let displayStatus = safeStatus || '-';
+                    
+                    if (safeStatus === 'Active') {
+                        displayStatus = `ACTIVE (${attendedDays} วัน)`;
+                        if (attendedDays === 0) {
+                            badge = "status-active !bg-gray-500/20 !text-gray-400 !border-gray-400 !shadow-none";
+                        } else if (attendedDays === 1) {
+                            badge = "status-active !bg-blue-500/20 !text-blue-400 !border-blue-400";
+                        } else if (attendedDays === 2) {
+                            badge = "status-active !bg-purple-500/20 !text-purple-400 !border-purple-400";
+                        } else if (attendedDays >= 3) {
+                            badge = "status-active !bg-teal-500/20 !text-teal-400 !border-teal-400";
+                        }
+                    } 
+                    else if (safeStatus === 'Passed') { badge = "status-passed"; } 
+                    else if (['Resigned','New Job'].includes(safeStatus)) { badge = "status-alert"; }
+                    
                     let dayColor = attendedDays === 3 ? 'var(--status-passed-text)' : (isDropout ? 'var(--status-alert-text)' : 'var(--accent)');
                     
                     let nameDisplay = `<div class="font-bold text-theme-main text-sm mb-0.5">${row.name || '-'}</div>`;
@@ -825,7 +842,7 @@
                         </td>
                         <td class="p-3 text-center hidden md:table-cell align-middle"><div class="flex justify-center gap-2">${icon(row.d1, row.timestamp)}${icon(row.d2, row.timestamp)}${icon(row.d3, row.timestamp)}</div></td>
                         <td class="p-3 text-center align-top pt-5">
-                            <div class="status-badge ${badge}">${safeStatus || '-'}</div>
+                            <div class="status-badge ${badge}">${displayStatus}</div>
                             ${isDropout ? `<div class="mt-2 inline-block bg-[var(--status-alert-bg)] border border-[var(--status-alert-text)] text-[var(--status-alert-text)] text-[9px] font-bold px-2 py-1 rounded shadow-lg animate-pulse"><i class="fa-solid fa-user-slash mr-1"></i>ออกระหว่างเทรน</div>` : ''}
                             ${row.note ? `<div class="text-[9px] text-theme-muted mt-2 max-w-[80px] truncate mx-auto" title="${row.note}"><i class="fa-solid fa-comment-dots mr-1"></i> ${row.note}</div>` : ''}
                         </td>
