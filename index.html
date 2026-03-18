@@ -194,7 +194,20 @@
 
         <section id="page-register" class="max-w-md mx-auto animate-fade-in">
             <div class="glass-panel p-6 rounded-2xl relative overflow-hidden">
-                <h2 class="text-lg font-header font-bold text-theme-main mb-6 flex items-center gap-2"><span class="w-1 h-5 rounded-full" style="background: var(--accent);"></span> ลงทะเบียนพนักงานใหม่</h2>
+                
+                <div class="flex items-center gap-4 mb-6 relative p-4 bg-gradient-to-r from-[var(--glass-border)] to-transparent rounded-2xl border border-[var(--glass-input-border)]">
+                    <div class="absolute w-20 h-20 bg-[var(--accent)] opacity-20 rounded-full blur-2xl top-1/2 left-4 transform -translate-y-1/2 animate-pulse"></div>
+                    
+                    <div class="relative z-10 animate-float w-20 h-20 shrink-0 drop-shadow-[0_10px_15px_rgba(0,0,0,0.4)]">
+                        <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Handshake.png" alt="3D Handshake" class="w-full h-full object-contain drop-shadow-[0_0_15px_var(--shadow-glow)]">
+                    </div>
+
+                    <div class="relative z-10 flex-1">
+                        <span class="inline-block bg-[var(--status-active-bg)] text-[var(--status-active-text)] text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-widest mb-1 shadow-sm">Welcome</span>
+                        <h2 class="text-xl font-header font-bold text-theme-main leading-tight drop-shadow-sm">ลงทะเบียน<br><span class="text-theme-accent">พนักงานใหม่</span></h2>
+                    </div>
+                </div>
+
                 <form id="regForm" onsubmit="handleRegister(event)" class="space-y-4 relative z-10">
                     <div class="grid grid-cols-3 gap-3">
                         <div><label class="text-[10px] text-theme-muted font-bold mb-1.5 block ml-1">คำนำหน้า</label><select name="prefix" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm focus:ring-0"><option class="bg-white text-black">นาย</option><option class="bg-white text-black">นาง</option><option class="bg-white text-black">นางสาว</option></select></div>
@@ -236,21 +249,31 @@
                     <div class="absolute -right-6 -top-6 w-24 h-24 bg-[var(--accent)] opacity-10 rounded-full blur-2xl"></div>
                     <div class="absolute -left-6 -bottom-6 w-32 h-32 bg-blue-500 opacity-10 rounded-full blur-2xl"></div>
 
-                    <div class="flex justify-between items-start mb-6 pb-5 border-b border-theme-border/50 relative z-10">
+                    <div class="flex justify-between items-start mb-6 pb-5 border-b border-theme-border/50 relative z-10 mt-2">
                         <div class="flex gap-4 items-center">
-                            <div class="w-12 h-12 min-w-[3rem] rounded-full bg-gradient-to-tr from-[var(--accent)] to-blue-500 flex items-center justify-center shadow-lg text-white font-bold text-xl ring-2 ring-[var(--glass-border)]">
-                                <i class="fa-regular fa-user"></i>
+                            
+                            <div class="relative">
+                                <div class="w-14 h-14 min-w-[3.5rem] rounded-full bg-gradient-to-tr from-[var(--glass-border)] to-[var(--bg-color)] flex items-center justify-center shadow-[0_0_15px_var(--shadow-glow)] ring-2 ring-[var(--accent)] overflow-hidden">
+                                    <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Man%20Technologist.png" alt="3D Tech Avatar" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                                </div>
+                                <div class="absolute -bottom-1 -right-2 bg-[var(--bg-color)] border border-[var(--accent)] text-[var(--accent)] text-[9px] font-digital font-bold px-1.5 py-0.5 rounded-md shadow-lg z-10">LV.1</div>
                             </div>
+
                             <div>
                                 <h3 class="text-lg font-header font-bold text-theme-main drop-shadow-sm leading-tight" id="uiName">...</h3>
                                 <div class="flex flex-wrap items-center gap-2 mt-1.5">
-                                    <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-[var(--glass-border)] border border-[var(--glass-input-border)] text-theme-muted" id="uiNick">...</span>
-                                    <span class="text-[10px] font-mono tracking-widest text-theme-accent uppercase font-bold bg-[var(--status-active-bg)] px-2 py-0.5 rounded" id="uiDept">...</span>
+                                    <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-[var(--glass-border)] border border-[var(--glass-input-border)] text-theme-muted shadow-inner" id="uiNick">...</span>
+                                    <span class="text-[10px] font-mono tracking-widest text-theme-accent uppercase font-bold bg-[var(--status-active-bg)] px-2 py-0.5 rounded shadow-sm" id="uiDept">...</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="flex flex-col items-end pl-2">
-                            <span id="uiStatus" class="status-badge status-active shadow-sm scale-110 origin-top-right">Active</span>
+                        
+                        <div class="flex flex-col items-end pl-2 relative">
+                            <div class="absolute -top-10 -right-2 w-12 h-12 animate-float z-20 pointer-events-none drop-shadow-[0_8px_10px_rgba(0,0,0,0.6)]">
+                                <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Robot/3D/robot_3d.png" alt="3D Robot Bodyguard" class="w-full h-full object-contain">
+                            </div>
+                            
+                            <span id="uiStatus" class="status-badge status-active shadow-[0_0_10px_var(--shadow-glow)] scale-110 origin-top-right relative z-10 mt-3">Active</span>
                         </div>
                     </div>
 
@@ -393,8 +416,8 @@
             </div>
         </section>
         
-        <div class="w-full text-center pt-8 pb-4 mt-auto">
-            <p class="text-[10px] text-theme-muted font-mono tracking-widest uppercase flex items-center justify-center gap-1.5 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default">
+        <div class="fixed bottom-2 left-0 w-full text-center z-30 pointer-events-none">
+            <p class="inline-flex text-[10px] text-theme-muted font-mono tracking-widest uppercase items-center justify-center gap-1.5 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default pointer-events-auto drop-shadow-md bg-[var(--bg-color)]/50 px-4 py-1.5 rounded-full backdrop-blur-sm border border-[var(--glass-border)]">
                 <i class="fa-solid fa-bolt text-theme-accent animate-pulse"></i> 
                 Powered by <span class="text-theme-accent font-bold font-header tracking-wider drop-shadow-[0_0_8px_var(--shadow-glow)]">KoRn</span>
             </p>
