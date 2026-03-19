@@ -28,388 +28,710 @@
 
     <style>
         /* =========================================
-           UX/UI DESIGN SYSTEM: THEME VARIABLES
+           UX/UI DESIGN SYSTEM v2 — REDESIGNED
            ========================================= */
+
+        /* === THEME: CYBER (DEFAULT) === */
         :root, [data-theme="cyber"] {
-            --bg-color: #0f172a;
-            --bg-grad1: hsla(253,16%,7%,1);
-            --bg-grad2: hsla(225,39%,30%,1);
-            --bg-grad3: hsla(339,49%,30%,1);
-            --glass-bg: rgba(30, 41, 59, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-input: rgba(15, 23, 42, 0.6);
-            --glass-input-border: rgba(255, 255, 255, 0.1);
-            --text-main: #ffffff;
-            --text-muted: #94a3b8;
+            --bg-color: #080e1a;
+            --bg-grad1: hsla(220,60%,6%,1);
+            --bg-grad2: hsla(210,70%,14%,1);
+            --bg-grad3: hsla(250,50%,8%,1);
+            --glass-bg: rgba(12, 22, 42, 0.75);
+            --glass-bg-solid: rgba(10, 18, 36, 0.95);
+            --glass-border: rgba(56, 189, 248, 0.1);
+            --glass-border-hover: rgba(56, 189, 248, 0.25);
+            --glass-input: rgba(5, 12, 28, 0.7);
+            --glass-input-border: rgba(56, 189, 248, 0.15);
+            --text-main: #e8f4fd;
+            --text-muted: #64899e;
             --accent: #38bdf8;
-            --btn-from: #0891b2;
-            --btn-to: #2563eb;
+            --accent-rgb: 56, 189, 248;
+            --accent2: #818cf8;
+            --btn-from: #0369a1;
+            --btn-to: #4f46e5;
             --btn-text: #ffffff;
-            --status-active-bg: rgba(59, 130, 246, 0.15);
-            --status-active-text: #60a5fa;
-            --status-passed-bg: rgba(16, 185, 129, 0.15);
+            --status-active-bg: rgba(56, 189, 248, 0.1);
+            --status-active-text: #38bdf8;
+            --status-passed-bg: rgba(52, 211, 153, 0.1);
             --status-passed-text: #34d399;
-            --status-alert-bg: rgba(239, 68, 68, 0.15);
+            --status-alert-bg: rgba(248, 113, 113, 0.1);
             --status-alert-text: #f87171;
-            --shadow-glow: rgba(56, 189, 248, 0.2);
+            --shadow-glow: rgba(56, 189, 248, 0.15);
+            --noise-opacity: 0.025;
+            --header-glow: rgba(56, 189, 248, 0.08);
         }
 
+        /* === THEME: GOLD === */
         [data-theme="gold"] {
-            --bg-color: #050505;
-            --bg-grad1: hsla(0,0%,3%,1);
-            --bg-grad2: hsla(43, 40%, 10%, 1);
-            --bg-grad3: hsla(0,0%,0%,1);
-            --glass-bg: rgba(20, 20, 20, 0.85);
-            --glass-border: rgba(212, 175, 55, 0.25);
-            --glass-input: rgba(0, 0, 0, 0.6);
-            --glass-input-border: rgba(212, 175, 55, 0.35);
-            --text-main: #fcfcfc;
-            --text-muted: #a3a3a3;
+            --bg-color: #07060a;
+            --bg-grad1: hsla(0,0%,4%,1);
+            --bg-grad2: hsla(40,35%,9%,1);
+            --bg-grad3: hsla(30,20%,5%,1);
+            --glass-bg: rgba(18, 14, 8, 0.80);
+            --glass-bg-solid: rgba(14, 11, 6, 0.97);
+            --glass-border: rgba(212, 175, 55, 0.15);
+            --glass-border-hover: rgba(212, 175, 55, 0.35);
+            --glass-input: rgba(8, 6, 2, 0.75);
+            --glass-input-border: rgba(212, 175, 55, 0.2);
+            --text-main: #f5f0e8;
+            --text-muted: #8a7a5a;
             --accent: #D4AF37;
-            --btn-from: #996515;
+            --accent-rgb: 212, 175, 55;
+            --accent2: #c9a227;
+            --btn-from: #7a5010;
             --btn-to: #D4AF37;
-            --btn-text: #050505;
-            --status-active-bg: rgba(212, 175, 55, 0.15);
+            --btn-text: #080500;
+            --status-active-bg: rgba(212, 175, 55, 0.1);
             --status-active-text: #D4AF37;
-            --status-passed-bg: rgba(16, 185, 129, 0.15);
+            --status-passed-bg: rgba(52, 211, 153, 0.1);
             --status-passed-text: #34d399;
-            --status-alert-bg: rgba(239, 68, 68, 0.15);
+            --status-alert-bg: rgba(248, 113, 113, 0.1);
             --status-alert-text: #f87171;
-            --shadow-glow: rgba(212, 175, 55, 0.15);
+            --shadow-glow: rgba(212, 175, 55, 0.12);
+            --noise-opacity: 0.03;
+            --header-glow: rgba(212, 175, 55, 0.06);
         }
 
+        /* === THEME: PEARL === */
         [data-theme="pearl"] {
-            --bg-color: #f8fafc;
-            --bg-grad1: hsla(210, 40%, 98%, 1);
-            --bg-grad2: hsla(210, 20%, 95%, 1);
-            --bg-grad3: hsla(210, 10%, 99%, 1);
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --glass-border: rgba(0, 0, 0, 0.08);
-            --glass-input: rgba(241, 245, 249, 0.8);
-            --glass-input-border: rgba(0, 0, 0, 0.15);
-            --text-main: #0f172a;
-            --text-muted: #475569;
-            --accent: #0f172a;
-            --btn-from: #334155;
-            --btn-to: #0f172a;
+            --bg-color: #f0f4f8;
+            --bg-grad1: hsla(210,30%,97%,1);
+            --bg-grad2: hsla(215,25%,93%,1);
+            --bg-grad3: hsla(205,20%,96%,1);
+            --glass-bg: rgba(255, 255, 255, 0.72);
+            --glass-bg-solid: rgba(255, 255, 255, 0.98);
+            --glass-border: rgba(15, 23, 42, 0.07);
+            --glass-border-hover: rgba(15, 23, 42, 0.18);
+            --glass-input: rgba(240, 244, 248, 0.85);
+            --glass-input-border: rgba(15, 23, 42, 0.12);
+            --text-main: #0d1829;
+            --text-muted: #5a708a;
+            --accent: #1e6fdc;
+            --accent-rgb: 30, 111, 220;
+            --accent2: #0f172a;
+            --btn-from: #1e3a5f;
+            --btn-to: #1e6fdc;
             --btn-text: #ffffff;
-            --status-active-bg: rgba(15, 23, 42, 0.1);
-            --status-active-text: #0f172a;
-            --status-passed-bg: rgba(16, 185, 129, 0.15);
+            --status-active-bg: rgba(30, 111, 220, 0.08);
+            --status-active-text: #1e6fdc;
+            --status-passed-bg: rgba(5, 150, 105, 0.08);
             --status-passed-text: #059669;
-            --status-alert-bg: rgba(239, 68, 68, 0.1);
+            --status-alert-bg: rgba(220, 38, 38, 0.08);
             --status-alert-text: #dc2626;
-            --shadow-glow: rgba(0, 0, 0, 0.05);
+            --shadow-glow: rgba(30, 111, 220, 0.08);
+            --noise-opacity: 0;
+            --header-glow: rgba(30, 111, 220, 0.04);
         }
 
-        /* Core Elements */
+        /* ======== BASE ======== */
+        *, *::before, *::after { box-sizing: border-box; }
+
         body { 
             background-color: var(--bg-color); 
-            background-image: radial-gradient(at 0% 0%, var(--bg-grad1) 0, transparent 50%), radial-gradient(at 50% 0%, var(--bg-grad2) 0, transparent 50%), radial-gradient(at 100% 0%, var(--bg-grad3) 0, transparent 50%);
-            color: var(--text-main); min-height: 100vh;
-            transition: background-color 0.5s ease, color 0.5s ease;
+            background-image: 
+                radial-gradient(ellipse 80% 60% at 20% -10%, var(--bg-grad2), transparent),
+                radial-gradient(ellipse 60% 50% at 80% 110%, var(--bg-grad3), transparent),
+                radial-gradient(ellipse 100% 80% at 50% 50%, var(--bg-grad1), transparent);
+            color: var(--text-main);
+            min-height: 100vh;
+            transition: background-color 0.6s ease, color 0.4s ease;
+            font-feature-settings: "kern" 1, "liga" 1;
+            -webkit-font-smoothing: antialiased;
         }
-        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--glass-border); box-shadow: 0 10px 40px 0 var(--shadow-glow); transition: all 0.4s ease; }
-        .glass-input { background: var(--glass-input); border: 1px solid var(--glass-input-border); color: var(--text-main); transition: all 0.3s ease; }
-        .glass-input:focus { border-color: var(--accent); background: var(--glass-bg); box-shadow: 0 0 0 2px var(--shadow-glow); outline: none; }
-        .glass-input::placeholder { color: var(--text-muted); opacity: 0.6; }
+
+        /* Noise texture overlay for depth */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+            opacity: var(--noise-opacity);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ======== GLASS PANELS ======== */
+        .glass-panel { 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(28px) saturate(1.4); 
+            -webkit-backdrop-filter: blur(28px) saturate(1.4); 
+            border: 1px solid var(--glass-border); 
+            box-shadow: 0 4px 24px var(--shadow-glow), inset 0 1px 0 rgba(255,255,255,0.06);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); 
+            position: relative;
+        }
+        .glass-panel:hover {
+            border-color: var(--glass-border-hover);
+        }
+
+        /* ======== INPUTS ======== */
+        .glass-input { 
+            background: var(--glass-input); 
+            border: 1px solid var(--glass-input-border); 
+            color: var(--text-main); 
+            transition: all 0.25s ease;
+            border-radius: 12px;
+        }
+        .glass-input:focus { 
+            border-color: var(--accent); 
+            background: var(--glass-bg); 
+            box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.12), 0 2px 8px rgba(var(--accent-rgb),0.08);
+            outline: none; 
+        }
+        .glass-input::placeholder { color: var(--text-muted); opacity: 0.5; }
         
-        /* Theme Utilities */
+        /* ======== THEME UTILITIES ======== */
         .text-theme-main { color: var(--text-main); }
         .text-theme-muted { color: var(--text-muted); }
         .text-theme-accent { color: var(--accent); }
         .bg-theme-panel { background-color: var(--glass-bg); border-color: var(--glass-border); }
         .border-theme-border { border-color: var(--glass-border); }
+
+        /* ======== BUTTONS ======== */
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--btn-from), var(--btn-to)); 
+            color: var(--btn-text);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.12));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .btn-primary:hover::after { opacity: 1; }
+        .btn-primary:hover { filter: brightness(1.12); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(var(--accent-rgb), 0.3); }
+        .btn-primary:active { transform: translateY(0); }
+        .icon-primary { background: linear-gradient(135deg, var(--btn-from), var(--btn-to)); color: var(--btn-text); }
         
-        .btn-primary { background: linear-gradient(to right, var(--btn-from), var(--btn-to)); color: var(--btn-text); }
-        .btn-primary:hover { filter: brightness(1.1); }
-        .icon-primary { background: linear-gradient(to bottom right, var(--btn-from), var(--btn-to)); color: var(--btn-text); }
-        
-        /* Status Badges */
-        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; border: 1px solid; min-width: 75px; text-align: center; }
-        .status-active { background-color: var(--status-active-bg); color: var(--status-active-text); border-color: var(--status-active-text); box-shadow: 0 0 10px var(--status-active-bg); }
-        .status-passed { background-color: var(--status-passed-bg); color: var(--status-passed-text); border-color: var(--status-passed-text); box-shadow: 0 0 10px var(--status-passed-bg); }
-        .status-alert { background-color: var(--status-alert-bg); color: var(--status-alert-text); border-color: var(--status-alert-text); box-shadow: 0 0 10px var(--status-alert-bg); }
-        .status-default { background-color: var(--glass-bg); color: var(--text-muted); border-color: var(--glass-border); }
-        
-        /* Scrollbar & Misc */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        /* ======== STATUS BADGES ======== */
+        .status-badge { 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px 10px; 
+            border-radius: 6px; 
+            font-size: 9px; 
+            text-transform: uppercase; 
+            font-weight: 700; 
+            letter-spacing: 0.08em; 
+            border: 1px solid; 
+            min-width: 72px; 
+            text-align: center;
+            gap: 4px;
+        }
+        .status-active { 
+            background-color: var(--status-active-bg); 
+            color: var(--status-active-text); 
+            border-color: rgba(var(--accent-rgb),0.3);
+        }
+        .status-passed { 
+            background-color: var(--status-passed-bg); 
+            color: var(--status-passed-text); 
+            border-color: rgba(52,211,153,0.3); 
+        }
+        .status-alert { 
+            background-color: var(--status-alert-bg); 
+            color: var(--status-alert-text); 
+            border-color: rgba(248,113,113,0.3);
+        }
+        .status-default { 
+            background-color: var(--glass-bg); 
+            color: var(--text-muted); 
+            border-color: var(--glass-border); 
+        }
+
+        /* ======== SCROLLBAR ======== */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-        
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(var(--accent-rgb),0.4); }
+
+        /* ======== ANIMATIONS ======== */
+        @keyframes float { 
+            0%, 100% { transform: translateY(0px); } 
+            50% { transform: translateY(-6px); } 
+        }
+        @keyframes rotation { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        @keyframes pulseRing {
+            0% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(var(--accent-rgb), 0); }
+            100% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0); }
+        }
+
         .animate-float { animation: float 6s ease-in-out infinite; }
-        .loader { width: 40px; height: 40px; border: 3px solid var(--text-main); border-bottom-color: var(--accent); border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
-        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        .nav-btn.active { background: var(--glass-border); color: var(--accent); border-bottom: 2px solid var(--accent); }
+        .animate-fade-in { animation: fadeInUp 0.4s ease forwards; }
+        .loader { 
+            width: 40px; height: 40px; 
+            border: 3px solid rgba(var(--accent-rgb), 0.15); 
+            border-top-color: var(--accent); 
+            border-radius: 50%; 
+            animation: rotation 0.9s linear infinite; 
+        }
+
+        /* ======== NAV ======== */
+        .nav-btn { 
+            transition: all 0.25s ease;
+            border-radius: 10px;
+            position: relative;
+        }
+        .nav-btn.active { 
+            background: rgba(var(--accent-rgb), 0.1);
+            color: var(--accent);
+        }
+        .nav-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 2px 2px 0 0;
+        }
+        .nav-btn:not(.active):hover {
+            background: rgba(var(--accent-rgb), 0.05);
+            color: var(--text-main);
+        }
+
+        /* ======== MISC ======== */
         .font-digital { font-family: 'Chakra Petch', sans-serif; }
-        .custom-checkbox { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; border-radius: 4px; }
-        th.sortable { cursor: pointer; transition: background 0.2s; }
-        th.sortable:hover { background: var(--glass-border); }
-        .sort-icon { transition: transform 0.2s; display: inline-block; margin-left: 4px; opacity: 0.5; }
-        th.sortable:hover .sort-icon { opacity: 1; }
+        .custom-checkbox { 
+            width: 18px; height: 18px; 
+            accent-color: var(--accent); 
+            cursor: pointer; 
+            border-radius: 4px; 
+        }
+
+        /* ======== TABLE ======== */
+        th.sortable { cursor: pointer; transition: all 0.2s; user-select: none; }
+        th.sortable:hover { background: rgba(var(--accent-rgb), 0.06); color: var(--accent); }
+        .sort-icon { transition: transform 0.2s; display: inline-block; margin-left: 4px; opacity: 0.35; font-size: 10px; }
+        th.sortable:hover .sort-icon { opacity: 1; color: var(--accent); }
+
+        /* Table rows */
+        #adminTable tr {
+            transition: background 0.2s ease;
+        }
+        #adminTable tr:hover {
+            background: rgba(var(--accent-rgb), 0.04);
+        }
+
+        /* ======== HEADER ======== */
+        header.glass-panel {
+            box-shadow: 0 1px 0 var(--glass-border), 0 8px 32px var(--header-glow);
+        }
+
+        /* ======== FORM FIELDS — Label refinement ======== */
+        label {
+            letter-spacing: 0.04em;
+        }
+
+        /* ======== PROFILE CARD ======== */
+        #profileCard {
+            animation: fadeInUp 0.4s ease;
+        }
+
+        /* Day Boxes — glow on complete */
+        .day-complete {
+            border-color: rgba(52,211,153,0.4) !important;
+            box-shadow: 0 0 16px rgba(52,211,153,0.15);
+        }
+
+        /* ======== ACTION BAR ======== */
+        #actionBar {
+            border: 1px solid var(--glass-border-hover);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(var(--accent-rgb),0.08);
+        }
+
+        /* ======== MODAL POLISH ======== */
+        .modal-overlay {
+            background: rgba(0,0,0,0.88);
+            backdrop-filter: blur(8px);
+        }
+
+        /* Loading spinner improvement */
+        #loadingOverlay .spin-outer {
+            border-color: rgba(var(--accent-rgb),0.15);
+            border-top-color: var(--accent);
+        }
+
+        /* Theme switcher dot animation */
+        #themeMenuBtn {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        #themeMenuBtn:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 0 20px rgba(var(--accent-rgb),0.4);
+        }
+
+        /* Checkin fingerprint button */
+        #btnCheckStatus {
+            transition: all 0.25s ease;
+            border: 1px solid var(--glass-border);
+        }
+        #btnCheckStatus:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(var(--accent-rgb), 0.06);
+            transform: translateY(-1px);
+        }
+
+        /* Section transitions */
+        section:not(.hidden) {
+            animation: fadeInUp 0.35s ease;
+        }
+
+        /* Filter panel */
+        #filterPanel {
+            border-top: 2px solid var(--accent);
+        }
+
+        /* Payment info box */
+        .payment-info-box {
+            background: rgba(52, 211, 153, 0.06);
+            border: 1px solid rgba(52, 211, 153, 0.25);
+            border-radius: 12px;
+        }
+
+        /* Improved select styling */
+        select.glass-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364899e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+        }
+
+        /* Focus visible for accessibility */
+        :focus-visible {
+            outline: 2px solid rgba(var(--accent-rgb), 0.5);
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden" onload="initApp()">
 
-    <header class="glass-panel sticky top-0 z-50 rounded-b-3xl mx-2 mt-2 px-6 py-4 mb-4">
+    <header class="glass-panel sticky top-0 z-50 rounded-b-2xl mx-2 mt-2 px-5 py-3.5 mb-4">
         <div class="flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl icon-primary flex items-center justify-center shadow-lg"><i class="fa-solid fa-layer-group"></i></div>
+                <div class="w-9 h-9 rounded-xl icon-primary flex items-center justify-center shadow-lg shrink-0">
+                    <i class="fa-solid fa-layer-group text-sm"></i>
+                </div>
                 <div>
-                    <h1 class="font-header font-bold text-sm text-theme-main tracking-wide">HR PORTAL</h1>
-                    <p class="text-[10px] text-theme-accent font-medium tracking-wider uppercase">Training System</p>
+                    <h1 class="font-header font-bold text-sm text-theme-main tracking-widest leading-tight">HR PORTAL</h1>
+                    <p class="text-[9px] text-theme-accent font-medium tracking-[0.2em] uppercase leading-tight mt-0.5 opacity-80">Training System</p>
                 </div>
             </div>
             <div class="text-right">
-                <div id="clockDate" class="text-[10px] text-theme-muted font-medium uppercase tracking-widest">...</div>
-                <div id="clockTime" class="font-digital text-2xl font-bold text-theme-main leading-none mt-0.5">00:00</div>
+                <div id="clockDate" class="text-[9px] text-theme-muted font-medium tracking-widest leading-tight">...</div>
+                <div id="clockTime" class="font-digital text-xl font-bold leading-tight mt-0.5 tabular-nums" style="color: var(--accent);">00:00</div>
             </div>
         </div>
-        <div class="flex justify-center mt-4 border-t border-theme-border pt-2 gap-1">
-            <button onclick="switchTab('register')" id="nav-register" class="nav-btn active flex-1 py-2 rounded-lg text-xs font-header transition-all text-theme-muted hover:text-theme-main">ลงทะเบียน</button>
-            <button onclick="switchTab('checkin')" id="nav-checkin" class="nav-btn flex-1 py-2 rounded-lg text-xs font-header transition-all text-theme-muted hover:text-theme-main">เช็คชื่อ</button>
-            <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn flex-1 py-2 rounded-lg text-xs font-header transition-all text-theme-muted hover:text-theme-main">Admin</button>
+        <div class="flex mt-3 border-t border-theme-border pt-2.5 gap-1">
+            <button onclick="switchTab('register')" id="nav-register" class="nav-btn active flex-1 py-2 rounded-xl text-xs font-header font-medium transition-all text-theme-muted flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-pen-to-square text-[10px]"></i> ลงทะเบียน
+            </button>
+            <button onclick="switchTab('checkin')" id="nav-checkin" class="nav-btn flex-1 py-2 rounded-xl text-xs font-header font-medium transition-all text-theme-muted flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-fingerprint text-[10px]"></i> เช็คชื่อ
+            </button>
+            <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn flex-1 py-2 rounded-xl text-xs font-header font-medium transition-all text-theme-muted flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-shield-halved text-[10px]"></i> Admin
+            </button>
         </div>
     </header>
 
     <main class="flex-1 overflow-y-auto px-4 pb-24 scroll-smooth">
-        <div id="loadingOverlay" class="hidden fixed inset-0 z-[100] bg-[var(--bg-color)]/80 backdrop-blur-md flex flex-col items-center justify-center transition-all duration-300">
-            <div class="bg-[var(--glass-bg)] border border-theme-border p-8 rounded-[2rem] shadow-[0_0_50px_var(--shadow-glow)] flex flex-col items-center relative overflow-hidden transform scale-100 animate-fade-in">
-                <div class="absolute inset-0 bg-gradient-to-tr from-[var(--accent)] to-transparent opacity-[0.05] animate-pulse"></div>
-                
-                <div class="relative w-20 h-20 flex items-center justify-center mb-6">
-                    <div class="absolute inset-0 border-4 border-[var(--glass-border)] rounded-full"></div>
-                    <div class="absolute inset-0 border-4 border-[var(--accent)] rounded-full border-t-transparent animate-spin" style="animation-duration: 1.5s;"></div>
-                    <div class="absolute inset-2 border-4 border-blue-500/30 rounded-full border-b-transparent animate-spin" style="animation-direction: reverse; animation-duration: 2s;"></div>
-                    <i class="fa-solid fa-fingerprint text-2xl text-[var(--accent)] animate-pulse drop-shadow-[0_0_8px_var(--accent)]"></i>
+        <div id="loadingOverlay" class="hidden fixed inset-0 z-[100] bg-black/70 backdrop-blur-lg flex flex-col items-center justify-center transition-all duration-300">
+            <div class="glass-panel p-8 rounded-3xl flex flex-col items-center gap-5 relative overflow-hidden animate-fade-in" style="min-width: 180px;">
+                <div class="absolute inset-0 bg-gradient-to-br from-[rgba(var(--accent-rgb),0.05)] to-transparent pointer-events-none"></div>
+                <div class="relative w-14 h-14 flex items-center justify-center">
+                    <div class="absolute inset-0 border-2 border-[rgba(var(--accent-rgb),0.15)] rounded-full"></div>
+                    <div class="absolute inset-0 border-2 rounded-full border-t-[color:var(--accent)] border-r-transparent border-b-transparent border-l-transparent animate-spin" style="animation-duration: 0.9s;"></div>
+                    <i class="fa-solid fa-fingerprint text-xl" style="color: var(--accent);"></i>
                 </div>
-                
-                <h3 class="text-theme-main font-header font-bold tracking-widest text-lg mb-1 drop-shadow-md">PROCESSING</h3>
-                <p class="text-[10px] text-theme-muted font-mono tracking-widest uppercase">Securing Data Connection...</p>
+                <div class="text-center">
+                    <p class="text-theme-main font-header font-bold text-sm tracking-widest">PROCESSING</p>
+                    <p class="text-[9px] text-theme-muted tracking-widest uppercase mt-0.5 opacity-60">กำลังเชื่อมต่อ...</p>
+                </div>
             </div>
         </div>
 
         <section id="page-register" class="max-w-md mx-auto animate-fade-in">
-            <div class="glass-panel p-6 rounded-2xl relative overflow-hidden">
+            <div class="glass-panel p-5 rounded-2xl relative overflow-hidden">
                 
-                <div class="flex items-center gap-4 mb-6 relative p-4 bg-gradient-to-r from-[var(--glass-border)] to-transparent rounded-2xl border border-[var(--glass-input-border)]">
-                    <div class="absolute w-20 h-20 bg-[var(--accent)] opacity-20 rounded-full blur-2xl top-1/2 left-4 transform -translate-y-1/2 animate-pulse"></div>
+                <!-- Hero banner -->
+                <div class="flex items-center gap-4 mb-5 p-4 rounded-xl relative overflow-hidden" style="background: linear-gradient(135deg, rgba(var(--accent-rgb),0.08), rgba(var(--accent-rgb),0.02)); border: 1px solid rgba(var(--accent-rgb),0.12);">
+                    <div class="absolute -right-4 -top-4 w-20 h-20 rounded-full blur-2xl" style="background: rgba(var(--accent-rgb),0.15);"></div>
                     
-                    <div class="relative z-10 animate-float w-20 h-20 shrink-0 drop-shadow-[0_10px_15px_rgba(0,0,0,0.4)]">
-                        <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Robot.png" alt="3D AI Robot" class="w-full h-full object-contain drop-shadow-[0_0_15px_var(--shadow-glow)] animate-float">
+                    <div class="relative z-10 animate-float w-16 h-16 shrink-0">
+                        <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Robot.png" alt="Robot" class="w-full h-full object-contain drop-shadow-lg">
                     </div>
 
-                    <div class="relative z-10 flex-1">
-                        <span class="inline-block bg-[var(--status-active-bg)] text-[var(--status-active-text)] text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-widest mb-1 shadow-sm">Welcome</span>
-                        <h2 class="text-xl font-header font-bold text-theme-main leading-tight drop-shadow-sm">ลงทะเบียน อบรม<br><span class="text-theme-accent">พนักงานใหม่</span></h2>
+                    <div class="relative z-10 flex-1 min-w-0">
+                        <span class="inline-block text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-widest mb-1.5" style="background: rgba(var(--accent-rgb),0.12); color: var(--accent);">Welcome</span>
+                        <h2 class="text-lg font-header font-bold text-theme-main leading-snug">ลงทะเบียน <span style="color: var(--accent);">พนักงานใหม่</span></h2>
+                        <p class="text-[10px] text-theme-muted mt-0.5">กรอกข้อมูลให้ครบถ้วนเพื่อเข้าระบบ</p>
                     </div>
                 </div>
 
-                <form id="regForm" onsubmit="handleRegister(event)" class="space-y-4 relative z-10">
-                    <div class="grid grid-cols-3 gap-3">
-                        <div><label class="text-[10px] text-theme-muted font-bold mb-1.5 block ml-1">คำนำหน้า</label><select name="prefix" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm focus:ring-0"><option class="bg-white text-black">นาย</option><option class="bg-white text-black">นาง</option><option class="bg-white text-black">นางสาว</option></select></div>
-                        <div class="col-span-2"><label class="text-[10px] text-theme-muted font-bold mb-1.5 block ml-1">ชื่อ-นามสกุล</label><input type="text" name="name" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm" placeholder="เว้นวรรคระหว่างชื่อ-สกุล"></div>
+                <form id="regForm" onsubmit="handleRegister(event)" class="space-y-3.5 relative z-10">
+                    <div class="grid grid-cols-3 gap-2.5">
+                        <div>
+                            <label class="text-[9px] text-theme-muted font-bold mb-1.5 block ml-0.5 uppercase tracking-wider">คำนำหน้า</label>
+                            <select name="prefix" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm">
+                                <option class="bg-white text-black">นาย</option>
+                                <option class="bg-white text-black">นาง</option>
+                                <option class="bg-white text-black">นางสาว</option>
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="text-[9px] text-theme-muted font-bold mb-1.5 block ml-0.5 uppercase tracking-wider">ชื่อ-นามสกุล</label>
+                            <input type="text" name="name" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm" placeholder="เว้นวรรคระหว่างชื่อ-สกุล">
+                        </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="text-[10px] text-theme-muted font-bold mb-1.5 block ml-1">ชื่อเล่น</label><input type="text" name="nickname" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
-                        <div><label class="text-[10px] text-theme-muted font-bold mb-1.5 block ml-1">เบอร์โทร</label><input type="tel" id="regPhone" name="phone" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm font-digital tracking-wide" placeholder="08X-XXX-XXXX"></div>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="text-[9px] text-theme-muted font-bold mb-1.5 block ml-0.5 uppercase tracking-wider">ชื่อเล่น</label>
+                            <input type="text" name="nickname" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm">
+                        </div>
+                        <div>
+                            <label class="text-[9px] text-theme-muted font-bold mb-1.5 block ml-0.5 uppercase tracking-wider">เบอร์โทร</label>
+                            <input type="tel" id="regPhone" name="phone" required class="w-full px-3 py-2.5 rounded-xl glass-input text-sm font-digital tracking-wide" placeholder="08X-XXX-XXXX">
+                        </div>
                     </div>
                     <div>
-                        <label class="text-[10px] text-theme-muted font-bold mb-1.5 block ml-1">แผนก</label>
+                        <label class="text-[9px] text-theme-muted font-bold mb-1.5 block ml-0.5 uppercase tracking-wider">แผนก</label>
                         <select name="dept" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm">
-                            <option value="TELESALES สินค้า" class="bg-white text-black">Telesales สินค้า</option><option value="Telesales Insurance" class="bg-white text-black">Telesales Insurance</option><option value="Back Office" class="bg-white text-black">Back Office</option>
+                            <option value="TELESALES สินค้า" class="bg-white text-black">Telesales สินค้า</option>
+                            <option value="Telesales Insurance" class="bg-white text-black">Telesales Insurance</option>
+                            <option value="Back Office" class="bg-white text-black">Back Office</option>
                         </select>
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="text-[10px] text-theme-muted font-bold mb-1.5 block ml-1">ทีม</label><input type="text" name="team" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
-                        <div><label class="text-[10px] text-theme-muted font-bold mb-1.5 block ml-1">ผู้แนะนำ</label><input type="text" name="recruiter" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm"></div>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="text-[9px] text-theme-muted font-bold mb-1.5 block ml-0.5 uppercase tracking-wider">ทีม</label>
+                            <input type="text" name="team" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm">
+                        </div>
+                        <div>
+                            <label class="text-[9px] text-theme-muted font-bold mb-1.5 block ml-0.5 uppercase tracking-wider">ผู้แนะนำ</label>
+                            <input type="text" name="recruiter" class="w-full px-3 py-2.5 rounded-xl glass-input text-sm">
+                        </div>
                     </div>
-                    <button type="submit" id="btnRegister" class="btn-primary w-full mt-4 py-3 font-header font-bold rounded-xl shadow-lg transition-transform transform active:scale-[0.98] disabled:opacity-50">ยืนยันข้อมูล</button>
+                    <button type="submit" id="btnRegister" class="btn-primary w-full mt-2 py-3 font-header font-bold rounded-xl shadow-lg transition-all transform active:scale-[0.98] disabled:opacity-50 text-sm tracking-wide">
+                        <i class="fa-solid fa-check-circle mr-2"></i>ยืนยันข้อมูล
+                    </button>
                 </form>
             </div>
         </section>
 
-        <section id="page-checkin" class="hidden max-w-md mx-auto pt-4">
-            <div class="glass-panel p-8 rounded-2xl text-center relative overflow-hidden">
-                <div class="w-20 h-20 bg-theme-panel border border-theme-border rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-inner rotate-3 hover:rotate-0 transition duration-500">
-                    <i class="fa-solid fa-fingerprint text-4xl text-theme-accent drop-shadow-md"></i>
-                </div>
-                <h2 class="text-xl font-header font-bold text-theme-main mb-2">ลงชื่อเข้าอบรม</h2>
-                <p class="text-xs text-theme-muted mb-8 font-light">กรอกเบอร์โทรศัพท์เพื่อยืนยันตัวตน</p>
-                <div class="relative max-w-xs mx-auto mb-6 group">
-                    <input type="tel" id="checkinPhone" class="w-full pl-12 pr-4 py-3.5 rounded-xl glass-input text-lg tracking-widest text-center font-digital font-bold transition-colors" placeholder="08X-XXX-XXXX">
-                    <i class="fa-solid fa-mobile-screen absolute left-4 top-4 text-theme-muted text-lg group-focus-within:text-theme-accent transition-colors"></i>
-                </div>
-                <button onclick="checkStatus()" id="btnCheckStatus" class="w-full py-3 bg-theme-panel text-theme-main rounded-xl font-header font-medium transition border border-theme-border hover:border-theme-accent disabled:opacity-50">ตรวจสอบสถานะ</button>
+        <section id="page-checkin" class="hidden max-w-md mx-auto pt-2">
+            <div class="glass-panel p-6 rounded-2xl text-center relative overflow-hidden">
+                
+                <!-- Ambient glow -->
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-20 blur-3xl rounded-full opacity-30 pointer-events-none" style="background: var(--accent);"></div>
+                
+                <div class="relative z-10">
+                    <div class="w-16 h-16 mx-auto flex items-center justify-center mb-4 rounded-2xl relative" style="background: rgba(var(--accent-rgb),0.1); border: 1px solid rgba(var(--accent-rgb),0.2);">
+                        <i class="fa-solid fa-fingerprint text-3xl" style="color: var(--accent);"></i>
+                    </div>
+                    <h2 class="text-lg font-header font-bold text-theme-main mb-1">ลงชื่อเข้าอบรม</h2>
+                    <p class="text-xs text-theme-muted mb-6 font-light">กรอกเบอร์โทรศัพท์เพื่อยืนยันตัวตน</p>
+                    
+                    <div class="relative max-w-xs mx-auto mb-4 group">
+                        <input type="tel" id="checkinPhone" class="w-full pl-11 pr-4 py-3.5 rounded-xl glass-input text-lg tracking-widest text-center font-digital font-bold transition-colors" placeholder="08X-XXX-XXXX">
+                        <i class="fa-solid fa-mobile-screen absolute left-4 top-4 text-theme-muted text-sm group-focus-within:text-theme-accent transition-colors"></i>
+                    </div>
+                <button onclick="checkStatus()" id="btnCheckStatus" class="w-full py-3 rounded-xl font-header font-medium transition-all text-sm" style="background: rgba(var(--accent-rgb),0.08); border: 1px solid rgba(var(--accent-rgb),0.2); color: var(--accent);">
+                    <i class="fa-solid fa-magnifying-glass mr-2 text-xs"></i>ตรวจสอบสถานะ
+                </button>
 
-                <div id="profileCard" class="hidden mt-8 text-left relative overflow-hidden bg-gradient-to-br from-[var(--glass-bg)] to-transparent rounded-2xl p-6 border border-theme-border shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-xl animate-float">
-                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-[var(--accent)] opacity-10 rounded-full blur-2xl"></div>
-                    <div class="absolute -left-6 -bottom-6 w-32 h-32 bg-blue-500 opacity-10 rounded-full blur-2xl"></div>
-
-                    <div class="flex justify-between items-start mb-6 pb-5 border-b border-theme-border/50 relative z-10 mt-2">
-                        <div class="flex gap-4 items-center">
-                            
-                            <div class="relative">
-                                <div class="w-14 h-14 min-w-[3.5rem] rounded-full bg-gradient-to-tr from-[var(--glass-border)] to-[var(--bg-color)] flex items-center justify-center shadow-[0_0_15px_var(--shadow-glow)] ring-2 ring-[var(--accent)] overflow-hidden">
-                                    <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Man%20Technologist.png" alt="3D Tech Avatar" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                <div id="profileCard" class="hidden mt-5 text-left relative overflow-hidden rounded-2xl p-5 border backdrop-blur-xl" style="background: rgba(var(--accent-rgb),0.04); border-color: rgba(var(--accent-rgb),0.15);">
+                    <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full blur-3xl opacity-20 pointer-events-none" style="background: var(--accent);"></div>
+                    
+                    <!-- Header row -->
+                    <div class="flex justify-between items-start mb-4 pb-4 border-b relative z-10" style="border-color: rgba(var(--accent-rgb),0.1);">
+                        <div class="flex gap-3 items-center">
+                            <div class="relative shrink-0">
+                                <div class="w-12 h-12 rounded-full overflow-hidden ring-2" style="ring-color: var(--accent);" >
+                                    <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Man%20Technologist.png" alt="Avatar" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
                                 </div>
-                                <div class="absolute -bottom-1 -right-2 bg-[var(--bg-color)] border border-[var(--accent)] text-[var(--accent)] text-[9px] font-digital font-bold px-1.5 py-0.5 rounded-md shadow-lg z-10">LV.1</div>
+                                <div class="absolute -bottom-1 -right-1 text-[8px] font-digital font-bold px-1 py-0.5 rounded-md z-10 leading-none" style="background: var(--bg-color); border: 1px solid rgba(var(--accent-rgb),0.4); color: var(--accent);">LV.1</div>
                             </div>
-
                             <div>
-                                <h3 class="text-lg font-header font-bold text-theme-main drop-shadow-sm leading-tight" id="uiName">...</h3>
-                                <div class="flex flex-wrap items-center gap-2 mt-1.5">
-                                    <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-[var(--glass-border)] border border-[var(--glass-input-border)] text-theme-muted shadow-inner" id="uiNick">...</span>
-                                    <span class="text-[10px] font-mono tracking-widest text-theme-accent uppercase font-bold bg-[var(--status-active-bg)] px-2 py-0.5 rounded shadow-sm" id="uiDept">...</span>
+                                <h3 class="text-base font-header font-bold text-theme-main leading-tight" id="uiName">...</h3>
+                                <div class="flex flex-wrap items-center gap-1.5 mt-1">
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-md text-theme-muted" style="background: var(--glass-border);" id="uiNick">...</span>
+                                    <span class="text-[9px] font-mono tracking-wider uppercase font-bold px-2 py-0.5 rounded-md" style="background: rgba(var(--accent-rgb),0.1); color: var(--accent);" id="uiDept">...</span>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="flex flex-col items-end pl-2 relative">
-                            <div class="absolute -top-10 -right-2 w-12 h-12 animate-float z-20 pointer-events-none drop-shadow-[0_8px_10px_rgba(0,0,0,0.6)]">
-                                <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Robot/3D/robot_3d.png" alt="3D Robot Bodyguard" class="w-full h-full object-contain">
-                            </div>
-                            
-                            <span id="uiStatus" class="status-badge status-active shadow-[0_0_10px_var(--shadow-glow)] scale-110 origin-top-right relative z-10 mt-3">Active</span>
-                        </div>
+                        <span id="uiStatus" class="status-badge status-active mt-1 shrink-0">Active</span>
                     </div>
 
-                    <h4 class="text-[10px] font-bold text-theme-muted mb-3 uppercase tracking-widest flex items-center gap-2"><i class="fa-regular fa-calendar-check text-theme-accent"></i> Timeline Record</h4>
-                    <div class="grid grid-cols-3 gap-3 relative z-10">
-                        <div id="boxD1" class="bg-[var(--glass-bg)] p-3 rounded-xl text-center border border-theme-border shadow-sm transition-all duration-300">
-                            <span class="text-[10px] text-theme-muted uppercase font-bold block mb-2 tracking-widest opacity-80">Day 1</span>
-                            <button onclick="doCheckIn(1)" class="w-full h-10 rounded-lg bg-[var(--glass-border)] text-theme-muted flex items-center justify-center"><i class="fa-solid fa-fingerprint text-lg"></i></button>
+                    <p class="text-[9px] font-bold text-theme-muted mb-2.5 uppercase tracking-widest flex items-center gap-1.5 relative z-10">
+                        <i class="fa-regular fa-calendar-check" style="color: var(--accent);"></i> Timeline Record
+                    </p>
+                    <div class="grid grid-cols-3 gap-2.5 relative z-10">
+                        <div id="boxD1" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
+                            <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 1</span>
+                            <button onclick="doCheckIn(1)" class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
+                                <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
+                            </button>
                         </div>
-                        <div id="boxD2" class="bg-[var(--glass-bg)] p-3 rounded-xl text-center border border-theme-border shadow-sm transition-all duration-300">
-                            <span class="text-[10px] text-theme-muted uppercase font-bold block mb-2 tracking-widest opacity-80">Day 2</span>
-                            <button onclick="doCheckIn(2)" class="w-full h-10 rounded-lg bg-[var(--glass-border)] text-theme-muted flex items-center justify-center"><i class="fa-solid fa-fingerprint text-lg"></i></button>
+                        <div id="boxD2" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
+                            <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 2</span>
+                            <button onclick="doCheckIn(2)" class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
+                                <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
+                            </button>
                         </div>
-                        <div id="boxD3" class="bg-[var(--glass-bg)] p-3 rounded-xl text-center border border-theme-border shadow-sm transition-all duration-300">
-                            <span class="text-[10px] text-theme-muted uppercase font-bold block mb-2 tracking-widest opacity-80">Day 3</span>
-                            <button onclick="doCheckIn(3)" class="w-full h-10 rounded-lg bg-[var(--glass-border)] text-theme-muted flex items-center justify-center"><i class="fa-solid fa-fingerprint text-lg"></i></button>
+                        <div id="boxD3" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
+                            <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 3</span>
+                            <button onclick="doCheckIn(3)" class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
+                                <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </section>
 
         <section id="page-admin" class="hidden h-full flex flex-col">
-            <div id="adminLogin" class="max-w-xs mx-auto glass-panel p-8 rounded-2xl text-center mt-10 border border-red-500/20">
-                <div class="w-14 h-14 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20"><i class="fa-solid fa-shield-cat text-2xl text-red-400"></i></div>
-                <h3 class="text-theme-main font-header font-bold mb-6">Restricted Area</h3>
-                <input type="password" id="adminPass" onkeypress="if(event.key === 'Enter') adminAccess()" class="w-full px-4 py-3 rounded-xl glass-input text-center mb-4 text-sm" placeholder="Admin Password">
-                <button onclick="adminAccess()" class="w-full py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold text-sm transition shadow-lg">เข้าสู่ระบบ</button>
+            <div id="adminLogin" class="max-w-xs mx-auto glass-panel p-7 rounded-2xl text-center mt-8" style="border-color: rgba(239,68,68,0.15);">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);">
+                    <i class="fa-solid fa-shield-cat text-xl text-red-400"></i>
+                </div>
+                <h3 class="text-theme-main font-header font-bold mb-1 text-base">Restricted Area</h3>
+                <p class="text-[10px] text-theme-muted mb-5 tracking-wide">เข้าถึงเฉพาะผู้มีสิทธิ์เท่านั้น</p>
+                <input type="password" id="adminPass" onkeypress="if(event.key === 'Enter') adminAccess()" class="w-full px-4 py-2.5 rounded-xl glass-input text-center mb-3 text-sm" placeholder="รหัสผ่าน Admin">
+                <button onclick="adminAccess()" class="w-full py-2.5 text-white rounded-xl font-bold text-sm transition shadow-lg" style="background: linear-gradient(135deg, #dc2626, #b91c1c);">
+                    <i class="fa-solid fa-unlock-keyhole mr-2"></i>เข้าสู่ระบบ
+                </button>
             </div>
 
             <div id="adminDashboard" class="hidden flex-1 flex flex-col">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 px-1 gap-3">
-                    <h2 class="text-theme-main font-header font-bold text-xl flex items-center gap-2">
-                        <i class="fa-solid fa-database text-theme-accent"></i> ฐานข้อมูล
-                        <button onclick="copyThemeLink()" class="text-sm text-theme-muted hover:text-purple-400 transition ml-1" title="แชร์ลิงก์บังคับใช้ธีมนี้"><i class="fa-solid fa-link"></i></button>
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 px-1 gap-2.5">
+                    <h2 class="text-theme-main font-header font-bold text-base flex items-center gap-2">
+                        <i class="fa-solid fa-database" style="color: var(--accent); font-size: 14px;"></i> ฐานข้อมูล
+                        <button onclick="copyThemeLink()" class="text-sm text-theme-muted hover:text-purple-400 transition ml-1 opacity-60 hover:opacity-100" title="แชร์ลิงก์บังคับใช้ธีมนี้"><i class="fa-solid fa-link text-xs"></i></button>
                     </h2>
                     <div class="flex gap-2 flex-wrap justify-end w-full md:w-auto">
-                        <div class="flex bg-[var(--glass-bg)] border border-theme-border rounded-xl p-1 shadow-inner gap-1">
-                            <button onclick="toggleFilterPanel()" class="text-xs text-theme-main hover:bg-[var(--glass-border)] hover:text-theme-accent px-3 py-2 rounded-lg transition flex items-center gap-1.5 font-medium"><i class="fa-solid fa-filter"></i> <span class="hidden sm:inline">ตัวกรอง</span></button>
-                            <button onclick="toggleSelectAll()" class="text-xs text-theme-main hover:bg-[var(--glass-border)] px-3 py-2 rounded-lg transition font-medium">เลือกทั้งหมด</button>
-                            <button onclick="loadAdminData()" class="text-xs text-theme-main hover:bg-[var(--glass-border)] px-3 py-2 rounded-lg transition" title="รีเฟรชข้อมูล"><i class="fa-solid fa-rotate-right"></i></button>
+                        <div class="flex rounded-xl p-1 gap-0.5" style="background: var(--glass-bg); border: 1px solid var(--glass-border);">
+                            <button onclick="toggleFilterPanel()" class="text-xs text-theme-main px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 font-medium hover:bg-[rgba(var(--accent-rgb),0.08)] hover:text-theme-accent">
+                                <i class="fa-solid fa-filter text-[10px]"></i> <span class="hidden sm:inline">ตัวกรอง</span>
+                            </button>
+                            <button onclick="toggleSelectAll()" class="text-xs text-theme-main px-3 py-1.5 rounded-lg transition font-medium hover:bg-[rgba(var(--accent-rgb),0.08)]">เลือกทั้งหมด</button>
+                            <button onclick="loadAdminData()" class="text-xs text-theme-main px-3 py-1.5 rounded-lg transition hover:bg-[rgba(var(--accent-rgb),0.08)] hover:text-theme-accent" title="รีเฟรชข้อมูล"><i class="fa-solid fa-rotate-right"></i></button>
                         </div>
-                        
-                        <button onclick="openPaymentModal()" class="text-xs bg-gradient-to-r from-[#10b981] to-[#059669] hover:from-[#059669] hover:to-[#047857] text-white px-5 py-2 rounded-xl transition shadow-[0_4px_15px_rgba(16,185,129,0.3)] font-bold flex items-center gap-2 transform active:scale-95">
+                        <button onclick="openPaymentModal()" class="text-xs text-white px-4 py-2 rounded-xl transition font-bold flex items-center gap-1.5 transform active:scale-95" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 12px rgba(16,185,129,0.25);">
                             <i class="fa-solid fa-file-invoice-dollar"></i> สรุปทำจ่าย
                         </button>
                     </div>
                 </div>
 
-                <div id="filterPanel" class="hidden glass-panel p-5 rounded-xl mb-4 border-t-4 border-theme-accent animate-fade-in shadow-lg">
-                    <div class="flex items-center gap-2 mb-4 border-b border-theme-border pb-2">
-                        <i class="fa-solid fa-sliders text-theme-accent"></i>
-                        <span class="text-sm font-bold text-theme-main tracking-wide">ตั้งค่าตัวกรองข้อมูล</span>
+                <div id="filterPanel" class="hidden glass-panel p-4 rounded-xl mb-3 animate-fade-in" style="border-top: 2px solid var(--accent);">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-xs" style="color: var(--accent);"></i>
+                            <span class="text-xs font-bold text-theme-main tracking-wide">ตัวกรองข้อมูล</span>
+                        </div>
+                        <button onclick="clearFilters()" class="text-[10px] text-theme-muted hover:text-red-400 flex items-center gap-1 transition-all font-bold px-2 py-1 rounded-lg hover:bg-red-400/10">
+                            <i class="fa-solid fa-eraser text-[9px]"></i> ล้าง
+                        </button>
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="grid grid-cols-2 gap-2 mb-2.5">
                         <div>
-                            <label class="text-xs text-theme-accent font-bold mb-2 block uppercase tracking-wider">ตั้งแต่วันที่</label>
-                            <input type="date" id="filterStart" class="w-full p-3 rounded-xl glass-input text-sm" onchange="applyAdminFilters()">
+                            <label class="text-[9px] font-bold mb-1 block uppercase tracking-wider" style="color: var(--accent);">ตั้งแต่วันที่</label>
+                            <input type="date" id="filterStart" class="w-full p-2 rounded-xl glass-input text-xs" onchange="applyAdminFilters()">
                         </div>
                         <div>
-                            <label class="text-xs text-theme-accent font-bold mb-2 block uppercase tracking-wider">ถึงวันที่</label>
-                            <input type="date" id="filterEnd" class="w-full p-3 rounded-xl glass-input text-sm" onchange="applyAdminFilters()">
+                            <label class="text-[9px] font-bold mb-1 block uppercase tracking-wider" style="color: var(--accent);">ถึงวันที่</label>
+                            <input type="date" id="filterEnd" class="w-full p-2 rounded-xl glass-input text-xs" onchange="applyAdminFilters()">
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
                         <div class="md:col-span-2">
-                            <label class="text-xs text-theme-muted font-bold mb-2 block tracking-wide">ค้นหาชื่อ / ชื่อเล่น</label>
+                            <label class="text-[9px] text-theme-muted font-bold mb-1 block uppercase tracking-wider">ค้นหาชื่อ / ชื่อเล่น</label>
                             <div class="relative">
-                                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-theme-muted opacity-70"></i>
-                                <input type="text" id="filterName" class="w-full pl-10 pr-3 py-3 rounded-xl glass-input text-sm" placeholder="พิมพ์ชื่อ หรือ ชื่อเล่น..." onkeyup="applyAdminFilters()">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-theme-muted opacity-60 text-[10px]"></i>
+                                <input type="text" id="filterName" class="w-full pl-8 pr-3 py-2 rounded-xl glass-input text-xs" placeholder="พิมพ์ชื่อ หรือ ชื่อเล่น..." onkeyup="applyAdminFilters()">
                             </div>
                         </div>
                         <div>
-                            <label class="text-xs text-theme-muted font-bold mb-2 block tracking-wide">ทีม</label>
-                            <input type="text" id="filterTeam" class="w-full p-3 rounded-xl glass-input text-sm" placeholder="ค้นหาทีม..." onkeyup="applyAdminFilters()">
+                            <label class="text-[9px] text-theme-muted font-bold mb-1 block uppercase tracking-wider">ทีม</label>
+                            <input type="text" id="filterTeam" class="w-full p-2 rounded-xl glass-input text-xs" placeholder="ค้นหาทีม..." onkeyup="applyAdminFilters()">
                         </div>
                         <div>
-                            <label class="text-xs text-theme-muted font-bold mb-2 block tracking-wide">สถานะ</label>
-                            <select id="filterStatus" class="w-full p-3 rounded-xl glass-input text-sm font-medium" onchange="applyAdminFilters()">
-                                <option value="all" class="bg-white text-black">ทั้งหมด (All)</option>
-                                <option value="active" class="bg-white text-black">กำลังเทรน (Active)</option>
-                                <option value="passed" class="bg-white text-black">เทรนครบ 3 วัน (Passed)</option>
-                                <option value="dropout" class="bg-white text-black">🔴 ออกระหว่างเทรน</option>
-                                <option value="resigned" class="bg-white text-black">ออก/สละสิทธิ์ (Resigned)</option>
+                            <label class="text-[9px] text-theme-muted font-bold mb-1 block uppercase tracking-wider">สถานะ</label>
+                            <select id="filterStatus" class="w-full p-2 rounded-xl glass-input text-xs" onchange="applyAdminFilters()">
+                                <option value="all" class="bg-white text-black">ทั้งหมด</option>
+                                <option value="active" class="bg-white text-black">Active</option>
+                                <option value="passed" class="bg-white text-black">Passed</option>
+                                <option value="dropout" class="bg-white text-black">ออกระหว่างเทรน</option>
+                                <option value="resigned" class="bg-white text-black">Resigned</option>
                             </select>
                         </div>
                     </div>
-                    
-                    <div class="flex justify-end mt-5 pt-3 border-t border-theme-border">
-                        <button onclick="clearFilters()" class="text-xs text-theme-muted hover:text-red-400 hover:bg-red-400/10 px-4 py-2.5 rounded-lg transition-all flex items-center gap-2 font-bold tracking-wide">
-                            <i class="fa-solid fa-eraser"></i> ล้างตัวกรอง
-                        </button>
-                    </div>
                 </div>
                 
-                <div class="flex-1 overflow-auto glass-panel rounded-xl mb-20 border-0 shadow-lg">
+                <div class="flex-1 overflow-auto glass-panel rounded-xl mb-20 shadow-lg" style="border: 1px solid var(--glass-border);">
                     <table class="w-full text-left border-collapse min-w-max">
-                        <thead class="bg-theme-panel backdrop-blur-xl text-theme-muted text-xs font-bold uppercase tracking-wider sticky top-0 z-10 shadow-md border-b-2 border-theme-border">
+                        <thead class="text-[10px] font-bold uppercase tracking-wider sticky top-0 z-10" style="background: var(--glass-bg); border-bottom: 1px solid var(--glass-border); color: var(--text-muted);">
                             <tr>
-                                <th class="px-4 py-4 w-12 text-center">#</th>
-                                <th class="px-4 py-4 sortable transition-colors hover:text-theme-main hover:bg-[var(--glass-border)] cursor-pointer" onclick="handleSort('name')">
+                                <th class="px-4 py-3 w-10 text-center">#</th>
+                                <th class="px-4 py-3 sortable" onclick="handleSort('name')">
                                     ข้อมูล & การเข้าเรียน <i class="fa-solid fa-sort sort-icon" id="sort-icon-name"></i>
                                 </th>
-                                <th class="px-4 py-4 text-center hidden md:table-cell">Check-in</th>
-                                <th class="px-4 py-4 text-center w-28 sortable transition-colors hover:text-theme-main hover:bg-[var(--glass-border)] cursor-pointer" onclick="handleSort('status')">
+                                <th class="px-4 py-3 text-center hidden md:table-cell">Check-in</th>
+                                <th class="px-4 py-3 text-center w-24 sortable" onclick="handleSort('status')">
                                     สถานะ <i class="fa-solid fa-sort sort-icon" id="sort-icon-status"></i>
                                 </th>
-                                <th class="px-4 py-4 text-center w-24">จัดการ</th>
+                                <th class="px-4 py-3 text-center w-20">จัดการ</th>
                             </tr>
                         </thead>
-                        <tbody id="adminTable" class="divide-y divide-[var(--glass-border)] text-sm">
+                        <tbody id="adminTable" class="divide-y text-sm" style="divide-color: var(--glass-border);">
                         </tbody>
                     </table>
                 </div>
 
-                <div id="actionBar" class="fixed bottom-8 left-0 right-0 mx-auto w-max max-w-[95vw] p-2 shadow-[0_15px_50px_rgba(0,0,0,0.6)] transform translate-y-[150%] transition-all duration-500 z-40 flex justify-between items-center border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-2xl rounded-full">
+                <div id="actionBar" class="fixed bottom-6 left-0 right-0 mx-auto w-max max-w-[95vw] p-1.5 shadow-2xl transform translate-y-[150%] transition-all duration-500 z-40 flex justify-between items-center rounded-2xl" style="background: var(--glass-bg); border: 1px solid rgba(var(--accent-rgb),0.2); backdrop-filter: blur(20px);">
                     
-                    <div class="flex items-center gap-3 pl-2 pr-4 border-r border-theme-border">
-                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-[var(--status-active-bg)] border border-[var(--status-active-text)] shadow-inner">
-                            <span id="selectedCount" class="text-theme-accent font-digital text-xl font-bold leading-none mt-0.5 drop-shadow-md">0</span>
+                    <div class="flex items-center gap-2.5 pl-3 pr-3 border-r" style="border-color: var(--glass-border);">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-xl" style="background: rgba(var(--accent-rgb),0.1);">
+                            <span id="selectedCount" class="font-digital text-lg font-bold leading-none" style="color: var(--accent);">0</span>
                         </div>
-                        <span class="text-xs text-theme-main font-bold hidden sm:block tracking-wider uppercase opacity-80">เลือกแล้ว</span>
+                        <span class="text-xs text-theme-muted font-medium hidden sm:block tracking-wide">เลือกแล้ว</span>
                     </div>
                     
-                    <div class="flex gap-2 pl-3 pr-1">
-                        <button onclick="openReportModal()" class="bg-gradient-to-r from-[#f59e0b] to-[#d97706] hover:from-[#d97706] hover:to-[#b45309] text-white px-5 py-2.5 rounded-full text-xs font-bold shadow-[0_4px_15px_rgba(245,158,11,0.3)] transition-all flex items-center gap-2 transform active:scale-95">
+                    <div class="flex gap-1.5 pl-2 pr-1">
+                        <button onclick="openReportModal()" class="text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 transform active:scale-95" style="background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 3px 12px rgba(245,158,11,0.25);">
                             <i class="fa-solid fa-file-invoice text-sm"></i> 
-                            <span class="hidden sm:inline tracking-wide">สร้างรายงาน</span>
-                            <span class="sm:hidden tracking-wide">รายงาน</span>
+                            <span class="hidden sm:inline">สร้างรายงาน</span>
+                            <span class="sm:hidden">รายงาน</span>
                         </button>
-                        <button onclick="openHRModal()" class="bg-gradient-to-r from-[#4f46e5] to-[#4338ca] hover:from-[#4338ca] hover:to-[#3730a3] text-white px-5 py-2.5 rounded-full text-xs font-bold shadow-[0_4px_15px_rgba(79,70,229,0.3)] transition-all flex items-center gap-2 transform active:scale-95">
+                        <button onclick="openHRModal()" class="text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 transform active:scale-95" style="background: linear-gradient(135deg, #4f46e5, #4338ca); box-shadow: 0 3px 12px rgba(79,70,229,0.25);">
                             <i class="fa-solid fa-paper-plane text-sm"></i> 
-                            <span class="hidden sm:inline tracking-wide">ส่งรายชื่อ HR</span>
-                            <span class="sm:hidden tracking-wide">ส่ง HR</span>
+                            <span class="hidden sm:inline">ส่งรายชื่อ HR</span>
+                            <span class="sm:hidden">ส่ง HR</span>
                         </button>
                     </div>
                 </div>
@@ -417,112 +739,198 @@
         </section>
         
         <div class="fixed bottom-2 left-0 w-full text-center z-30 pointer-events-none">
-            <p class="inline-flex text-[10px] text-theme-muted font-mono tracking-widest uppercase items-center justify-center gap-1.5 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-default pointer-events-auto drop-shadow-md bg-[var(--bg-color)]/50 px-4 py-1.5 rounded-full backdrop-blur-sm border border-[var(--glass-border)]">
-                <i class="fa-solid fa-bolt text-theme-accent animate-pulse"></i> 
-                Powered by <span class="text-theme-accent font-bold font-header tracking-wider drop-shadow-[0_0_8px_var(--shadow-glow)]">KoRn</span>
+            <p class="inline-flex text-[9px] text-theme-muted font-mono tracking-widest uppercase items-center justify-center gap-1.5 opacity-40 hover:opacity-80 transition-opacity duration-300 cursor-default pointer-events-auto px-3 py-1 rounded-full" style="background: rgba(var(--accent-rgb),0.04); border: 1px solid var(--glass-border);">
+                <i class="fa-solid fa-bolt text-[8px]" style="color: var(--accent);"></i> 
+                Powered by <span class="font-bold font-header" style="color: var(--accent);">KoRn</span>
             </p>
         </div>
     </main>
 
     <div class="fixed bottom-6 right-4 z-[100]">
-        <button id="themeMenuBtn" class="w-12 h-12 rounded-full bg-theme-panel border border-theme-border shadow-[0_4px_15px_var(--shadow-glow)] flex items-center justify-center text-theme-main backdrop-blur-xl transition-transform hover:scale-110 focus:outline-none">
-            <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <button id="themeMenuBtn" class="w-11 h-11 rounded-xl flex items-center justify-center text-theme-muted focus:outline-none" style="background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(12px);">
+            <i class="fa-solid fa-wand-magic-sparkles text-sm" style="color: var(--accent);"></i>
         </button>
-        <div id="themeMenu" class="hidden absolute bottom-16 right-0 bg-theme-panel border border-theme-border p-3 rounded-2xl shadow-2xl backdrop-blur-2xl flex flex-col gap-2 transition-all w-48 origin-bottom-right">
-            <div class="text-[10px] text-theme-muted font-bold uppercase tracking-wider mb-1 px-2 border-b border-theme-border pb-2">Select UX Theme</div>
-            <button onclick="setTheme('cyber')" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-[var(--glass-border)] text-theme-main text-sm transition-colors text-left"><div class="w-4 h-4 rounded-full bg-[#0ea5e9] shadow-[0_0_8px_#0ea5e9]"></div>Cyber Space</button>
-            <button onclick="setTheme('gold')" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-[var(--glass-border)] text-theme-main text-sm transition-colors text-left"><div class="w-4 h-4 rounded-full bg-[#D4AF37] shadow-[0_0_8px_#D4AF37]"></div>Majestic Gold</button>
-            <button onclick="setTheme('pearl')" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-[var(--glass-border)] text-theme-main text-sm transition-colors text-left"><div class="w-4 h-4 rounded-full bg-[#f8fafc] border border-slate-400 shadow-[0_0_8px_rgba(0,0,0,0.1)]"></div>Pearl Minimal</button>
+        <div id="themeMenu" class="hidden absolute bottom-14 right-0 p-3 rounded-2xl shadow-2xl flex flex-col gap-1.5 w-44 origin-bottom-right" style="background: var(--glass-bg-solid); border: 1px solid var(--glass-border); backdrop-filter: blur(20px);">
+            <div class="text-[9px] text-theme-muted font-bold uppercase tracking-widest mb-1 px-2 border-b pb-2" style="border-color: var(--glass-border);">ธีม / Theme</div>
+            <button onclick="setTheme('cyber')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-theme-main text-xs transition-all text-left hover:bg-[rgba(var(--accent-rgb),0.06)]">
+                <div class="w-3.5 h-3.5 rounded-full shrink-0" style="background: #0ea5e9; box-shadow: 0 0 6px #0ea5e9;"></div>Cyber Space
+            </button>
+            <button onclick="setTheme('gold')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-theme-main text-xs transition-all text-left hover:bg-[rgba(var(--accent-rgb),0.06)]">
+                <div class="w-3.5 h-3.5 rounded-full shrink-0" style="background: #D4AF37; box-shadow: 0 0 6px #D4AF37;"></div>Majestic Gold
+            </button>
+            <button onclick="setTheme('pearl')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-theme-main text-xs transition-all text-left hover:bg-[rgba(var(--accent-rgb),0.06)]">
+                <div class="w-3.5 h-3.5 rounded-full border shrink-0" style="background: #f8fafc; border-color: #94a3b8;"></div>Pearl Minimal
+            </button>
         </div>
     </div>
 
-    <div id="editModal" class="hidden fixed inset-0 z-[70] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-sm rounded-2xl p-6">
-            <h3 class="text-theme-main font-header font-bold text-lg mb-4 border-b border-theme-border pb-2" id="editModalTitle">แก้ไขข้อมูล</h3>
+    <div id="editModal" class="hidden fixed inset-0 z-[70] bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-sm rounded-2xl p-5">
+            <h3 class="text-theme-main font-header font-bold text-base mb-4 border-b border-theme-border pb-3 leading-snug" id="editModalTitle">แก้ไขข้อมูล</h3>
             <input type="hidden" id="editRowId">
-            <div class="space-y-4">
+            <div class="space-y-3.5">
                 <div>
-                    <label class="text-[10px] text-theme-muted font-bold block mb-1">ทีม (Team)</label>
-                    <select id="editTeamSelect" onchange="toggleTeamInput(this)" class="w-full p-2.5 rounded-lg glass-input text-sm">
+                    <label class="text-[9px] text-theme-muted font-bold block mb-1.5 uppercase tracking-wider">ทีม (Team)</label>
+                    <select id="editTeamSelect" onchange="toggleTeamInput(this)" class="w-full p-2.5 rounded-xl glass-input text-sm">
                         <option value="RETAIL 1" class="bg-white text-black">RETAIL 1</option><option value="RETAIL 2" class="bg-white text-black">RETAIL 2</option><option value="RETAIL 3" class="bg-white text-black">RETAIL 3</option><option value="RETAIL 4" class="bg-white text-black">RETAIL 4</option>
                         <option value="PA 1A" class="bg-white text-black">PA 1A</option><option value="PA 1B" class="bg-white text-black">PA 1B</option><option value="PA 1C" class="bg-white text-black">PA 1C</option><option value="PA 1D" class="bg-white text-black">PA 1D</option>
                         <option value="PA 2A" class="bg-white text-black">PA 2A</option><option value="PA 2B" class="bg-white text-black">PA 2B</option><option value="PA 2C" class="bg-white text-black">PA 2C</option><option value="OTHER" class="bg-white text-black font-bold">+ พิมพ์เอง</option>
                     </select>
-                    <input type="text" id="editTeamInput" class="hidden w-full mt-2 p-2.5 rounded-lg glass-input text-sm" placeholder="ระบุชื่อทีม...">
+                    <input type="text" id="editTeamInput" class="hidden w-full mt-2 p-2.5 rounded-xl glass-input text-sm" placeholder="ระบุชื่อทีม...">
                 </div>
-                <div><label class="text-[10px] text-theme-muted font-bold block mb-1">สถานะ</label><select id="editStatus" class="w-full p-2.5 rounded-lg glass-input text-sm"><option value="Active" class="bg-white text-black">Active</option><option value="Passed" class="bg-white text-black">Passed</option><option value="Resigned" class="bg-white text-black">Resigned</option><option value="New Job" class="bg-white text-black">New Job</option><option value="Back Office" class="bg-white text-black">Back Office</option><option value="Other" class="bg-white text-black">Other</option></select></div>
-                <div><label class="text-[10px] text-theme-muted font-bold block mb-1">หมายเหตุ</label><textarea id="editNote" rows="2" class="w-full p-2.5 rounded-lg glass-input text-sm"></textarea></div>
+                <div>
+                    <label class="text-[9px] text-theme-muted font-bold block mb-1.5 uppercase tracking-wider">สถานะ</label>
+                    <select id="editStatus" class="w-full p-2.5 rounded-xl glass-input text-sm">
+                        <option value="Active" class="bg-white text-black">Active</option><option value="Passed" class="bg-white text-black">Passed</option><option value="Resigned" class="bg-white text-black">Resigned</option><option value="New Job" class="bg-white text-black">New Job</option><option value="Back Office" class="bg-white text-black">Back Office</option><option value="Other" class="bg-white text-black">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[9px] text-theme-muted font-bold block mb-1.5 uppercase tracking-wider">หมายเหตุ</label>
+                    <textarea id="editNote" rows="2" class="w-full p-2.5 rounded-xl glass-input text-sm resize-none"></textarea>
+                </div>
             </div>
-            <div class="flex gap-3 mt-6 pt-4 border-t border-theme-border">
-                <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 py-2 rounded-lg border border-theme-border text-theme-muted text-sm hover:bg-theme-panel">ยกเลิก</button>
-                <button onclick="saveAdminEdit()" class="flex-1 py-2 rounded-lg btn-primary font-bold text-sm shadow-lg">บันทึก</button>
+            <div class="flex gap-2.5 mt-5 pt-4 border-t border-theme-border">
+                <button onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 py-2.5 rounded-xl text-theme-muted text-sm font-medium transition-all hover:text-theme-main" style="border: 1px solid var(--glass-border);">ยกเลิก</button>
+                <button onclick="saveAdminEdit()" class="flex-1 py-2.5 rounded-xl btn-primary font-bold text-sm shadow-lg">บันทึก</button>
             </div>
         </div>
     </div>
 
-    <div id="reportModal" class="hidden fixed inset-0 z-[80] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-md rounded-2xl p-6 flex flex-col max-h-[90vh]">
-            <div class="flex justify-between items-center mb-4 border-b border-theme-border pb-3">
-                <h3 class="text-theme-main font-header font-bold text-lg"><i class="fa-solid fa-file-lines mr-2 text-[#f59e0b]"></i>รายงานอบรม</h3>
-                <button onclick="document.getElementById('reportModal').classList.add('hidden')" class="text-theme-muted hover:text-theme-main"><i class="fa-solid fa-xmark"></i></button>
+    <!-- ====== REPORT MODAL ====== -->
+    <div id="reportModal" class="hidden fixed inset-0 z-[80] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-md rounded-2xl flex flex-col max-h-[90vh] overflow-hidden">
+            <!-- Header -->
+            <div class="flex justify-between items-center px-5 py-4 border-b" style="border-color: var(--glass-border);">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25);">
+                        <i class="fa-solid fa-file-lines text-sm" style="color: #f59e0b;"></i>
+                    </div>
+                    <h3 class="text-theme-main font-header font-bold text-sm tracking-wide">รายงานอบรม</h3>
+                </div>
+                <button onclick="document.getElementById('reportModal').classList.add('hidden')" class="w-7 h-7 rounded-lg flex items-center justify-center text-theme-muted hover:text-theme-main transition-all" style="background: var(--glass-border);">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
             </div>
-            <div class="flex-1 overflow-y-auto space-y-4 pr-1">
-                <div class="grid grid-cols-2 gap-3">
-                    <div><label class="text-[10px] text-theme-muted font-bold mb-1 block">วันที่รอบอบรม</label><input type="date" id="reportDate" class="w-full p-2 rounded-lg glass-input text-xs" onchange="updateReportDate()"></div>
-                    <div><label class="text-[10px] text-theme-muted font-bold mb-1 block">ครั้งที่</label><select id="reportDayType" class="w-full p-2 rounded-lg glass-input text-xs"><option value="วันแรก" class="bg-white text-black">วันแรก</option><option value="วันที่สอง" class="bg-white text-black">วันที่สอง</option><option value="วันที่สาม" class="bg-white text-black">วันที่สาม</option></select></div>
+            <div class="flex-1 overflow-y-auto px-5 py-4 space-y-3">
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="text-[9px] text-theme-muted font-bold mb-1.5 block uppercase tracking-wider">วันที่รอบอบรม</label>
+                        <input type="date" id="reportDate" class="w-full p-2.5 rounded-xl glass-input text-xs" onchange="updateReportDate()">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-theme-muted font-bold mb-1.5 block uppercase tracking-wider">ครั้งที่</label>
+                        <select id="reportDayType" class="w-full p-2.5 rounded-xl glass-input text-xs">
+                            <option value="วันแรก" class="bg-white text-black">วันแรก</option>
+                            <option value="วันที่สอง" class="bg-white text-black">วันที่สอง</option>
+                            <option value="วันที่สาม" class="bg-white text-black">วันที่สาม</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="addSelectionToReport()" class="flex-1 py-2.5 btn-primary rounded-xl font-bold text-xs shadow"><i class="fa-solid fa-plus-circle mr-1"></i> เพิ่มรายการ</button>
-                    <button onclick="resetReport()" class="px-3 py-2.5 bg-red-600 hover:bg-red-500 rounded-xl text-white font-bold text-xs shadow"><i class="fa-solid fa-rotate-right"></i> ล้างข้อมูล</button>
+                    <button onclick="addSelectionToReport()" class="flex-1 py-2.5 btn-primary rounded-xl font-bold text-xs shadow">
+                        <i class="fa-solid fa-plus-circle mr-1.5"></i> เพิ่มรายการ
+                    </button>
+                    <button onclick="resetReport()" class="px-3 py-2.5 text-white rounded-xl font-bold text-xs shadow transition-all" style="background: linear-gradient(135deg, #dc2626, #b91c1c);">
+                        <i class="fa-solid fa-rotate-right mr-1"></i> ล้าง
+                    </button>
                 </div>
-                <textarea id="finalReportText" class="w-full h-40 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
+                <textarea id="finalReportText" class="w-full h-36 p-3 rounded-xl glass-input text-xs leading-relaxed font-mono resize-none" spellcheck="false"></textarea>
             </div>
-            <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('finalReportText')" class="flex-1 py-2.5 bg-theme-panel border border-theme-border text-theme-main rounded-xl font-bold text-xs"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('finalReportText')" class="flex-1 py-2.5 bg-[#06C755] text-white rounded-xl font-bold text-xs"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
+            <div class="flex gap-2.5 px-5 py-3.5 border-t" style="border-color: var(--glass-border);">
+                <button onclick="copyToClipboard('finalReportText')" class="flex-1 py-2.5 rounded-xl font-bold text-xs transition-all hover:text-theme-accent" style="background: var(--glass-input); border: 1px solid var(--glass-border); color: var(--text-main);">
+                    <i class="fa-regular fa-copy mr-1.5"></i> Copy
+                </button>
+                <button onclick="sendLine('finalReportText')" class="flex-1 py-2.5 rounded-xl font-bold text-xs text-white transition-all" style="background: #06C755;">
+                    <i class="fa-brands fa-line mr-1.5"></i> ส่ง Line
+                </button>
+            </div>
         </div>
     </div>
 
-    <div id="hrModal" class="hidden fixed inset-0 z-[80] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-md rounded-2xl p-6 flex flex-col max-h-[90vh]">
-            <div class="flex justify-between items-center mb-4 border-b border-theme-border pb-3"><h3 class="text-theme-main font-header font-bold text-lg"><i class="fa-solid fa-user-tie mr-2 text-[#4f46e5]"></i>ส่งรายชื่อ HR</h3><button onclick="document.getElementById('hrModal').classList.add('hidden')" class="text-theme-muted hover:text-theme-main"><i class="fa-solid fa-xmark"></i></button></div>
-            <div class="flex-1 overflow-y-auto space-y-4 pr-1">
-                <div class="space-y-3">
-                    <div><label class="text-[10px] text-theme-muted font-bold mb-1 block">วันเริ่มอบรม</label><input type="date" id="hrTrainingDate" class="w-full p-2.5 rounded-xl glass-input text-sm"></div>
-                    <div><label class="text-[10px] text-theme-accent font-bold mb-1 block">วันเริ่มงานจริง</label><input type="date" id="hrWorkDate" class="w-full p-2.5 rounded-xl glass-input text-sm border-theme-accent"></div>
+    <!-- ====== HR MODAL ====== -->
+    <div id="hrModal" class="hidden fixed inset-0 z-[80] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-md rounded-2xl flex flex-col max-h-[90vh] overflow-hidden">
+            <div class="flex justify-between items-center px-5 py-4 border-b" style="border-color: var(--glass-border);">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background: rgba(79,70,229,0.12); border: 1px solid rgba(79,70,229,0.25);">
+                        <i class="fa-solid fa-user-tie text-sm" style="color: #818cf8;"></i>
+                    </div>
+                    <h3 class="text-theme-main font-header font-bold text-sm tracking-wide">ส่งรายชื่อ HR</h3>
                 </div>
-                <button onclick="generateHRReport()" class="w-full py-2.5 btn-primary rounded-xl font-bold text-xs shadow mt-2"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> สร้างข้อความ</button>
-                <textarea id="hrReportText" class="w-full h-40 p-3 rounded-xl glass-input text-sm leading-relaxed font-mono" spellcheck="false"></textarea>
+                <button onclick="document.getElementById('hrModal').classList.add('hidden')" class="w-7 h-7 rounded-lg flex items-center justify-center text-theme-muted hover:text-theme-main transition-all" style="background: var(--glass-border);">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
             </div>
-            <div class="flex gap-3 mt-4"><button onclick="copyToClipboard('hrReportText')" class="flex-1 py-2.5 bg-theme-panel border border-theme-border text-theme-main rounded-xl font-bold text-xs"><i class="fa-regular fa-copy mr-1"></i> Copy</button><button onclick="sendLine('hrReportText')" class="flex-1 py-2.5 bg-[#06C755] text-white rounded-xl font-bold text-xs"><i class="fa-brands fa-line mr-1"></i> Line</button></div>
+            <div class="flex-1 overflow-y-auto px-5 py-4 space-y-3">
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="text-[9px] text-theme-muted font-bold mb-1.5 block uppercase tracking-wider">วันเริ่มอบรม</label>
+                        <input type="date" id="hrTrainingDate" class="w-full p-2.5 rounded-xl glass-input text-sm">
+                    </div>
+                    <div>
+                        <label class="text-[9px] font-bold mb-1.5 block uppercase tracking-wider" style="color: var(--accent);">วันเริ่มงานจริง</label>
+                        <input type="date" id="hrWorkDate" class="w-full p-2.5 rounded-xl glass-input text-sm" style="border-color: rgba(var(--accent-rgb),0.3);">
+                    </div>
+                </div>
+                <button onclick="generateHRReport()" class="w-full py-2.5 btn-primary rounded-xl font-bold text-xs shadow">
+                    <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> สร้างข้อความ
+                </button>
+                <textarea id="hrReportText" class="w-full h-36 p-3 rounded-xl glass-input text-xs leading-relaxed font-mono resize-none" spellcheck="false"></textarea>
+            </div>
+            <div class="flex gap-2.5 px-5 py-3.5 border-t" style="border-color: var(--glass-border);">
+                <button onclick="copyToClipboard('hrReportText')" class="flex-1 py-2.5 rounded-xl font-bold text-xs transition-all hover:text-theme-accent" style="background: var(--glass-input); border: 1px solid var(--glass-border); color: var(--text-main);">
+                    <i class="fa-regular fa-copy mr-1.5"></i> Copy
+                </button>
+                <button onclick="sendLine('hrReportText')" class="flex-1 py-2.5 rounded-xl font-bold text-xs text-white" style="background: #06C755;">
+                    <i class="fa-brands fa-line mr-1.5"></i> ส่ง Line
+                </button>
+            </div>
         </div>
     </div>
 
-    <div id="paymentModal" class="hidden fixed inset-0 z-[80] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-2xl rounded-2xl p-6 flex flex-col max-h-[90vh]">
-            <div class="flex justify-between items-center mb-4 border-b border-theme-border pb-3">
-                <h3 class="text-theme-main font-header font-bold text-lg"><i class="fa-solid fa-money-bill-wave mr-2 text-[#10b981]"></i>สรุปทำจ่ายค่าอบรม</h3>
-                <button onclick="document.getElementById('paymentModal').classList.add('hidden')" class="text-theme-muted hover:text-theme-main"><i class="fa-solid fa-xmark"></i></button>
+    <!-- ====== PAYMENT MODAL ====== -->
+    <div id="paymentModal" class="hidden fixed inset-0 z-[80] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-2xl rounded-2xl flex flex-col max-h-[90vh] overflow-hidden">
+            <div class="flex justify-between items-center px-5 py-4 border-b" style="border-color: var(--glass-border);">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25);">
+                        <i class="fa-solid fa-money-bill-wave text-sm" style="color: #10b981;"></i>
+                    </div>
+                    <h3 class="text-theme-main font-header font-bold text-sm tracking-wide">สรุปทำจ่ายค่าอบรม</h3>
+                </div>
+                <button onclick="document.getElementById('paymentModal').classList.add('hidden')" class="w-7 h-7 rounded-lg flex items-center justify-center text-theme-muted hover:text-theme-main transition-all" style="background: var(--glass-border);">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
             </div>
-            <div class="flex-1 overflow-y-auto space-y-4 pr-1">
-                <div class="bg-[rgba(16,185,129,0.1)] p-3 rounded-xl border border-[#10b981] text-[11px] text-[#34d399] mb-2 flex items-start gap-2">
-                    <i class="fa-solid fa-circle-info mt-0.5"></i> 
-                    <div>ระบบคัดกรองเฉพาะผู้ที่ <b>"ติ๊กเลือก + เข้าอบรมครบ 3 วัน + สถานะ Passed"</b> เท่านั้น<br></div>
+            <div class="flex-1 overflow-y-auto px-5 py-4 space-y-3">
+                <!-- Info banner -->
+                <div class="flex items-start gap-2.5 p-3 rounded-xl text-[11px]" style="background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.2); color: #34d399;">
+                    <i class="fa-solid fa-circle-info mt-0.5 shrink-0"></i>
+                    <div>ระบบคัดกรองเฉพาะผู้ที่ <b>"ติ๊กเลือก + เข้าอบรมครบ 3 วัน + สถานะ Passed"</b> เท่านั้น</div>
                 </div>
-                
-                <div class="grid grid-cols-2 gap-3 mb-2">
-                    <div><label class="text-[10px] text-theme-muted font-bold mb-1 block">ตั้งแต่วันที่ (ลงทะเบียน)</label><input type="date" id="paymentStartDate" class="w-full p-2 rounded-lg glass-input text-xs" onchange="generatePaymentReportText()"></div>
-                    <div><label class="text-[10px] text-theme-muted font-bold mb-1 block">ถึงวันที่</label><input type="date" id="paymentEndDate" class="w-full p-2 rounded-lg glass-input text-xs" onchange="generatePaymentReportText()"></div>
+                <!-- Date range filter -->
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="text-[9px] text-theme-muted font-bold mb-1.5 block uppercase tracking-wider">ตั้งแต่วันที่ (ลงทะเบียน)</label>
+                        <input type="date" id="paymentStartDate" class="w-full p-2.5 rounded-xl glass-input text-xs" onchange="generatePaymentReportText()">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-theme-muted font-bold mb-1.5 block uppercase tracking-wider">ถึงวันที่</label>
+                        <input type="date" id="paymentEndDate" class="w-full p-2.5 rounded-xl glass-input text-xs" onchange="generatePaymentReportText()">
+                    </div>
                 </div>
-                
-                <div class="mb-2">
-                    <label class="text-[10px] text-theme-accent font-bold mb-1 block">ระบุวันที่อบรม (แสดงบน Excel/Sheet)</label>
-                    <input type="text" id="paymentCustomDate" class="w-full p-2 rounded-lg glass-input text-xs font-mono text-theme-accent" placeholder="เช่น 19และ20และ23 ก.พ. 69" onkeyup="generatePaymentReportText()">
-                    <p class="text-[9px] text-theme-muted mt-1">*หากปล่อยว่าง ระบบจะดึง "วันที่ลงทะเบียนวันแรก" มาให้</p>
+                <!-- Custom date -->
+                <div>
+                    <label class="text-[9px] font-bold mb-1.5 block uppercase tracking-wider" style="color: var(--accent);">ระบุวันที่อบรม (แสดงบน Excel/Sheet)</label>
+                    <input type="text" id="paymentCustomDate" class="w-full p-2.5 rounded-xl glass-input text-xs font-mono" style="color: var(--accent); border-color: rgba(var(--accent-rgb),0.25);" placeholder="เช่น 19และ20และ23 ก.พ. 69" onkeyup="generatePaymentReportText()">
+                    <p class="text-[9px] text-theme-muted mt-1 ml-0.5 opacity-70">*หากปล่อยว่าง ระบบจะดึงวันที่เช็คชื่อมาให้อัตโนมัติ</p>
                 </div>
-
-                <textarea id="paymentReportText" class="w-full h-40 p-3 rounded-xl glass-input text-xs leading-relaxed font-sans whitespace-pre overflow-x-auto" spellcheck="false" readonly></textarea>
+                <textarea id="paymentReportText" class="w-full h-36 p-3 rounded-xl glass-input text-xs leading-relaxed font-mono whitespace-pre overflow-x-auto resize-none" spellcheck="false" readonly></textarea>
             </div>
-            <div class="mt-4 pt-3 border-t border-theme-border text-center">
-                <button onclick="copyToClipboardPayment()" class="w-full py-3 bg-[#10b981] text-white rounded-xl font-bold text-sm shadow-lg transition transform hover:bg-[#059669] active:scale-[0.98]"><i class="fa-regular fa-copy mr-2"></i> คัดลอกนำไปวางในเซลล์ A1 ของ Google Sheet</button>
+            <div class="px-5 py-3.5 border-t" style="border-color: var(--glass-border);">
+                <button onclick="copyToClipboardPayment()" class="w-full py-3 text-white rounded-xl font-bold text-sm shadow-lg transition-all transform hover:brightness-110 active:scale-[0.98]" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 16px rgba(16,185,129,0.25);">
+                    <i class="fa-regular fa-copy mr-2"></i> คัดลอกนำไปวางในเซลล์ A1 ของ Google Sheet
+                </button>
             </div>
         </div>
     </div>
