@@ -151,6 +151,21 @@
             z-index: 0;
         }
 
+        /* Subtle cyber grid overlay (kept very low opacity) */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.06;
+            background-image:
+                linear-gradient(to right, rgba(var(--accent-rgb), 0.35) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(var(--accent-rgb), 0.25) 1px, transparent 1px);
+            background-size: 64px 64px;
+            mix-blend-mode: overlay;
+        }
+
         /* ======== GLASS PANELS ======== */
         .glass-panel { 
             background: var(--glass-bg); 
@@ -424,6 +439,63 @@
             outline: 2px solid rgba(var(--accent-rgb), 0.5);
             outline-offset: 2px;
         }
+
+        /* ======== Mobile: admin table -> card-like layout ======== */
+        @media (max-width: 640px) {
+            #adminTable thead { display: none; }
+            #adminTable tbody { display: block; width: 100%; }
+
+            #adminTable tbody tr {
+                display: grid !important;
+                grid-template-columns: 44px 1fr;
+                grid-auto-rows: min-content;
+                gap: 6px;
+                padding: 10px 12px;
+                border: 1px solid var(--glass-border) !important;
+                border-radius: 18px;
+                background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.06), rgba(var(--accent-rgb), 0.02)) !important;
+                margin: 10px 0;
+                border-bottom: none !important;
+                box-shadow: 0 18px 40px rgba(0,0,0,0.35), 0 0 0 1px rgba(var(--accent-rgb),0.06) !important;
+            }
+
+            #adminTable tbody tr td {
+                padding: 6px 0 !important;
+                background: transparent !important;
+                border: none !important;
+            }
+
+            /* td1: checkbox */
+            #adminTable tbody tr td:nth-child(1) {
+                grid-column: 1;
+                grid-row: 1;
+                display: flex !important;
+                align-items: flex-start;
+                justify-content: center;
+                padding-top: 8px !important;
+            }
+
+            /* td2: name + timeline */
+            #adminTable tbody tr td:nth-child(2) {
+                grid-column: 2;
+                grid-row: 1;
+            }
+
+            /* td4: status */
+            #adminTable tbody tr td:nth-child(4) {
+                grid-column: 2;
+                grid-row: 2;
+                padding-top: 0 !important;
+            }
+
+            /* td5: action buttons (span both columns) */
+            #adminTable tbody tr td:nth-child(5) {
+                grid-column: 1 / span 2;
+                grid-row: 3;
+                padding-top: 4px !important;
+            }
+        }
+
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden" onload="initApp()">
@@ -569,7 +641,7 @@
                     <div class="flex justify-between items-start mb-4 pb-4 border-b relative z-10" style="border-color: rgba(var(--accent-rgb),0.1);">
                         <div class="flex gap-3 items-center">
                             <div class="relative shrink-0">
-                                <div class="w-12 h-12 rounded-full overflow-hidden ring-2" style="ring-color: var(--accent);" >
+                                <div class="w-12 h-12 rounded-full overflow-hidden ring-2" style="--tw-ring-color: var(--accent);" >
                                     <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Man%20Technologist.png" alt="Avatar" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
                                 </div>
                                 <div class="absolute -bottom-1 -right-1 text-[8px] font-digital font-bold px-1 py-0.5 rounded-md z-10 leading-none" style="background: var(--bg-color); border: 1px solid rgba(var(--accent-rgb),0.4); color: var(--accent);">LV.1</div>
@@ -588,24 +660,31 @@
                     <p class="text-[9px] font-bold text-theme-muted mb-2.5 uppercase tracking-widest flex items-center gap-1.5 relative z-10">
                         <i class="fa-regular fa-calendar-check" style="color: var(--accent);"></i> Timeline Record
                     </p>
-                    <div class="grid grid-cols-3 gap-2.5 relative z-10">
-                        <div id="boxD1" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
-                            <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 1</span>
-                            <button onclick="doCheckIn(1)" class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
-                                <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
-                            </button>
+                    <div class="relative z-10">
+                        <!-- stepper connector line (boxD1/2/3 className is overwritten by JS, so keep this separate) -->
+                        <div class="block absolute left-2 right-2 top-1/2 -translate-y-1/2 h-px pointer-events-none" style="display:grid; grid-template-columns:1fr 1fr;">
+                            <div id="stepperLine12" class="h-px" style="background: rgba(var(--accent-rgb),0.22);"></div>
+                            <div id="stepperLine23" class="h-px" style="background: rgba(var(--accent-rgb),0.22);"></div>
                         </div>
-                        <div id="boxD2" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
-                            <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 2</span>
-                            <button onclick="doCheckIn(2)" class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
-                                <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
-                            </button>
-                        </div>
-                        <div id="boxD3" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
-                            <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 3</span>
-                            <button onclick="doCheckIn(3)" class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
-                                <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
-                            </button>
+                        <div class="grid grid-cols-3 gap-2.5 relative">
+                            <div id="boxD1" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
+                                <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 1</span>
+                                <button onclick="doCheckIn(1)" class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
+                                    <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
+                                </button>
+                            </div>
+                            <div id="boxD2" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
+                                <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 2</span>
+                                <button onclick="doCheckIn(2)" class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
+                                    <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
+                                </button>
+                            </div>
+                            <div id="boxD3" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
+                                <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 3</span>
+                                <button onclick="doCheckIn(3)" class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
+                                    <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -614,14 +693,14 @@
         </section>
 
         <section id="page-admin" class="hidden h-full flex flex-col">
-            <div id="adminLogin" class="max-w-xs mx-auto glass-panel p-7 rounded-2xl text-center mt-8" style="border-color: rgba(239,68,68,0.15);">
-                <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);">
-                    <i class="fa-solid fa-shield-cat text-xl text-red-400"></i>
+            <div id="adminLogin" class="max-w-xs mx-auto glass-panel p-7 rounded-2xl text-center mt-8" style="border-color: rgba(var(--accent-rgb),0.15);">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style="background: rgba(var(--accent-rgb),0.08); border: 1px solid rgba(var(--accent-rgb),0.2);">
+                    <i class="fa-solid fa-shield-cat text-xl" style="color: var(--accent);"></i>
                 </div>
                 <h3 class="text-theme-main font-header font-bold mb-1 text-base">Restricted Area</h3>
                 <p class="text-[10px] text-theme-muted mb-5 tracking-wide">เข้าถึงเฉพาะผู้มีสิทธิ์เท่านั้น</p>
                 <input type="password" id="adminPass" onkeypress="if(event.key === 'Enter') adminAccess()" class="w-full px-4 py-2.5 rounded-xl glass-input text-center mb-3 text-sm" placeholder="รหัสผ่าน Admin">
-                <button onclick="adminAccess()" class="w-full py-2.5 text-white rounded-xl font-bold text-sm transition shadow-lg" style="background: linear-gradient(135deg, #dc2626, #b91c1c);">
+                <button onclick="adminAccess()" class="w-full py-2.5 text-white rounded-xl font-bold text-sm transition shadow-lg" style="background: linear-gradient(135deg, var(--btn-from), var(--btn-to)); box-shadow: 0 4px 12px rgba(var(--accent-rgb),0.25);">
                     <i class="fa-solid fa-unlock-keyhole mr-2"></i>เข้าสู่ระบบ
                 </button>
             </div>
@@ -640,7 +719,7 @@
                             <button onclick="toggleSelectAll()" class="text-xs text-theme-main px-3 py-1.5 rounded-lg transition font-medium hover:bg-[rgba(var(--accent-rgb),0.08)]">เลือกทั้งหมด</button>
                             <button onclick="loadAdminData()" class="text-xs text-theme-main px-3 py-1.5 rounded-lg transition hover:bg-[rgba(var(--accent-rgb),0.08)] hover:text-theme-accent" title="รีเฟรชข้อมูล"><i class="fa-solid fa-rotate-right"></i></button>
                         </div>
-                        <button onclick="openPaymentModal()" class="text-xs text-white px-4 py-2 rounded-xl transition font-bold flex items-center gap-1.5 transform active:scale-95" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 12px rgba(16,185,129,0.25);">
+                        <button onclick="openPaymentModal()" class="text-xs text-white px-4 py-2 rounded-xl transition font-bold flex items-center gap-1.5 transform active:scale-95" style="background: linear-gradient(135deg, var(--btn-from), var(--btn-to)); box-shadow: 0 4px 12px rgba(var(--accent-rgb),0.25);">
                             <i class="fa-solid fa-file-invoice-dollar"></i> สรุปทำจ่าย
                         </button>
                     </div>
@@ -708,7 +787,7 @@
                                 <th class="px-4 py-3 text-center w-20">จัดการ</th>
                             </tr>
                         </thead>
-                        <tbody id="adminTable" class="divide-y text-sm" style="divide-color: var(--glass-border);">
+                        <tbody id="adminTable" class="divide-y text-sm divide-[var(--glass-border)]">
                         </tbody>
                     </table>
                 </div>
@@ -723,12 +802,12 @@
                     </div>
                     
                     <div class="flex gap-1.5 pl-2 pr-1">
-                        <button onclick="openReportModal()" class="text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 transform active:scale-95" style="background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 3px 12px rgba(245,158,11,0.25);">
+                        <button onclick="openReportModal()" class="text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 transform active:scale-95" style="background: linear-gradient(135deg, var(--btn-from), var(--btn-to)); box-shadow: 0 3px 12px rgba(var(--accent-rgb),0.25);">
                             <i class="fa-solid fa-file-invoice text-sm"></i> 
                             <span class="hidden sm:inline">สร้างรายงาน</span>
                             <span class="sm:hidden">รายงาน</span>
                         </button>
-                        <button onclick="openHRModal()" class="text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 transform active:scale-95" style="background: linear-gradient(135deg, #4f46e5, #4338ca); box-shadow: 0 3px 12px rgba(79,70,229,0.25);">
+                        <button onclick="openHRModal()" class="text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 transform active:scale-95" style="background: linear-gradient(135deg, var(--btn-from), var(--btn-to)); box-shadow: 0 3px 12px rgba(var(--accent-rgb),0.25);">
                             <i class="fa-solid fa-paper-plane text-sm"></i> 
                             <span class="hidden sm:inline">ส่งรายชื่อ HR</span>
                             <span class="sm:hidden">ส่ง HR</span>
@@ -764,7 +843,7 @@
         </div>
     </div>
 
-    <div id="editModal" class="hidden fixed inset-0 z-[70] bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+    <div id="editModal" class="hidden fixed inset-0 z-[70] bg-black/75 backdrop-blur-md flex items-center justify-center p-4" onclick="if(event.target===this) document.getElementById('editModal').classList.add('hidden')">
         <div class="glass-panel w-full max-w-sm rounded-2xl p-5">
             <h3 class="text-theme-main font-header font-bold text-base mb-4 border-b border-theme-border pb-3 leading-snug" id="editModalTitle">แก้ไขข้อมูล</h3>
             <input type="hidden" id="editRowId">
@@ -797,13 +876,13 @@
     </div>
 
     <!-- ====== REPORT MODAL ====== -->
-    <div id="reportModal" class="hidden fixed inset-0 z-[80] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-md rounded-2xl flex flex-col max-h-[90vh] overflow-hidden">
+    <div id="reportModal" class="hidden fixed inset-0 z-[80] bg-black/80 backdrop-blur-md flex items-center justify-center p-4" onclick="if(event.target===this) document.getElementById('reportModal').classList.add('hidden')">
+        <div class="glass-panel w-full max-w-lg rounded-2xl flex flex-col max-h-[90vh] overflow-hidden">
             <!-- Header -->
             <div class="flex justify-between items-center px-5 py-4 border-b" style="border-color: var(--glass-border);">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25);">
-                        <i class="fa-solid fa-file-lines text-sm" style="color: #f59e0b;"></i>
+                    <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background: rgba(var(--accent-rgb),0.12); border: 1px solid rgba(var(--accent-rgb),0.25);">
+                        <i class="fa-solid fa-file-lines text-sm" style="color: var(--accent);"></i>
                     </div>
                     <h3 class="text-theme-main font-header font-bold text-sm tracking-wide">รายงานอบรม</h3>
                 </div>
@@ -830,7 +909,7 @@
                     <button onclick="addSelectionToReport()" class="flex-1 py-2.5 btn-primary rounded-xl font-bold text-xs shadow">
                         <i class="fa-solid fa-plus-circle mr-1.5"></i> เพิ่มรายการ
                     </button>
-                    <button onclick="resetReport()" class="px-3 py-2.5 text-white rounded-xl font-bold text-xs shadow transition-all" style="background: linear-gradient(135deg, #dc2626, #b91c1c);">
+                    <button onclick="resetReport()" class="px-3 py-2.5 text-theme-accent rounded-xl font-bold text-xs shadow transition-all" style="background: rgba(var(--accent-rgb),0.08); border: 1px solid rgba(var(--accent-rgb),0.18);">
                         <i class="fa-solid fa-rotate-right mr-1"></i> ล้าง
                     </button>
                 </div>
@@ -840,7 +919,7 @@
                 <button onclick="copyToClipboard('finalReportText')" class="flex-1 py-2.5 rounded-xl font-bold text-xs transition-all hover:text-theme-accent" style="background: var(--glass-input); border: 1px solid var(--glass-border); color: var(--text-main);">
                     <i class="fa-regular fa-copy mr-1.5"></i> Copy
                 </button>
-                <button onclick="sendLine('finalReportText')" class="flex-1 py-2.5 rounded-xl font-bold text-xs text-white transition-all" style="background: #06C755;">
+                <button onclick="sendLine('finalReportText')" class="flex-1 py-2.5 rounded-xl font-bold text-xs btn-primary transition-all" style="box-shadow: 0 3px 12px rgba(var(--accent-rgb),0.25);">
                     <i class="fa-brands fa-line mr-1.5"></i> ส่ง Line
                 </button>
             </div>
@@ -848,12 +927,12 @@
     </div>
 
     <!-- ====== HR MODAL ====== -->
-    <div id="hrModal" class="hidden fixed inset-0 z-[80] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-md rounded-2xl flex flex-col max-h-[90vh] overflow-hidden">
+    <div id="hrModal" class="hidden fixed inset-0 z-[80] bg-black/80 backdrop-blur-md flex items-center justify-center p-4" onclick="if(event.target===this) document.getElementById('hrModal').classList.add('hidden')">
+        <div class="glass-panel w-full max-w-lg rounded-2xl flex flex-col max-h-[90vh] overflow-hidden">
             <div class="flex justify-between items-center px-5 py-4 border-b" style="border-color: var(--glass-border);">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background: rgba(79,70,229,0.12); border: 1px solid rgba(79,70,229,0.25);">
-                        <i class="fa-solid fa-user-tie text-sm" style="color: #818cf8;"></i>
+                    <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background: rgba(var(--accent-rgb),0.12); border: 1px solid rgba(var(--accent-rgb),0.25);">
+                        <i class="fa-solid fa-user-tie text-sm" style="color: var(--accent);"></i>
                     </div>
                     <h3 class="text-theme-main font-header font-bold text-sm tracking-wide">ส่งรายชื่อ HR</h3>
                 </div>
@@ -881,7 +960,7 @@
                 <button onclick="copyToClipboard('hrReportText')" class="flex-1 py-2.5 rounded-xl font-bold text-xs transition-all hover:text-theme-accent" style="background: var(--glass-input); border: 1px solid var(--glass-border); color: var(--text-main);">
                     <i class="fa-regular fa-copy mr-1.5"></i> Copy
                 </button>
-                <button onclick="sendLine('hrReportText')" class="flex-1 py-2.5 rounded-xl font-bold text-xs text-white" style="background: #06C755;">
+                <button onclick="sendLine('hrReportText')" class="flex-1 py-2.5 rounded-xl font-bold text-xs btn-primary transition-all" style="box-shadow: 0 3px 12px rgba(var(--accent-rgb),0.25);">
                     <i class="fa-brands fa-line mr-1.5"></i> ส่ง Line
                 </button>
             </div>
@@ -889,12 +968,12 @@
     </div>
 
     <!-- ====== PAYMENT MODAL ====== -->
-    <div id="paymentModal" class="hidden fixed inset-0 z-[80] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div id="paymentModal" class="hidden fixed inset-0 z-[80] bg-black/80 backdrop-blur-md flex items-center justify-center p-4" onclick="if(event.target===this) document.getElementById('paymentModal').classList.add('hidden')">
         <div class="glass-panel w-full max-w-2xl rounded-2xl flex flex-col max-h-[90vh] overflow-hidden">
             <div class="flex justify-between items-center px-5 py-4 border-b" style="border-color: var(--glass-border);">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25);">
-                        <i class="fa-solid fa-money-bill-wave text-sm" style="color: #10b981;"></i>
+                    <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background: rgba(var(--accent-rgb),0.12); border: 1px solid rgba(var(--accent-rgb),0.25);">
+                        <i class="fa-solid fa-money-bill-wave text-sm" style="color: var(--accent);"></i>
                     </div>
                     <h3 class="text-theme-main font-header font-bold text-sm tracking-wide">สรุปทำจ่ายค่าอบรม</h3>
                 </div>
@@ -904,7 +983,7 @@
             </div>
             <div class="flex-1 overflow-y-auto px-5 py-4 space-y-3">
                 <!-- Info banner -->
-                <div class="flex items-start gap-2.5 p-3 rounded-xl text-[11px]" style="background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.2); color: #34d399;">
+                <div class="flex items-start gap-2.5 p-3 rounded-xl text-[11px]" style="background: rgba(var(--accent-rgb),0.07); border: 1px solid rgba(var(--accent-rgb),0.2); color: var(--accent);">
                     <i class="fa-solid fa-circle-info mt-0.5 shrink-0"></i>
                     <div>ระบบคัดกรองเฉพาะผู้ที่ <b>"ติ๊กเลือก + เข้าอบรมครบ 3 วัน + สถานะ Passed"</b> เท่านั้น</div>
                 </div>
@@ -928,7 +1007,7 @@
                 <textarea id="paymentReportText" class="w-full h-36 p-3 rounded-xl glass-input text-xs leading-relaxed font-mono whitespace-pre overflow-x-auto resize-none" spellcheck="false" readonly></textarea>
             </div>
             <div class="px-5 py-3.5 border-t" style="border-color: var(--glass-border);">
-                <button onclick="copyToClipboardPayment()" class="w-full py-3 text-white rounded-xl font-bold text-sm shadow-lg transition-all transform hover:brightness-110 active:scale-[0.98]" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 16px rgba(16,185,129,0.25);">
+                <button onclick="copyToClipboardPayment()" class="w-full py-3 rounded-xl btn-primary font-bold text-sm shadow-lg transition-all transform hover:brightness-110 active:scale-[0.98]" style="box-shadow: 0 4px 16px rgba(var(--accent-rgb),0.25);">
                     <i class="fa-regular fa-copy mr-2"></i> คัดลอกนำไปวางในเซลล์ A1 ของ Google Sheet
                 </button>
             </div>
@@ -942,13 +1021,48 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbyYYauRspNoRvkhUWKZh4c5Hp1TzhxWGu_T96TvPPMZ6p1DHJqh30Azzi_PrEcGn9dy/exec"; 
         // **********************************************
 
-        const ADMIN_DEFAULT_THEME = 'gold'; 
+        const ADMIN_DEFAULT_THEME = 'cyber'; 
         
         let adminPassCache = "";
         let adminAllData = []; 
         let selectedRows = new Set(); 
         let sortState = { key: 'timestamp', asc: false };
         let currentAdminRole = 'master'; 
+        let checkinLock = {}; // กันกดเช็คชื่อซ้ำเร็ว ๆ ก่อน backend ตอบกลับ
+
+        function getTodayKey() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function updateStepperLine(d) {
+            const line12 = document.getElementById('stepperLine12');
+            const line23 = document.getElementById('stepperLine23');
+            if (!line12 || !line23) return;
+
+            const d1Passed = !!(d && d.d1);
+            const d2Passed = !!(d && d.d2);
+
+            const setPassed = (el) => {
+                el.style.background = 'var(--status-passed-text)';
+                el.style.boxShadow = '0 0 14px rgba(52, 211, 153, 0.25)';
+                el.style.opacity = '0.95';
+            };
+
+            const setDefault = (el) => {
+                el.style.background = 'rgba(var(--accent-rgb),0.22)';
+                el.style.boxShadow = 'none';
+                el.style.opacity = '1';
+            };
+
+            setDefault(line12);
+            setDefault(line23);
+            if (d1Passed) setPassed(line12);
+            if (d2Passed) setPassed(line23);
+        }
 
         function initApp() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -1109,6 +1223,7 @@
                 document.getElementById('uiStatus').className = `status-badge ${bCls}`;
                 document.getElementById('profileCard').classList.remove('hidden');
                 ['1','2','3'].forEach(i => updateCheckBtn(`boxD${i}`, i, d[`d${i}`]));
+                updateStepperLine(d);
                 
             } else { 
                 // กรณีค้นหาไม่เจอ
@@ -1165,10 +1280,59 @@
 
         async function doCheckIn(day) {
             const rawPhone = getRawPhone('checkinPhone');
+            const todayKey = getTodayKey();
+            const alreadyKey = `hr_checkin_done_${rawPhone}_${day}`;
+            const anyDoneKey = `hr_checkin_done_any_${rawPhone}_${todayKey}`;
+            const anyLockKey = `hr_checkin_lock_any_${rawPhone}_${todayKey}`;
+
+            // กันกดหลาย Day ใน “วันเดียวกัน” (ทำได้แค่ครั้งเดียวต่อวัน)
+            if (localStorage.getItem(anyDoneKey) === todayKey) {
+                return Swal.fire({
+                    icon: 'info',
+                    title: 'ทำรายการแล้ว',
+                    text: 'วันนี้คุณเช็คชื่อเรียบร้อยแล้ว (ทำได้วันละ 1 ครั้ง)',
+                    background: 'var(--glass-bg)',
+                    color: 'var(--text-main)',
+                    timer: 1800,
+                    showConfirmButton: false
+                });
+            }
+
+            if (checkinLock[anyLockKey]) return;
+            checkinLock[anyLockKey] = true;
+
+            // กันกดซ้ำ Day เดิมในวันเดียวกัน (กรณี reload/เปิดแท็บหลายอัน)
+            if (localStorage.getItem(alreadyKey) === todayKey) {
+                return Swal.fire({
+                    icon: 'info',
+                    title: 'ทำรายการแล้ว',
+                    text: `Day ${day} ของวันนี้เช็คชื่อเรียบร้อยแล้ว`,
+                    background: 'var(--glass-bg)',
+                    color: 'var(--text-main)',
+                    timer: 1800,
+                    showConfirmButton: false
+                });
+            }
+
+            const lockKey = `hr_checkin_lock_${rawPhone}_${day}`;
+            if (checkinLock[lockKey]) return;
+            checkinLock[lockKey] = true;
+
             const cf = await Swal.fire({ title: `เช็คชื่อวันที่ ${day}?`, showCancelButton: true, confirmButtonText: 'ยืนยัน', confirmButtonColor: 'var(--accent)', cancelButtonColor: 'var(--text-muted)', background: 'var(--glass-bg)', color: 'var(--text-main)' });
-            if (cf.isConfirmed) {
-                const res = await fetchAPI({ action: 'checkin', phone: rawPhone, day });
-                if (res.status === 'success') { checkStatus(); confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, zIndex: 9999 }); Swal.fire({ icon: 'success', title: 'สำเร็จ', timer: 1500, showConfirmButton: false, background: 'var(--glass-bg)', color: 'var(--text-main)' }); }
+            try {
+                if (cf.isConfirmed) {
+                    const res = await fetchAPI({ action: 'checkin', phone: rawPhone, day });
+                    if (res.status === 'success') {
+                        localStorage.setItem(alreadyKey, todayKey);
+                        localStorage.setItem(anyDoneKey, todayKey);
+                        checkStatus();
+                        confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, zIndex: 9999 });
+                        Swal.fire({ icon: 'success', title: 'สำเร็จ', timer: 1500, showConfirmButton: false, background: 'var(--glass-bg)', color: 'var(--text-main)' });
+                    }
+                }
+            } finally {
+                checkinLock[lockKey] = false;
+                checkinLock[anyLockKey] = false;
             }
         }
 
@@ -1491,7 +1655,30 @@
         }
 
         // --- 2. HR Report ---
-        function openHRModal() { document.getElementById('hrTrainingDate').value = new Date().toISOString().split('T')[0]; document.getElementById('hrWorkDate').value = ""; document.getElementById('hrReportText').value = ""; document.getElementById('hrModal').classList.remove('hidden'); }
+        function openHRModal() {
+            const tEl = document.getElementById('hrTrainingDate');
+            const wEl = document.getElementById('hrWorkDate');
+            const txtEl = document.getElementById('hrReportText');
+
+            // ดึงวันเริ่มอบรมจาก Day 1 (d1) ของคนที่ติ๊กเลือกไว้
+            const items = adminAllData.filter(i => selectedRows.has(String(i.id)));
+            let fallbackDate = new Date();
+            let dates = [];
+            if (items && items.length) {
+                dates = items.map(i => parseToDateObj(i.d1)).filter(Boolean);
+            }
+
+            let chosen = dates.length ? dates.sort((a, b) => a - b)[0] : fallbackDate;
+            chosen.setHours(0, 0, 0, 0);
+
+            // สร้างวันที่แบบ local (ไม่ใช้ toISOString เพื่อกันเลื่อนวันด้วย timezone)
+            const isoLocal = `${chosen.getFullYear()}-${String(chosen.getMonth() + 1).padStart(2, '0')}-${String(chosen.getDate()).padStart(2, '0')}`;
+            tEl.value = isoLocal;
+
+            wEl.value = "";
+            txtEl.value = "";
+            document.getElementById('hrModal').classList.remove('hidden');
+        }
         function generateHRReport() {
             const tDate = document.getElementById('hrTrainingDate').value; const wDate = document.getElementById('hrWorkDate').value; if(!tDate || !wDate) return Swal.fire({icon:'warning', title:'เลือกวันที่ให้ครบ', toast:true, position:'top', showConfirmButton:false, timer:1500});
             const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate)); const items = adminAllData.filter(i => selectedRows.has(String(i.id))); let txt = "";
@@ -1615,7 +1802,7 @@
             const text = document.getElementById('paymentReportText').value; 
             if(!text.trim()) return Swal.fire({ icon: 'warning', text: 'ไม่มีข้อมูลให้คัดลอก', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
             navigator.clipboard.writeText(text).then(() => { 
-                Swal.fire({ icon: 'success', title: 'คัดลอกสำเร็จ!', html: '<p class="text-sm mt-2">สลับไปที่ Google Sheet คลิกขวาที่เซลล์บนสุดแล้วกด <b>Paste (วาง)</b> ข้อมูลจะถูกแบ่งคอลัมน์ให้ทันที</p>', confirmButtonColor: '#10b981', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
+                Swal.fire({ icon: 'success', title: 'คัดลอกสำเร็จ!', html: '<p class="text-sm mt-2">สลับไปที่ Google Sheet คลิกขวาที่เซลล์บนสุดแล้วกด <b>Paste (วาง)</b> ข้อมูลจะถูกแบ่งคอลัมน์ให้ทันที</p>', confirmButtonColor: '#38bdf8', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
                 document.getElementById('paymentModal').classList.add('hidden'); 
             }); 
         }
