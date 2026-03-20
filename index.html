@@ -289,9 +289,60 @@
             70% { box-shadow: 0 0 0 10px rgba(var(--accent-rgb), 0); }
             100% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0); }
         }
+        @keyframes xpBurst {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            60% { opacity: 1; transform: translateY(-32px) scale(1.2); }
+            100% { opacity: 0; transform: translateY(-60px) scale(0.8); }
+        }
+        @keyframes badgeReveal {
+            0% { opacity: 0; transform: scale(0.3) rotate(-15deg); }
+            60% { transform: scale(1.15) rotate(3deg); }
+            80% { transform: scale(0.95) rotate(-1deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+        @keyframes progressFill {
+            from { width: 0%; }
+        }
+        @keyframes streakPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.5); }
+            50% { box-shadow: 0 0 0 8px rgba(var(--accent-rgb), 0); }
+        }
+        @keyframes starfall {
+            0% { opacity: 1; transform: translateY(-20px) rotate(0deg); }
+            100% { opacity: 0; transform: translateY(60px) rotate(360deg); }
+        }
+        @keyframes avatarGlow {
+            0%, 100% { box-shadow: 0 0 0 2px var(--accent), 0 0 12px rgba(var(--accent-rgb),0.3); }
+            50% { box-shadow: 0 0 0 3px var(--accent), 0 0 24px rgba(var(--accent-rgb),0.5); }
+        }
+        @keyframes levelUp {
+            0% { opacity: 0; transform: scale(0.5) translateY(10px); }
+            40% { opacity: 1; transform: scale(1.3) translateY(-5px); }
+            70% { transform: scale(0.95) translateY(2px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes dayCheckBlast {
+            0% { opacity: 0; transform: scale(0.2); }
+            50% { opacity: 1; transform: scale(1.4); }
+            75% { transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes shimmerAvatar {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        @keyframes completionGlow {
+            0% { filter: brightness(1); }
+            50% { filter: brightness(1.3) saturate(1.5); }
+            100% { filter: brightness(1); }
+        }
 
         .animate-float { animation: float 6s ease-in-out infinite; }
         .animate-fade-in { animation: fadeInUp 0.4s ease forwards; }
+        .animate-badge-reveal { animation: badgeReveal 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .animate-level-up { animation: levelUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .animate-day-blast { animation: dayCheckBlast 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .animate-completion-glow { animation: completionGlow 1.5s ease 3; }
         .loader { 
             width: 40px; height: 40px; 
             border: 3px solid rgba(var(--accent-rgb), 0.15); 
@@ -299,6 +350,131 @@
             border-radius: 50%; 
             animation: rotation 0.9s linear infinite; 
         }
+
+        /* ======== GAMIFICATION UI ======== */
+        .xp-bar-container {
+            height: 6px;
+            background: rgba(var(--accent-rgb), 0.12);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        .xp-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: progressFill 1.2s ease forwards;
+            position: relative;
+            overflow: hidden;
+        }
+        .xp-bar-fill::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s linear infinite;
+        }
+        .xp-float {
+            position: absolute;
+            font-size: 11px;
+            font-weight: 800;
+            color: #fbbf24;
+            pointer-events: none;
+            z-index: 999;
+            animation: xpBurst 0.9s ease forwards;
+            text-shadow: 0 0 8px rgba(251,191,36,0.7);
+            white-space: nowrap;
+        }
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+        .badge-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            border: 1px solid;
+            opacity: 0.35;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .badge-item.unlocked {
+            opacity: 1;
+        }
+        .badge-item.unlocked::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+        }
+        .badge-day1 { background: rgba(56,189,248,0.1); color: #38bdf8; border-color: rgba(56,189,248,0.3); }
+        .badge-day2 { background: rgba(167,139,250,0.1); color: #a78bfa; border-color: rgba(167,139,250,0.3); }
+        .badge-day3 { background: rgba(52,211,153,0.1); color: #34d399; border-color: rgba(52,211,153,0.3); }
+        .badge-complete { background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(245,158,11,0.08)); color: #fbbf24; border-color: rgba(251,191,36,0.5); }
+        .badge-complete.unlocked { animation: streakPulse 2s ease infinite; }
+
+        .avatar-initials {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            font-family: 'Prompt', sans-serif;
+            letter-spacing: -0.5px;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            border-radius: inherit;
+        }
+        .avatar-ring-animated {
+            animation: avatarGlow 2.5s ease-in-out infinite;
+        }
+
+        /* Starfall effect container */
+        .star-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            font-size: 14px;
+            animation: starfall 0.8s ease-in forwards;
+        }
+        
+        /* Completion banner */
+        .completion-banner {
+            background: linear-gradient(135deg, rgba(251,191,36,0.12), rgba(245,158,11,0.06));
+            border: 1px solid rgba(251,191,36,0.35);
+            border-radius: 14px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .completion-banner .trophy-icon {
+            font-size: 22px;
+            animation: float 3s ease-in-out infinite;
+        }
+        .level-badge {
+            font-family: 'Chakra Petch', monospace;
+            font-size: 8px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 6px;
+            letter-spacing: 0.05em;
+            transition: all 0.4s ease;
+        }
+        
 
         /* ======== NAV ======== */
         .nav-btn { 
@@ -641,10 +817,10 @@
                     <div class="flex justify-between items-start mb-4 pb-4 border-b relative z-10" style="border-color: rgba(var(--accent-rgb),0.1);">
                         <div class="flex gap-3 items-center">
                             <div class="relative shrink-0">
-                                <div class="w-12 h-12 rounded-full overflow-hidden ring-2" style="--tw-ring-color: var(--accent);" >
-                                    <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Man%20Technologist.png" alt="Avatar" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                                <div id="avatarCircle" class="w-12 h-12 rounded-full overflow-hidden ring-2" style="--tw-ring-color: var(--accent);">
+                                    <div id="avatarContent" class="avatar-initials">?</div>
                                 </div>
-                                <div class="absolute -bottom-1 -right-1 text-[8px] font-digital font-bold px-1 py-0.5 rounded-md z-10 leading-none" style="background: var(--bg-color); border: 1px solid rgba(var(--accent-rgb),0.4); color: var(--accent);">LV.1</div>
+                                <div id="levelBadge" class="level-badge absolute -bottom-1 -right-1 z-10 leading-none" style="background: var(--bg-color); border: 1px solid rgba(var(--accent-rgb),0.4); color: var(--accent);">LV.1</div>
                             </div>
                             <div>
                                 <h3 class="text-base font-header font-bold text-theme-main leading-tight" id="uiName">...</h3>
@@ -662,29 +838,70 @@
                     </p>
                     <div class="relative z-10">
                         <!-- stepper connector line (boxD1/2/3 className is overwritten by JS, so keep this separate) -->
-                        <div class="block absolute left-2 right-2 top-1/2 -translate-y-1/2 h-px pointer-events-none" style="display:grid; grid-template-columns:1fr 1fr;">
+                        <div class="absolute left-2 right-2 top-1/2 -translate-y-1/2 pointer-events-none" style="display:grid; grid-template-columns:1fr 1fr; height:1px;">
                             <div id="stepperLine12" class="h-px" style="background: rgba(var(--accent-rgb),0.22);"></div>
                             <div id="stepperLine23" class="h-px" style="background: rgba(var(--accent-rgb),0.22);"></div>
                         </div>
                         <div class="grid grid-cols-3 gap-2.5 relative">
                             <div id="boxD1" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
                                 <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 1</span>
-                                <button onclick="doCheckIn(1)" class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
+                                <button class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
                                     <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
                                 </button>
                             </div>
                             <div id="boxD2" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
                                 <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 2</span>
-                                <button onclick="doCheckIn(2)" class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
+                                <button class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
                                     <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
                                 </button>
                             </div>
                             <div id="boxD3" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
                                 <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 3</span>
-                                <button onclick="doCheckIn(3)" class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
+                                <button class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
                                     <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
                                 </button>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- XP Progress Bar -->
+                    <div class="mt-4 relative z-10">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-[9px] text-theme-muted font-bold uppercase tracking-widest flex items-center gap-1">
+                                <i class="fa-solid fa-bolt text-[8px]" style="color: var(--accent);"></i> XP Progress
+                            </span>
+                            <span id="xpLabel" class="text-[9px] font-digital font-bold" style="color: var(--accent);">0 / 300 XP</span>
+                        </div>
+                        <div class="xp-bar-container">
+                            <div id="xpBarFill" class="xp-bar-fill" style="width: 0%;"></div>
+                        </div>
+                        <p id="xpMotivate" class="text-[9px] text-theme-muted mt-1.5 text-center font-medium opacity-70">มาเริ่มอบรมวันแรกกันเลย! 🚀</p>
+                    </div>
+
+                    <!-- Badges -->
+                    <div class="relative z-10">
+                        <div class="badge-container" id="badgeContainer">
+                            <span class="badge-item badge-day1" id="badge-day1">
+                                <i class="fa-solid fa-star text-[8px]"></i> Day 1 Explorer
+                            </span>
+                            <span class="badge-item badge-day2" id="badge-day2">
+                                <i class="fa-solid fa-fire text-[8px]"></i> Day 2 Warrior
+                            </span>
+                            <span class="badge-item badge-day3" id="badge-day3">
+                                <i class="fa-solid fa-crown text-[8px]"></i> Day 3 Champion
+                            </span>
+                            <span class="badge-item badge-complete" id="badge-complete">
+                                <i class="fa-solid fa-trophy text-[8px]"></i> GRADUATE ⭐
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Completion Banner (hidden until day 3) -->
+                    <div id="completionBanner" class="hidden completion-banner animate-fade-in relative z-10">
+                        <span class="trophy-icon">🏆</span>
+                        <div>
+                            <p class="text-xs font-header font-bold" style="color: #fbbf24;">ยินดีด้วย! เข้าอบรมครบ 3 วันแล้ว</p>
+                            <p class="text-[9px] text-theme-muted mt-0.5">คุณได้รับ Badge <b>GRADUATE</b> และ 300 XP เต็ม 🎉</p>
                         </div>
                     </div>
                 </div>
@@ -951,9 +1168,14 @@
                         <input type="date" id="hrWorkDate" class="w-full p-2.5 rounded-xl glass-input text-sm" style="border-color: rgba(var(--accent-rgb),0.3);">
                     </div>
                 </div>
-                <button onclick="generateHRReport()" class="w-full py-2.5 btn-primary rounded-xl font-bold text-xs shadow">
-                    <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> สร้างข้อความ
-                </button>
+                <div class="flex gap-2">
+                    <button onclick="generateHRReport()" class="flex-1 py-2.5 btn-primary rounded-xl font-bold text-xs shadow">
+                        <i class="fa-solid fa-plus-circle mr-1.5"></i> เพิ่มรายการ
+                    </button>
+                    <button onclick="resetHRReport()" class="px-3 py-2.5 text-white rounded-xl font-bold text-xs shadow transition-all" style="background: linear-gradient(135deg, #dc2626, #b91c1c);">
+                        <i class="fa-solid fa-rotate-right mr-1"></i> ล้าง
+                    </button>
+                </div>
                 <textarea id="hrReportText" class="w-full h-36 p-3 rounded-xl glass-input text-xs leading-relaxed font-mono resize-none" spellcheck="false"></textarea>
             </div>
             <div class="flex gap-2.5 px-5 py-3.5 border-t" style="border-color: var(--glass-border);">
@@ -1211,6 +1433,7 @@
 
                 // 🟢 ถ้าปกติ (Active/Passed) ให้เข้าหน้าเช็คชื่อตามปกติ
                 localStorage.setItem('hr_saved_phone', rawPhone);
+                window._lastCheckinData = d; // 🔒 store for day-order lock
                 document.getElementById('uiName').innerText = d.name; 
                 document.getElementById('uiNick').innerText = d.nickname; 
                 document.getElementById('uiDept').innerText = d.dept; 
@@ -1222,8 +1445,12 @@
                 
                 document.getElementById('uiStatus').className = `status-badge ${bCls}`;
                 document.getElementById('profileCard').classList.remove('hidden');
-                ['1','2','3'].forEach(i => updateCheckBtn(`boxD${i}`, i, d[`d${i}`]));
+                [1,2,3].forEach(i => updateCheckBtn(`boxD${i}`, i, d[`d${i}`]));
                 updateStepperLine(d);
+                
+                // 🎮 Gamification: update avatar + XP + badges
+                updateAvatar(d.name);
+                updateGamification(d);
                 
             } else { 
                 // กรณีค้นหาไม่เจอ
@@ -1235,11 +1462,12 @@
         }
 
         function updateCheckBtn(id, day, val) {
+            day = Number(day); // normalize ทุกกรณี
             const btn = document.querySelector(`#${id} button`); 
             const box = document.getElementById(id);
             
             if(val) { 
-                // ✅ สไตล์ตอน "เช็คชื่อผ่านแล้ว" (Premium Passed State) - กล่องเด้งนูนขึ้นและเรืองแสง
+                // ✅ สไตล์ตอน "เช็คชื่อผ่านแล้ว"
                 box.className="bg-gradient-to-b from-[var(--status-passed-bg)] to-transparent p-3 rounded-xl text-center border border-[var(--status-passed-text)] shadow-[0_0_15px_var(--status-passed-bg)] transform scale-105 transition-all duration-500 z-20 relative"; 
                 
                 let displayVal = val;
@@ -1260,74 +1488,110 @@
                         const yy = pd.getFullYear();
                         const hh = String(pd.getHours()).padStart(2, '0'); 
                         const min = String(pd.getMinutes()).padStart(2, '0'); 
-                        
-                        // ปรับให้ตัวเวลาใหญ่ขึ้นกว่าวันที่ เพื่อให้ดูเป็น Digital Clock
                         displayVal = `${dd}/${mm}/${yy}<br><span class="text-xs mt-1 block drop-shadow-md text-[var(--status-passed-text)]"><i class="fa-regular fa-circle-check mr-1"></i>${hh}:${min}</span>`;
                     }
                 } catch(e) {}
 
                 btn.className="w-full h-10 rounded bg-transparent text-[var(--status-passed-text)] cursor-default font-digital text-[10px] leading-tight font-bold tracking-wide flex flex-col items-center justify-center opacity-90"; 
                 btn.innerHTML= displayVal; 
-                btn.onclick=null; 
-            } else { 
-                // ⏳ สไตล์ตอน "ยังไม่เช็คชื่อ" (Premium Pending State) - กล่องปกติ แต่มี Hover Effect เรืองแสง
-                box.className="bg-[var(--glass-bg)] p-3 rounded-xl text-center border border-theme-border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-[var(--accent)] group cursor-pointer"; 
-                btn.className="w-full h-10 rounded-lg bg-[var(--glass-border)] text-theme-muted group-hover:text-white group-hover:bg-gradient-to-br group-hover:from-[var(--accent)] group-hover:to-blue-600 transition-all duration-300 flex items-center justify-center shadow-inner group-hover:shadow-[0_0_15px_var(--accent)]"; 
-                btn.innerHTML=`<i class="fa-solid fa-fingerprint text-xl group-hover:scale-110 transition-transform"></i>`; 
-                btn.onclick=()=>doCheckIn(day); 
+                btn.removeAttribute('onclick'); btn.onclick=null; 
+            } else {
+                // 🔒 ตรวจสอบว่า Day ก่อนหน้าเช็คแล้วหรือยัง (ใช้ข้อมูลจาก _lastCheckinData)
+                const d = window._lastCheckinData || {};
+                const dayNum = Number(day);
+                const prevDayDone = (dayNum === 1) || (dayNum === 2 && !!d.d1) || (dayNum === 3 && !!d.d2);
+
+                if (prevDayDone) {
+                    // ⏳ Active — กดได้ตามปกติ
+                    box.className="bg-[var(--glass-bg)] p-3 rounded-xl text-center border border-theme-border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-[var(--accent)] group cursor-pointer"; 
+                    btn.className="w-full h-10 rounded-lg bg-[var(--glass-border)] text-theme-muted group-hover:text-white group-hover:bg-gradient-to-br group-hover:from-[var(--accent)] group-hover:to-blue-600 transition-all duration-300 flex items-center justify-center shadow-inner group-hover:shadow-[0_0_15px_var(--accent)]"; 
+                    btn.innerHTML=`<i class="fa-solid fa-fingerprint text-xl group-hover:scale-110 transition-transform"></i>`; 
+                    btn.removeAttribute('onclick'); btn.onclick=()=>doCheckIn(day);
+                    btn.disabled = false;
+                } else {
+                    // 🔒 Locked — ยังไม่ถึงคิว ปุ่มเป็น disabled สีจางๆ มีไอคอนกุญแจ
+                    box.className="bg-[var(--glass-bg)] p-3 rounded-xl text-center border border-theme-border opacity-40 cursor-not-allowed transition-all duration-300";
+                    btn.className="w-full h-10 rounded-lg bg-[var(--glass-border)] text-theme-muted flex items-center justify-center cursor-not-allowed";
+                    btn.innerHTML=`<i class="fa-solid fa-lock text-base"></i>`;
+                    btn.removeAttribute('onclick'); btn.onclick=null;
+                    btn.disabled = true;
+                }
             }
         }
 
         async function doCheckIn(day) {
+            day = Number(day); // normalize string -> number
             const rawPhone = getRawPhone('checkinPhone');
             const todayKey = getTodayKey();
             const alreadyKey = `hr_checkin_done_${rawPhone}_${day}`;
             const anyDoneKey = `hr_checkin_done_any_${rawPhone}_${todayKey}`;
             const anyLockKey = `hr_checkin_lock_any_${rawPhone}_${todayKey}`;
 
-            // กันกดหลาย Day ใน “วันเดียวกัน” (ทำได้แค่ครั้งเดียวต่อวัน)
+            // 🔒 กันกดข้าม Day — ตรวจสอบจาก server data ที่ดึงมาล่าสุด
+            // ถ้า _lastCheckinData ยังไม่มี (ยังไม่ได้ตรวจสอบสถานะ) ให้บล็อกทุก Day ยกเว้น Day 1
+            const userData = window._lastCheckinData;
+            if (!userData && day > 1) {
+                return Swal.fire({ icon: 'info', title: 'กรุณาตรวจสอบสถานะก่อน', text: 'กดปุ่ม "ตรวจสอบสถานะ" เพื่อโหลดข้อมูลก่อนเช็คชื่อครับ', background: 'var(--glass-bg)', color: 'var(--text-main)', timer: 2500, showConfirmButton: false });
+            }
+            if (userData && day === 2 && !userData.d1) {
+                return Swal.fire({ icon: 'info', title: 'ยังเช็ค Day 1 ไม่ครบ', text: 'กรุณาเช็คชื่อ Day 1 ก่อนนะครับ 😊', background: 'var(--glass-bg)', color: 'var(--text-main)', timer: 2200, showConfirmButton: false });
+            }
+            if (userData && day === 3 && !userData.d2) {
+                return Swal.fire({ icon: 'info', title: 'ยังเช็ค Day 2 ไม่ครบ', text: 'กรุณาเช็คชื่อ Day 2 ก่อนนะครับ 😊', background: 'var(--glass-bg)', color: 'var(--text-main)', timer: 2200, showConfirmButton: false });
+            }
+
+            // กันกดหลาย Day ใน "วันเดียวกัน" (ทำได้แค่ครั้งเดียวต่อวัน)
             if (localStorage.getItem(anyDoneKey) === todayKey) {
-                return Swal.fire({
-                    icon: 'info',
-                    title: 'ทำรายการแล้ว',
-                    text: 'วันนี้คุณเช็คชื่อเรียบร้อยแล้ว (ทำได้วันละ 1 ครั้ง)',
-                    background: 'var(--glass-bg)',
-                    color: 'var(--text-main)',
-                    timer: 1800,
-                    showConfirmButton: false
-                });
+                return Swal.fire({ icon: 'info', title: 'ทำรายการแล้ว', text: 'วันนี้คุณเช็คชื่อเรียบร้อยแล้ว (ทำได้วันละ 1 ครั้ง)', background: 'var(--glass-bg)', color: 'var(--text-main)', timer: 1800, showConfirmButton: false });
             }
 
             if (checkinLock[anyLockKey]) return;
             checkinLock[anyLockKey] = true;
 
-            // กันกดซ้ำ Day เดิมในวันเดียวกัน (กรณี reload/เปิดแท็บหลายอัน)
             if (localStorage.getItem(alreadyKey) === todayKey) {
-                return Swal.fire({
-                    icon: 'info',
-                    title: 'ทำรายการแล้ว',
-                    text: `Day ${day} ของวันนี้เช็คชื่อเรียบร้อยแล้ว`,
-                    background: 'var(--glass-bg)',
-                    color: 'var(--text-main)',
-                    timer: 1800,
-                    showConfirmButton: false
-                });
+                return Swal.fire({ icon: 'info', title: 'ทำรายการแล้ว', text: `Day ${day} ของวันนี้เช็คชื่อเรียบร้อยแล้ว`, background: 'var(--glass-bg)', color: 'var(--text-main)', timer: 1800, showConfirmButton: false });
             }
 
             const lockKey = `hr_checkin_lock_${rawPhone}_${day}`;
             if (checkinLock[lockKey]) return;
             checkinLock[lockKey] = true;
 
-            const cf = await Swal.fire({ title: `เช็คชื่อวันที่ ${day}?`, showCancelButton: true, confirmButtonText: 'ยืนยัน', confirmButtonColor: 'var(--accent)', cancelButtonColor: 'var(--text-muted)', background: 'var(--glass-bg)', color: 'var(--text-main)' });
+            // 🎮 Day-specific confirm message
+            const dayMsgs = [
+                { title: '🚀 เริ่มต้นการเดินทาง!', text: 'เช็คชื่อ Day 1 เพื่อรับ +100 XP' },
+                { title: '🔥 ไฟยังลุกอยู่!', text: 'เช็คชื่อ Day 2 เพื่อรับ +100 XP' },
+                { title: '🏆 วันสุดท้ายแล้ว!', text: 'เช็คชื่อ Day 3 ปิดท้าย รับ GRADUATE Badge!' },
+            ];
+            const msg = dayMsgs[day - 1] || { title: `เช็คชื่อวันที่ ${day}?`, text: '' };
+
+            const cf = await Swal.fire({
+                title: msg.title, text: msg.text,
+                showCancelButton: true, confirmButtonText: '✅ ยืนยัน', cancelButtonText: 'ยกเลิก',
+                confirmButtonColor: 'var(--accent)', cancelButtonColor: 'var(--text-muted)',
+                background: 'var(--glass-bg)', color: 'var(--text-main)'
+            });
             try {
                 if (cf.isConfirmed) {
                     const res = await fetchAPI({ action: 'checkin', phone: rawPhone, day });
                     if (res.status === 'success') {
                         localStorage.setItem(alreadyKey, todayKey);
                         localStorage.setItem(anyDoneKey, todayKey);
-                        checkStatus();
-                        confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, zIndex: 9999 });
-                        Swal.fire({ icon: 'success', title: 'สำเร็จ', timer: 1500, showConfirmButton: false, background: 'var(--glass-bg)', color: 'var(--text-main)' });
+
+                        // 🎮 Day-specific visual effects
+                        const dayBox = document.getElementById(`boxD${day}`);
+                        launchDayEffect(day);
+                        spawnStarBurst(day, dayBox);
+                        spawnXPFloat(100, dayBox);
+
+                        await checkStatus();
+
+                        if (day === 3) {
+                            setTimeout(() => {
+                                Swal.fire({ icon: 'success', title: '🎉 GRADUATE!', html: '<p class="text-sm">คุณเข้าอบรมครบ <b>3 วัน</b> แล้ว!<br>ยินดีด้วยอย่างยิ่ง 🏆</p>', confirmButtonColor: '#fbbf24', background: 'var(--glass-bg)', color: 'var(--text-main)' });
+                            }, 800);
+                        } else {
+                            Swal.fire({ icon: 'success', title: `Day ${day} ✓  +100 XP ⚡`, timer: 1600, showConfirmButton: false, background: 'var(--glass-bg)', color: 'var(--text-main)' });
+                        }
                     }
                 }
             } finally {
@@ -1658,7 +1922,6 @@
         function openHRModal() {
             const tEl = document.getElementById('hrTrainingDate');
             const wEl = document.getElementById('hrWorkDate');
-            const txtEl = document.getElementById('hrReportText');
 
             // ดึงวันเริ่มอบรมจาก Day 1 (d1) ของคนที่ติ๊กเลือกไว้
             const items = adminAllData.filter(i => selectedRows.has(String(i.id)));
@@ -1671,18 +1934,32 @@
             let chosen = dates.length ? dates.sort((a, b) => a - b)[0] : fallbackDate;
             chosen.setHours(0, 0, 0, 0);
 
-            // สร้างวันที่แบบ local (ไม่ใช้ toISOString เพื่อกันเลื่อนวันด้วย timezone)
             const isoLocal = `${chosen.getFullYear()}-${String(chosen.getMonth() + 1).padStart(2, '0')}-${String(chosen.getDate()).padStart(2, '0')}`;
             tEl.value = isoLocal;
-
             wEl.value = "";
-            txtEl.value = "";
+            // ไม่ล้าง hrReportText เพื่อให้ append ต่อได้
             document.getElementById('hrModal').classList.remove('hidden');
         }
         function generateHRReport() {
             const tDate = document.getElementById('hrTrainingDate').value; const wDate = document.getElementById('hrWorkDate').value; if(!tDate || !wDate) return Swal.fire({icon:'warning', title:'เลือกวันที่ให้ครบ', toast:true, position:'top', showConfirmButton:false, timer:1500});
-            const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate)); const items = adminAllData.filter(i => selectedRows.has(String(i.id))); let txt = "";
-            items.forEach(i => { txt += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันเริ่มเทรน ${tStr}\nวันเริ่มงาน ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; }); txt += "ขอบคุณครับ"; document.getElementById('hrReportText').value = txt;
+            const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate)); const items = adminAllData.filter(i => selectedRows.has(String(i.id)));
+            if (!items.length) return Swal.fire({icon:'warning', title:'ยังไม่ได้เลือกรายชื่อ', text:'กลับไปติ๊กเลือกพนักงานในตารางก่อนนะครับ', background:'var(--glass-bg)', color:'var(--text-main)'});
+            let newBlock = "";
+            items.forEach(i => { newBlock += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันเริ่มเทรน ${tStr}\nวันเริ่มงาน ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
+            newBlock += "ขอบคุณครับ";
+            const txtEl = document.getElementById('hrReportText');
+            // ถ้ามีข้อความเดิมอยู่แล้ว ให้ต่อท้ายด้วยบรรทัดว่าง
+            if (txtEl.value.trim()) {
+                txtEl.value = txtEl.value.trimEnd() + "\n\n" + newBlock;
+            } else {
+                txtEl.value = newBlock;
+            }
+            txtEl.scrollTop = txtEl.scrollHeight;
+            Swal.fire({ icon: 'success', title: 'เพิ่มรายการแล้ว', toast: true, position: 'top-end', showConfirmButton: false, timer: 1200, background: 'var(--glass-bg)', color: 'var(--text-main)' });
+        }
+        function resetHRReport() {
+            document.getElementById('hrReportText').value = '';
+            Swal.fire({ icon: 'info', title: 'ล้างข้อมูลแล้ว', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000, background: 'var(--glass-bg)', color: 'var(--text-main)' });
         }
 
         // --- 🔴 3. PAYMENT REPORT LOGIC (อัปเกรดเรียงทีม และ คอลัมน์) ---
@@ -1806,6 +2083,184 @@
                 document.getElementById('paymentModal').classList.add('hidden'); 
             }); 
         }
+
+        // =============================================
+        // 🎮 GAMIFICATION ENGINE
+        // =============================================
+
+        // Avatar color palette — deterministic from name hash
+        const AVATAR_PALETTES = [
+            ['#f87171','#991b1b'], ['#fb923c','#9a3412'], ['#fbbf24','#92400e'],
+            ['#34d399','#065f46'], ['#38bdf8','#0c4a6e'], ['#818cf8','#312e81'],
+            ['#e879f9','#701a75'], ['#f472b6','#831843'], ['#a78bfa','#4c1d95'],
+            ['#6ee7b7','#064e3b'], ['#67e8f9','#164e63'], ['#93c5fd','#1e3a5f'],
+        ];
+
+        function getAvatarColor(name) {
+            if (!name) return AVATAR_PALETTES[0];
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            return AVATAR_PALETTES[Math.abs(hash) % AVATAR_PALETTES.length];
+        }
+
+        function getInitials(name) {
+            if (!name || name.trim() === '...') return '?';
+            const parts = name.trim().split(/\s+/);
+            if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+            return parts[0].slice(0, 2).toUpperCase();
+        }
+
+        function updateAvatar(name) {
+            const avatarEl = document.getElementById('avatarContent');
+            const ringEl = document.getElementById('avatarCircle');
+            if (!avatarEl || !ringEl) return;
+            const [bg1, bg2] = getAvatarColor(name);
+            avatarEl.style.background = `linear-gradient(135deg, ${bg1}, ${bg2})`;
+            avatarEl.textContent = getInitials(name);
+            ringEl.style.setProperty('--tw-ring-color', bg1);
+            ringEl.classList.remove('avatar-ring-animated');
+            void ringEl.offsetWidth;
+        }
+
+        // XP config: day -> xp
+        const DAY_XP = { 1: 100, 2: 100, 3: 100 };
+        const MOTIVATE_MSG = [
+            'มาเริ่มอบรมวันแรกกันเลย! 🚀',
+            'ยอดเยี่ยม! Day 1 ผ่านแล้ว ต่อไปอีกนิด 💪',
+            'เก่งมาก! Day 2 ครบ เหลืออีกวันเดียว 🔥',
+            'ยินดีด้วย! เข้าอบรมครบ 3 วัน คุณคือ GRADUATE ⭐',
+        ];
+        const LEVEL_CONFIG = [
+            { lv: 1, label: 'LV.1', style: 'background: var(--bg-color); border: 1px solid rgba(var(--accent-rgb),0.4); color: var(--accent);' },
+            { lv: 2, label: 'LV.2', style: 'background: rgba(56,189,248,0.15); border: 1px solid #38bdf8; color: #38bdf8;' },
+            { lv: 3, label: 'LV.3', style: 'background: rgba(167,139,250,0.15); border: 1px solid #a78bfa; color: #a78bfa;' },
+            { lv: 4, label: 'MAX ⭐', style: 'background: linear-gradient(135deg, rgba(251,191,36,0.25), rgba(245,158,11,0.1)); border: 1px solid #fbbf24; color: #fbbf24;' },
+        ];
+
+        function countDays(d) {
+            let c = 0;
+            if (d && d.d1) c++;
+            if (d && d.d2) c++;
+            if (d && d.d3) c++;
+            return c;
+        }
+
+        function updateGamification(d) {
+            const days = countDays(d);
+            const xp = days * 100;
+            const pct = (xp / 300) * 100;
+
+            // XP bar
+            const fillEl = document.getElementById('xpBarFill');
+            const labelEl = document.getElementById('xpLabel');
+            const motivateEl = document.getElementById('xpMotivate');
+            if (fillEl) { fillEl.style.width = pct + '%'; }
+            if (labelEl) { labelEl.textContent = `${xp} / 300 XP`; }
+            if (motivateEl) { motivateEl.textContent = MOTIVATE_MSG[days]; }
+
+            // Level badge
+            const lvConf = LEVEL_CONFIG[Math.min(days, 3)];
+            const lvEl = document.getElementById('levelBadge');
+            if (lvEl) {
+                lvEl.textContent = lvConf.label;
+                lvEl.style.cssText = lvConf.style;
+            }
+
+            // Avatar ring animated at max level
+            const ringEl = document.getElementById('avatarCircle');
+            if (ringEl) {
+                if (days === 3) ringEl.classList.add('avatar-ring-animated');
+                else ringEl.classList.remove('avatar-ring-animated');
+            }
+
+            // Badges
+            const badgeMap = { 1: 'badge-day1', 2: 'badge-day2', 3: 'badge-day3' };
+            for (let i = 1; i <= 3; i++) {
+                const el = document.getElementById(`badge-day${i}`);
+                if (el) {
+                    if (d && d[`d${i}`]) el.classList.add('unlocked');
+                    else el.classList.remove('unlocked');
+                }
+            }
+            const completeEl = document.getElementById('badge-complete');
+            if (completeEl) {
+                if (days === 3) completeEl.classList.add('unlocked');
+                else completeEl.classList.remove('unlocked');
+            }
+
+            // Completion banner
+            const banner = document.getElementById('completionBanner');
+            if (banner) {
+                if (days === 3) banner.classList.remove('hidden');
+                else banner.classList.add('hidden');
+            }
+        }
+
+        // Floating XP burst
+        function spawnXPFloat(xpAmt, anchorEl) {
+            const el = document.createElement('div');
+            el.className = 'xp-float';
+            el.textContent = `+${xpAmt} XP ⚡`;
+            document.body.appendChild(el);
+            const rect = anchorEl
+                ? anchorEl.getBoundingClientRect()
+                : { left: window.innerWidth / 2, top: window.innerHeight / 2, width: 0, height: 0 };
+            el.style.left = (rect.left + rect.width / 2 - 24) + 'px';
+            el.style.top = (rect.top + rect.height / 2) + 'px';
+            setTimeout(() => el.remove(), 1000);
+        }
+
+        // Star / sparkle burst
+        const STAR_EMOJIS_BY_DAY = [
+            ['⭐','✨','💫'],          // day 1
+            ['🔥','⚡','💥','✨'],     // day 2
+            ['🏆','🌟','🎊','🎉','💎'], // day 3
+        ];
+        function spawnStarBurst(dayIndex, anchorEl) {
+            const stars = STAR_EMOJIS_BY_DAY[Math.min(dayIndex - 1, 2)];
+            const rect = anchorEl
+                ? anchorEl.getBoundingClientRect()
+                : { left: window.innerWidth / 2, top: window.innerHeight / 2, width: 60, height: 40 };
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            for (let i = 0; i < 8; i++) {
+                const el = document.createElement('div');
+                el.className = 'star-particle';
+                el.textContent = stars[i % stars.length];
+                const angle = (Math.PI * 2 / 8) * i;
+                const dist = 28 + Math.random() * 30;
+                el.style.left = (cx + Math.cos(angle) * dist - 8) + 'px';
+                el.style.top = (cy + Math.sin(angle) * dist - 8) + 'px';
+                el.style.animationDelay = (i * 0.05) + 's';
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 1200);
+            }
+        }
+
+        // Day-specific confetti configs
+        function launchDayEffect(day) {
+            const configs = [
+                // Day 1 — cool blue burst
+                { particleCount: 100, spread: 70, origin: { y: 0.65 }, colors: ['#38bdf8','#818cf8','#ffffff'], zIndex: 9999 },
+                // Day 2 — fire orange wide
+                { particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#fb923c','#fbbf24','#f87171'], startVelocity: 35, zIndex: 9999 },
+                // Day 3 — full gold rainbow
+                { particleCount: 220, spread: 140, origin: { y: 0.55 }, colors: ['#fbbf24','#34d399','#818cf8','#f472b6','#38bdf8'], startVelocity: 45, scalar: 1.1, zIndex: 9999 },
+            ];
+            if (typeof confetti !== 'undefined') {
+                const cfg = configs[Math.min(day - 1, 2)];
+                confetti(cfg);
+                // For day 3, fire double salvo
+                if (day === 3) {
+                    setTimeout(() => confetti({ ...cfg, origin: { x: 0.25, y: 0.6 }, angle: 60 }), 400);
+                    setTimeout(() => confetti({ ...cfg, origin: { x: 0.75, y: 0.6 }, angle: 120 }), 700);
+                }
+            }
+        }
+
+        // =============================================
+        // END GAMIFICATION ENGINE
+        // =============================================
 
         // --- Data Mutators ---
         function toggleTeamInput(s) { const i = document.getElementById('editTeamInput'); if (s.value === 'OTHER') { i.classList.remove('hidden'); i.focus(); } else { i.classList.add('hidden'); } }
