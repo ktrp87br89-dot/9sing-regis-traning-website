@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HR Training Portal | Premium UX/UI</title>
+    <title>HR Training Portal | v3 Ultimate Merged</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -1509,12 +1509,13 @@
                     btn.removeAttribute('onclick'); btn.onclick=()=>doCheckIn(day);
                     btn.disabled = false;
                 } else {
-                    // 🔒 Locked — ยังไม่ถึงคิว ปุ่มเป็น disabled สีจางๆ มีไอคอนกุญแจ
+                    // 🔒 Locked — ยังไม่ถึงคิว ปุ่มสีจางๆ มีไอคอนกุญแจ + Toast แจ้งเตือนเมื่อกด
                     box.className="bg-[var(--glass-bg)] p-3 rounded-xl text-center border border-theme-border opacity-40 cursor-not-allowed transition-all duration-300";
                     btn.className="w-full h-10 rounded-lg bg-[var(--glass-border)] text-theme-muted flex items-center justify-center cursor-not-allowed";
                     btn.innerHTML=`<i class="fa-solid fa-lock text-base"></i>`;
-                    btn.removeAttribute('onclick'); btn.onclick=null;
-                    btn.disabled = true;
+                    btn.removeAttribute('onclick');
+                    btn.onclick = () => Swal.fire({ icon: 'warning', text: `กรุณาเช็คชื่อ Day ${dayNum - 1} ให้เรียบร้อยก่อนครับ 😊`, background: 'var(--glass-bg)', color: 'var(--text-main)', toast: true, position: 'top', timer: 2200, showConfirmButton: false });
+                    btn.disabled = false;
                 }
             }
         }
@@ -1915,7 +1916,10 @@
             let txt = `อบรม${type} ทั้งหมด ${items.length} คน\n\n`; for (const [t, n] of Object.entries(teams)) { txt += `${t}    จำนวน ${n.length} คน (${n.join(' ')})\n`; } txt += `\n`; 
             let currentText = document.getElementById('finalReportText').value; currentText = currentText.replace(/อบรมทั้งหมดจำนวน \d+ คน/, `อบรมทั้งหมดจำนวน ${reportTotalCount} คน`);
             if(currentText.includes("ขอบคุณครับ")) currentText = currentText.replace("ขอบคุณครับ", txt + "ขอบคุณครับ"); else currentText += txt + "ขอบคุณครับ";
-            document.getElementById('finalReportText').value = currentText; selectedRows.clear(); document.querySelectorAll('.custom-checkbox').forEach(c => c.checked = false); updateActionBar();
+            document.getElementById('finalReportText').value = currentText;
+            // 🟢 ใช้ Helper กลาง + Toast แจ้งผล
+            clearSelectionAfterAction();
+            Swal.fire({ icon: 'success', title: `เพิ่ม ${items.length} คนแล้ว`, text: 'ยกเลิกการติ๊กเลือกอัตโนมัติ พร้อมเลือกรอบถัดไปได้เลย', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000, background: 'var(--glass-bg)', color: 'var(--text-main)' });
         }
 
         // --- 2. HR Report ---
@@ -1940,6 +1944,13 @@
             // ไม่ล้าง hrReportText เพื่อให้ append ต่อได้
             document.getElementById('hrModal').classList.remove('hidden');
         }
+        // --- 🟢 Helper: ล้าง Checkbox หลังทำรายการเสร็จ ---
+        function clearSelectionAfterAction() {
+            selectedRows.clear();
+            document.querySelectorAll('.custom-checkbox').forEach(cb => { cb.checked = false; });
+            updateActionBar();
+        }
+
         function generateHRReport() {
             const tDate = document.getElementById('hrTrainingDate').value; const wDate = document.getElementById('hrWorkDate').value; if(!tDate || !wDate) return Swal.fire({icon:'warning', title:'เลือกวันที่ให้ครบ', toast:true, position:'top', showConfirmButton:false, timer:1500});
             const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate)); const items = adminAllData.filter(i => selectedRows.has(String(i.id)));
@@ -1955,7 +1966,9 @@
                 txtEl.value = newBlock;
             }
             txtEl.scrollTop = txtEl.scrollHeight;
-            Swal.fire({ icon: 'success', title: 'เพิ่มรายการแล้ว', toast: true, position: 'top-end', showConfirmButton: false, timer: 1200, background: 'var(--glass-bg)', color: 'var(--text-main)' });
+            // 🟢 Auto-clear selection หลังเพิ่มรายการแล้ว
+            clearSelectionAfterAction();
+            Swal.fire({ icon: 'success', title: `เพิ่ม ${items.length} คนแล้ว`, text: 'ยกเลิกการติ๊กเลือกอัตโนมัติ พร้อมเลือกรอบถัดไปได้เลย', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000, background: 'var(--glass-bg)', color: 'var(--text-main)' });
         }
         function resetHRReport() {
             document.getElementById('hrReportText').value = '';
@@ -2080,7 +2093,9 @@
             if(!text.trim()) return Swal.fire({ icon: 'warning', text: 'ไม่มีข้อมูลให้คัดลอก', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
             navigator.clipboard.writeText(text).then(() => { 
                 Swal.fire({ icon: 'success', title: 'คัดลอกสำเร็จ!', html: '<p class="text-sm mt-2">สลับไปที่ Google Sheet คลิกขวาที่เซลล์บนสุดแล้วกด <b>Paste (วาง)</b> ข้อมูลจะถูกแบ่งคอลัมน์ให้ทันที</p>', confirmButtonColor: '#38bdf8', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
-                document.getElementById('paymentModal').classList.add('hidden'); 
+                document.getElementById('paymentModal').classList.add('hidden');
+                // 🟢 Auto-clear selection หลัง copy ทำจ่ายสำเร็จ
+                clearSelectionAfterAction();
             }); 
         }
 
