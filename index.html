@@ -384,15 +384,16 @@
             animation: shimmer 2s linear infinite;
         }
         .xp-float {
-            position: absolute;
-            font-size: 11px;
+            position: fixed;
+            font-size: 13px;
             font-weight: 800;
             color: #fbbf24;
             pointer-events: none;
-            z-index: 999;
-            animation: xpBurst 0.9s ease forwards;
-            text-shadow: 0 0 8px rgba(251,191,36,0.7);
+            z-index: 9999;
+            animation: xpBurst 1s ease forwards;
+            text-shadow: 0 0 10px rgba(251,191,36,0.8), 0 2px 4px rgba(0,0,0,0.5);
             white-space: nowrap;
+            will-change: transform, opacity;
         }
         .badge-container {
             display: flex;
@@ -623,6 +624,87 @@
             outline-offset: 2px;
         }
 
+        /* ======== Phone input glow on valid ======== */
+        #checkinPhone:valid:not(:placeholder-shown),
+        #regPhone:valid:not(:placeholder-shown) {
+            border-color: rgba(var(--accent-rgb), 0.4);
+        }
+
+        /* ======== Tooltip for check-in hover icons ======== */
+        [title]:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--glass-bg-solid);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* ======== Admin table empty state ======== */
+        #adminTable tr td[colspan] {
+            padding: 3rem 1rem;
+        }
+
+        /* ======== Scrollable textarea mono improvement ======== */
+        textarea.glass-input {
+            line-height: 1.6;
+            tab-size: 4;
+        }
+
+        /* ======== Badge shimmer on unlock ======== */
+        .badge-item.unlocked {
+            animation: badgeReveal 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .badge-item.unlocked::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 1.5s ease 1;
+        }
+
+        /* ======== Disabled button state ======== */
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* ======== Filter panel smooth open ======== */
+        #filterPanel {
+            border-top: 2px solid var(--accent);
+        }
+        #filterPanel:not(.hidden) {
+            animation: fadeInUp 0.25s ease;
+        }
+
+        /* ======== Admin stat row count badge ======== */
+        #adminRowCount {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            background: rgba(var(--accent-rgb), 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(var(--accent-rgb), 0.2);
+            margin-left: 6px;
+        }
+
+        /* ======== Edit modal — note field XSS-safe display ======== */
+        #editModal textarea { font-size: 13px; }
+
+        /* ======== Checkin day label ======== */
+        .day-label { font-size: 9px; text-transform: uppercase; font-weight: 700; letter-spacing: .1em; display: block; margin-bottom: 8px; opacity: .7; }
+
         /* ======== Mobile: admin table -> card-like layout ======== */
         @media (max-width: 640px) {
             #adminTable thead { display: none; }
@@ -810,7 +892,7 @@
                     <p class="text-xs text-theme-muted mb-6 font-light">กรอกเบอร์โทรศัพท์เพื่อยืนยันตัวตน</p>
                     
                     <div class="relative max-w-xs mx-auto mb-4 group">
-                        <input type="tel" id="checkinPhone" class="w-full pl-11 pr-4 py-3.5 rounded-xl glass-input text-lg tracking-widest text-center font-digital font-bold transition-colors" placeholder="08X-XXX-XXXX">
+                        <input type="tel" id="checkinPhone" class="w-full pl-11 pr-4 py-3.5 rounded-xl glass-input text-lg tracking-widest text-center font-digital font-bold transition-colors" placeholder="08X-XXX-XXXX" onkeypress="if(event.key==='Enter') checkStatus()">
                         <i class="fa-solid fa-mobile-screen absolute left-4 top-4 text-theme-muted text-sm group-focus-within:text-theme-accent transition-colors"></i>
                     </div>
                 <button onclick="checkStatus()" id="btnCheckStatus" class="w-full py-3 rounded-xl font-header font-medium transition-all text-sm" style="background: rgba(var(--accent-rgb),0.08); border: 1px solid rgba(var(--accent-rgb),0.2); color: var(--accent);">
@@ -913,7 +995,6 @@
                     </div>
                 </div>
             </div>
-            </div>
         </section>
 
         <section id="page-admin" class="hidden h-full flex flex-col">
@@ -923,8 +1004,8 @@
                 </div>
                 <h3 class="text-theme-main font-header font-bold mb-1 text-base">Restricted Area</h3>
                 <p class="text-[10px] text-theme-muted mb-5 tracking-wide">เข้าถึงเฉพาะผู้มีสิทธิ์เท่านั้น</p>
-                <input type="password" id="adminPass" onkeypress="if(event.key === 'Enter') adminAccess()" class="w-full px-4 py-2.5 rounded-xl glass-input text-center mb-3 text-sm" placeholder="รหัสผ่าน Admin">
-                <button onclick="adminAccess()" class="w-full py-2.5 text-white rounded-xl font-bold text-sm transition shadow-lg" style="background: linear-gradient(135deg, var(--btn-from), var(--btn-to)); box-shadow: 0 4px 12px rgba(var(--accent-rgb),0.25);">
+                <input type="password" id="adminPass" onkeypress="if(event.key === 'Enter') adminAccess()" class="w-full px-4 py-2.5 rounded-xl glass-input text-center mb-3 text-sm" placeholder="รหัสผ่าน Admin" autocomplete="current-password">
+                <button id="btnAdminLogin" onclick="adminAccess()" class="w-full py-2.5 text-white rounded-xl font-bold text-sm transition shadow-lg" style="background: linear-gradient(135deg, var(--btn-from), var(--btn-to)); box-shadow: 0 4px 12px rgba(var(--accent-rgb),0.25);">
                     <i class="fa-solid fa-unlock-keyhole mr-2"></i>เข้าสู่ระบบ
                 </button>
             </div>
@@ -933,6 +1014,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 px-1 gap-2.5">
                     <h2 class="text-theme-main font-header font-bold text-base flex items-center gap-2">
                         <i class="fa-solid fa-database" style="color: var(--accent); font-size: 14px;"></i> ฐานข้อมูล
+                        <span id="adminRowCount" class="hidden">0</span>
                         <button onclick="copyThemeLink()" class="text-sm text-theme-muted hover:text-purple-400 transition ml-1 opacity-60 hover:opacity-100" title="แชร์ลิงก์บังคับใช้ธีมนี้"><i class="fa-solid fa-link text-xs"></i></button>
                     </h2>
                     <div class="flex gap-2 flex-wrap justify-end w-full md:w-auto">
@@ -1313,7 +1395,13 @@
             localStorage.setItem('hr_theme', theme);
             document.getElementById('themeMenu').classList.add('hidden');
         }
-        document.getElementById('themeMenuBtn').addEventListener('click', () => { document.getElementById('themeMenu').classList.toggle('hidden'); });
+        document.getElementById('themeMenuBtn').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('themeMenu').classList.toggle('hidden'); });
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('themeMenu');
+            if (menu && !menu.classList.contains('hidden') && !menu.parentElement.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
 
         function copyThemeLink() {
             let currentUrl = window.location.href.split('?')[0]; 
@@ -1321,17 +1409,34 @@
             let shareLink = currentUrl + "?theme=" + currentTheme;
             navigator.clipboard.writeText(shareLink).then(() => {
                 Swal.fire({ icon: 'success', title: 'คัดลอกลิงก์สำเร็จ!', html: `<p class="text-sm">นำลิงก์นี้ไปให้พนักงาน<br>เมื่อเขาเปิดเว็บ ระบบจะเปลี่ยนเป็นธีม <b>${currentTheme.toUpperCase()}</b> ทันที</p>`, background: 'var(--glass-bg)', color: 'var(--text-main)', confirmButtonColor: 'var(--accent)' });
+            }).catch(() => {
+                Swal.fire({ icon: 'info', title: 'ลิงก์ธีม', text: shareLink, background: 'var(--glass-bg)', color: 'var(--text-main)', confirmButtonColor: 'var(--accent)' });
             });
         }
 
         function startTime() {
-            const today = new Date();
-            const thaiDays = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
-            const thaiMonths = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
-            document.getElementById('clockDate').innerText = `${thaiDays[today.getDay()]}ที่ ${today.getDate()} ${thaiMonths[today.getMonth()]} ${today.getFullYear() + 543}`;
-            document.getElementById('clockTime').innerText = `${String(today.getHours()).padStart(2,'0')}:${String(today.getMinutes()).padStart(2,'0')}`;
-            setTimeout(startTime, 1000);
+            function tick() {
+                const today = new Date();
+                const thaiDays = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
+                const thaiMonths = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+                document.getElementById('clockDate').innerText = `${thaiDays[today.getDay()]}ที่ ${today.getDate()} ${thaiMonths[today.getMonth()]} ${today.getFullYear() + 543}`;
+                document.getElementById('clockTime').innerText = `${String(today.getHours()).padStart(2,'0')}:${String(today.getMinutes()).padStart(2,'0')}`;
+            }
+            tick();
+            setInterval(tick, 1000); // 🔴 FIX: setInterval แทน setTimeout nested — ป้องกัน call stack drift
         }
+
+        // 🟢 ESC key ปิด modal ทุกตัว
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                ['editModal', 'reportModal', 'hrModal', 'paymentModal'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && !el.classList.contains('hidden')) el.classList.add('hidden');
+                });
+                const themeMenu = document.getElementById('themeMenu');
+                if (themeMenu) themeMenu.classList.add('hidden');
+            }
+        });
 
         function setupPhoneFormatting() {
             const formatInput = function(e) {
@@ -1345,8 +1450,8 @@
 
         function loadSavedPhone() {
             const savedPhone = localStorage.getItem('hr_saved_phone');
-            if(savedPhone) {
-                let match = savedPhone.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
+            if(savedPhone && /^0\d{9}$/.test(savedPhone)) { // 🔴 FIX: ตรวจสอบว่าเป็น 10 หลักจริงก่อนโหลด
+                let match = savedPhone.match(/^(\d{3})(\d{3})(\d{4})$/);
                 if(match) {
                     document.getElementById('checkinPhone').value = `${match[1]}-${match[2]}-${match[3]}`;
                 }
@@ -1358,6 +1463,8 @@
                 setTimeout(() => {
                     checkStatus(true); // ส่งค่า true ไปบอกว่าเป็น Auto-login
                 }, 300);
+            } else if (savedPhone) {
+                localStorage.removeItem('hr_saved_phone'); // 🔴 FIX: เคลียร์ค่าที่ invalid ออก
             }
         }
         
@@ -1400,7 +1507,8 @@
 
             if (res.status === 'success') { 
                 Swal.fire({ icon: 'success', title: 'ลงทะเบียนสำเร็จ', confirmButtonColor: 'var(--accent)', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
-                e.target.reset(); document.getElementById('checkinPhone').value = document.getElementById('regPhone').value; switchTab('checkin'); 
+                const savedFormattedPhone = document.getElementById('regPhone').value; // 🔴 FIX: save ก่อน reset
+                e.target.reset(); document.getElementById('checkinPhone').value = savedFormattedPhone; switchTab('checkin'); 
             } else { Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: res.message, background: 'var(--glass-bg)', color: 'var(--text-main)' }); }
         }
 
@@ -1551,6 +1659,7 @@
 
             // กันกดหลาย Day ใน "วันเดียวกัน" (ทำได้แค่ครั้งเดียวต่อวัน)
             if (localStorage.getItem(anyDoneKey) === todayKey) {
+                checkinLock[anyLockKey] = false; // 🔴 FIX: release lock ก่อน return
                 return Swal.fire({ icon: 'info', title: 'ทำรายการแล้ว', text: 'วันนี้คุณเช็คชื่อเรียบร้อยแล้ว (ทำได้วันละ 1 ครั้ง)', background: 'var(--glass-bg)', color: 'var(--text-main)', timer: 1800, showConfirmButton: false });
             }
 
@@ -1558,11 +1667,12 @@
             checkinLock[anyLockKey] = true;
 
             if (localStorage.getItem(alreadyKey) === todayKey) {
+                checkinLock[anyLockKey] = false; // 🔴 FIX: release lock ก่อน return
                 return Swal.fire({ icon: 'info', title: 'ทำรายการแล้ว', text: `Day ${day} ของวันนี้เช็คชื่อเรียบร้อยแล้ว`, background: 'var(--glass-bg)', color: 'var(--text-main)', timer: 1800, showConfirmButton: false });
             }
 
             const lockKey = `hr_checkin_lock_${rawPhone}_${day}`;
-            if (checkinLock[lockKey]) return;
+            if (checkinLock[lockKey]) { checkinLock[anyLockKey] = false; return; } // 🔴 FIX: release anyLock too
             checkinLock[lockKey] = true;
 
             // 🎮 Day-specific confirm message
@@ -1612,7 +1722,11 @@
         // --- Admin Logic ---
         async function adminAccess() {
             const pass = document.getElementById('adminPass').value; 
+            const btn = document.getElementById('btnAdminLogin');
+            const orig = btn ? btn.innerHTML : '';
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังตรวจสอบ...'; }
             const res = await fetchAPI({ action: 'get_admin', pass });
+            if (btn) { btn.disabled = false; btn.innerHTML = orig; }
             if (res.status === 'success') { 
                 adminPassCache = pass; 
                 currentAdminRole = (pass === 'adminhr0208') ? 'hr' : 'master';
@@ -1686,6 +1800,14 @@
             const fName = document.getElementById('filterName').value.trim().toLowerCase(); 
             const fTeam = document.getElementById('filterTeam').value.trim().toLowerCase(); 
             const fStatus = document.getElementById('filterStatus').value;
+
+            // 🟢 ตรวจสอบ date range ไม่ให้ start > end
+            if (fStart && fEnd && new Date(fStart) > new Date(fEnd)) {
+                document.getElementById('filterEnd').style.borderColor = 'rgba(248,113,113,0.6)';
+                return; // รอให้แก้ไขก่อน ไม่ filter
+            } else {
+                document.getElementById('filterEnd').style.borderColor = '';
+            }
             
             if(!Array.isArray(adminAllData)) return renderAdminTable([]);
 
@@ -1757,8 +1879,13 @@
 
         function renderAdminTable(data) {
             const tbody = document.getElementById('adminTable'); tbody.innerHTML = '';
+
+            // อัปเดต badge นับจำนวนแถว
+            const countEl = document.getElementById('adminRowCount');
+            if (countEl) { countEl.textContent = data ? data.length : 0; countEl.classList.remove('hidden'); }
+
             if(!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-theme-muted">ไม่พบข้อมูล</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-12 text-theme-muted"><div class="flex flex-col items-center gap-3"><i class="fa-solid fa-inbox text-3xl opacity-30"></i><span class="text-sm">ไม่พบข้อมูลที่ตรงกับเงื่อนไข</span></div></td></tr>';
                 updateActionBar(); return;
             }
 
@@ -1873,7 +2000,7 @@
                                 <span class="bg-[var(--glass-border)] text-theme-main px-2.5 py-1 rounded-md text-sm font-medium shadow-sm border border-theme-border">
                                     <i class="fa-regular fa-face-smile text-theme-muted mr-1 opacity-70"></i>${row.nickname || '-'}
                                 </span>
-                                <span class="bg-theme-panel border border-theme-accent text-theme-accent px-2.5 py-1 rounded-md text-sm font-bold shadow-sm">
+                                <span class="bg-theme-panel border border-[var(--accent)] text-theme-accent px-2.5 py-1 rounded-md text-sm font-bold shadow-sm">
                                     <i class="fa-solid fa-users mr-1 opacity-80"></i>TEAM: ${row.team || '-'}
                                 </span>
                                 <span class="text-xs text-theme-muted font-medium ml-1 bg-black/20 px-2 py-1 rounded-md">${row.dept || '-'}</span>
@@ -1890,17 +2017,39 @@
                         <td class="px-4 py-5 text-center align-top">
                             <div class="status-badge ${badge}">${displayStatus}</div>
                             ${overdueWarning} ${isDropout ? `<div class="mt-3 block bg-[var(--status-alert-bg)] border border-[var(--status-alert-text)] text-[var(--status-alert-text)] text-xs font-bold px-2 py-1.5 rounded shadow-lg animate-pulse"><i class="fa-solid fa-user-slash mr-1"></i>ออกระหว่างเทรน</div>` : ''}
-                            ${row.note ? `<div class="text-[11px] text-theme-muted mt-3 max-w-[120px] truncate mx-auto bg-[var(--glass-bg)] px-2 py-1 rounded border border-theme-border" title="${row.note}"><i class="fa-solid fa-comment-dots mr-1"></i> ${row.note}</div>` : ''}
+                            ${row.note ? `<div class="text-[11px] text-theme-muted mt-3 max-w-[120px] truncate mx-auto bg-[var(--glass-bg)] px-2 py-1 rounded border border-theme-border" title="${String(row.note).replace(/"/g,'&quot;')}"><i class="fa-solid fa-comment-dots mr-1"></i> ${String(row.note).replace(/</g,'&lt;')}</div>` : ''}
                         </td>
                         <td class="px-4 py-5 text-center align-top">
                             <div class="flex justify-center gap-2">
-                                <button onclick="openEditModal(${row.row}, '${safeStatus}', '${row.team||''}', '${row.note||''}', '${row.name||'-'}', '${row.nickname||'-'}')" class="text-theme-accent bg-[var(--glass-border)] w-9 h-9 rounded-xl hover:bg-[var(--accent)] hover:text-white transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-pen"></i></button>
+                                <button class="edit-row-btn text-theme-accent bg-[var(--glass-border)] w-9 h-9 rounded-xl hover:bg-[var(--accent)] hover:text-white transition flex items-center justify-center shadow-lg"
+                                    data-row="${row.row}"
+                                    data-status="${safeStatus}"
+                                    data-team="${String(row.team||'').replace(/"/g,'&quot;')}"
+                                    data-note="${String(row.note||'').replace(/"/g,'&quot;')}"
+                                    data-name="${String(row.name||'-').replace(/"/g,'&quot;')}"
+                                    data-nickname="${String(row.nickname||'-').replace(/"/g,'&quot;')}">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
                                 ${deleteBtn}
                             </div>
                         </td>
                     `; tbody.appendChild(tr);
                 } catch(e) {}
             }); updateActionBar();
+
+            // 🔴 FIX: ใช้ event delegation สำหรับปุ่ม edit แทน inline onclick (ป้องกัน XSS + special chars)
+            tbody.querySelectorAll('.edit-row-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    openEditModal(
+                        this.dataset.row,
+                        this.dataset.status,
+                        this.dataset.team,
+                        this.dataset.note,
+                        this.dataset.name,
+                        this.dataset.nickname
+                    );
+                });
+            });
         }
 
         // --- Selection & Action Bar ---
@@ -1909,7 +2058,7 @@
         function updateActionBar() { const count = selectedRows.size; document.getElementById('selectedCount').innerText = count; const bar = document.getElementById('actionBar'); if (count > 0) bar.classList.remove('translate-y-[150%]'); else bar.classList.add('translate-y-[150%]'); }
 
         // --- General Utilities ---
-        function copyToClipboard(id) { let t = document.getElementById(id).value; navigator.clipboard.writeText(t).then(() => Swal.fire({ icon: 'success', title: 'คัดลอกแล้ว', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000, background: 'var(--glass-bg)', color: 'var(--text-main)' })); }
+        function copyToClipboard(id) { let t = document.getElementById(id).value; navigator.clipboard.writeText(t).then(() => Swal.fire({ icon: 'success', title: 'คัดลอกแล้ว', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000, background: 'var(--glass-bg)', color: 'var(--text-main)' })).catch(() => Swal.fire({ icon: 'error', title: 'ไม่สามารถคัดลอกได้', text: 'กรุณาคัดลอกด้วยตนเอง (Ctrl+A, Ctrl+C)', background: 'var(--glass-bg)', color: 'var(--text-main)' })); }
         function sendLine(id) { let t = document.getElementById(id).value; window.open(`https://line.me/R/msg/text/?${encodeURIComponent(t)}`, '_blank'); }
         function formatDateThai(date) { const m = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']; return `${date.getDate()} ${m[date.getMonth()]} ${date.getFullYear()+543}`; }
 
@@ -2118,7 +2267,7 @@
                 document.getElementById('paymentModal').classList.add('hidden');
                 // 🟢 Auto-clear selection หลัง copy ทำจ่ายสำเร็จ
                 clearSelectionAfterAction();
-            }); 
+            }).catch(() => Swal.fire({ icon: 'error', title: 'ไม่สามารถคัดลอกได้', text: 'กรุณาคัดลอกข้อความด้วยตนเอง (Ctrl+A, Ctrl+C)', background: 'var(--glass-bg)', color: 'var(--text-main)' })); 
         }
 
         // =============================================
@@ -2309,31 +2458,38 @@
             // ใส่ชื่อให้ Admin เห็นชัดๆ ป้องกันแก้ผิดคน
             const titleEl = document.getElementById('editModalTitle');
             if (titleEl) {
-                titleEl.innerHTML = `แก้ไขข้อมูล: <span class="text-theme-accent font-sans text-sm block mt-1"><i class="fa-regular fa-user mr-1"></i>${name} (${nickname})</span>`;
+                // 🔴 FIX: escape HTML เพื่อป้องกัน XSS จากชื่อที่มีอักขระพิเศษ
+                const safeName = String(name).replace(/</g,'&lt;').replace(/>/g,'&gt;');
+                const safeNickname = String(nickname).replace(/</g,'&lt;').replace(/>/g,'&gt;');
+                titleEl.innerHTML = `แก้ไขข้อมูล: <span class="text-theme-accent font-sans text-sm block mt-1"><i class="fa-regular fa-user mr-1"></i>${safeName} (${safeNickname})</span>`;
             }
 
-            const s = document.getElementById('editTeamSelect'); 
-            const i = document.getElementById('editTeamInput'); 
-            const opts = Array.from(s.options).map(o => o.value);
+            // 🔴 FIX: เปลี่ยนชื่อตัวแปร sel/inp เพื่อไม่ shadow parameter
+            const sel = document.getElementById('editTeamSelect'); 
+            const inp = document.getElementById('editTeamInput'); 
+            const opts = Array.from(sel.options).map(o => o.value);
             
             if (opts.includes(tm)) { 
-                s.value = tm; 
-                i.classList.add('hidden'); 
-                i.value = ""; 
+                sel.value = tm; 
+                inp.classList.add('hidden'); 
+                inp.value = ""; 
             } else { 
-                s.value = 'OTHER'; 
-                i.classList.remove('hidden'); 
-                i.value = tm; 
+                sel.value = 'OTHER'; 
+                inp.classList.remove('hidden'); 
+                inp.value = tm; 
             } 
             document.getElementById('editModal').classList.remove('hidden');
         }
         
         async function saveAdminEdit() { 
             document.getElementById('editModal').classList.add('hidden'); 
-            const s = document.getElementById('editTeamSelect'); 
-            const i = document.getElementById('editTeamInput'); 
-            const tm = s.value === 'OTHER' ? i.value : s.value; 
-            await fetchAPI({ action: 'admin_update', row: document.getElementById('editRowId').value, team: tm, status: document.getElementById('editStatus').value, note: document.getElementById('editNote').value }); 
+            const sel = document.getElementById('editTeamSelect'); 
+            const inp = document.getElementById('editTeamInput'); 
+            const tm = sel.value === 'OTHER' ? inp.value.trim() : sel.value; 
+            const res = await fetchAPI({ action: 'admin_update', row: document.getElementById('editRowId').value, team: tm, status: document.getElementById('editStatus').value, note: document.getElementById('editNote').value }); 
+            if (res && res.status === 'error') {
+                Swal.fire({ icon: 'error', title: 'บันทึกไม่สำเร็จ', text: res.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่', background: 'var(--glass-bg)', color: 'var(--text-main)' });
+            }
             loadAdminData(); 
         }
 
