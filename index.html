@@ -895,9 +895,13 @@
                         <input type="tel" id="checkinPhone" class="w-full pl-11 pr-4 py-3.5 rounded-xl glass-input text-lg tracking-widest text-center font-digital font-bold transition-colors" placeholder="08X-XXX-XXXX" onkeypress="if(event.key==='Enter') checkStatus()">
                         <i class="fa-solid fa-mobile-screen absolute left-4 top-4 text-theme-muted text-sm group-focus-within:text-theme-accent transition-colors"></i>
                     </div>
-                <button onclick="checkStatus()" id="btnCheckStatus" class="w-full py-3 rounded-xl font-header font-medium transition-all text-sm" style="background: rgba(var(--accent-rgb),0.08); border: 1px solid rgba(var(--accent-rgb),0.2); color: var(--accent);">
-                    <i class="fa-solid fa-magnifying-glass mr-2 text-xs"></i>ตรวจสอบสถานะ
-                </button>
+                <button onclick="checkStatus()" id="btnCheckStatus" class="w-full py-3.5 rounded-xl font-header font-bold transition-all text-sm shadow-lg transform active:scale-[0.98] relative overflow-hidden group hover:shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]" style="background: rgba(var(--accent-rgb),0.08); border: 1px solid rgba(var(--accent-rgb),0.3); color: var(--accent);">
+    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-[rgba(var(--accent-rgb),0.2)] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none"></div>
+    
+    <span class="relative z-10 flex items-center justify-center gap-2 tracking-wide">
+        <i class="fa-solid fa-right-to-bracket text-sm"></i>เข้าสู่ระบบเช็คชื่อ
+    </span>
+</button>
 
                 <div id="profileCard" class="hidden mt-5 text-left relative overflow-hidden rounded-2xl p-5 border backdrop-blur-xl" style="background: rgba(var(--accent-rgb),0.04); border-color: rgba(var(--accent-rgb),0.15);">
                     <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full blur-3xl opacity-20 pointer-events-none" style="background: var(--accent);"></div>
@@ -2008,10 +2012,30 @@
                             
                             ${formatPrettyDate(row.timestamp)}
                             
-                            <div class="mt-3 flex items-center gap-3 bg-theme-panel px-3 py-1.5 rounded-lg border border-theme-border w-fit shadow-inner">
-                                <span class="text-[10px] text-theme-main font-bold uppercase tracking-wide">เข้าเรียน <span class="text-lg mx-1 leading-none font-digital drop-shadow-md" style="color: ${dayColor}">${attendedDays}</span>/ 3 วัน</span>
-                                <div class="flex gap-1.5 border-l border-theme-border pl-3">${icon(row.d1, row.timestamp)}${icon(row.d2, row.timestamp)}${icon(row.d3, row.timestamp)}</div>
-                            </div>
+                            <div class="mt-3 bg-theme-panel p-3 rounded-xl border border-theme-border shadow-inner w-56 transition-all hover:border-[var(--accent)] hover:shadow-[0_0_15px_rgba(var(--accent-rgb),0.1)]">
+    <div class="flex justify-between items-center mb-2">
+        <span class="text-[9px] text-theme-muted font-bold uppercase tracking-widest flex items-center gap-1.5">
+            <i class="fa-solid fa-chart-simple" style="color: ${dayColor};"></i> Progress
+        </span>
+        <span class="text-xs font-digital font-bold" style="color: ${dayColor};">${attendedDays}/3 วัน</span>
+    </div>
+    
+    <div class="w-full bg-[var(--glass-border)] rounded-full h-1.5 mb-2.5 overflow-hidden relative">
+        <div class="h-full rounded-full transition-all duration-1000 ease-out relative" 
+             style="width: ${(attendedDays/3)*100}%; background: ${dayColor}; box-shadow: 0 0 10px ${dayColor};">
+            ${attendedDays > 0 && attendedDays < 3 ? '<div class="absolute inset-0 bg-white/20 animate-pulse"></div>' : ''}
+        </div>
+    </div>
+    
+    <div class="flex justify-between items-center text-[9px]">
+        <div class="flex gap-1.5">
+            ${icon(row.d1, row.timestamp)}${icon(row.d2, row.timestamp)}${icon(row.d3, row.timestamp)}
+        </div>
+        <span class="font-mono font-bold px-1.5 py-0.5 rounded" style="background: rgba(var(--accent-rgb),0.1); color: ${dayColor};">
+            ${Math.round((attendedDays/3)*100)}%
+        </span>
+    </div>
+</div>
                         </td>
                         <td class="px-4 py-5 text-center hidden md:table-cell align-middle"><div class="flex justify-center gap-2">${icon(row.d1, row.timestamp)}${icon(row.d2, row.timestamp)}${icon(row.d3, row.timestamp)}</div></td>
                         <td class="px-4 py-5 text-center align-top">
