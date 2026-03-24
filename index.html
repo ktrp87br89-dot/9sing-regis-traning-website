@@ -1770,7 +1770,8 @@
         }
 
         function renderAdminTable(data) {
-            const tbody = document.getElementById('adminTable'); tbody.innerHTML = '';
+            const tbody = document.getElementById('adminTable'); 
+            tbody.innerHTML = '';
             const countEl = document.getElementById('adminRowCount');
             if (countEl) { countEl.textContent = data ? data.length : 0; countEl.classList.remove('hidden'); }
 
@@ -1805,6 +1806,9 @@
                 } catch(e) { return val; }
             };
 
+            // 🚀 อัปเกรด: ใช้ DocumentFragment เพื่อวาดตารางทีเดียว ลดอาการหน้าจอค้าง
+            const fragment = document.createDocumentFragment();
+
             data.forEach(row => {
                 try {
                     const tr = document.createElement('tr'); 
@@ -1816,6 +1820,7 @@
                     let badge = "status-default"; 
                     let displayStatus = safeStatus || '-';
                     let overdueWarning = '';
+                    
                     if (safeStatus === 'Active') {
                         displayStatus = `ACTIVE (${attendedDays} วัน)`;
                         if (attendedDays === 0) { badge = "status-active !bg-gray-500/20 !text-gray-400 !border-gray-400 !shadow-none"; }
@@ -1836,14 +1841,17 @@
                     } 
                     else if (safeStatus === 'Passed') { badge = "status-passed"; } 
                     else if (['Resigned','New Job'].includes(safeStatus)) { badge = "status-alert"; }
+                    
                     let dayColor = attendedDays === 3 ? 'var(--status-passed-text)' : (isDropout ? 'var(--status-alert-text)' : 'var(--accent)');
                     let nameDisplay = `<div class="font-bold text-theme-main text-base mb-1.5">${row.name || '-'}</div>`;
                     if (isDropout) { nameDisplay = `<div class="font-bold text-[var(--status-alert-text)] text-base mb-1.5 flex items-center gap-1.5 drop-shadow-md"><i class="fa-solid fa-circle-exclamation animate-pulse"></i>${row.name}</div>`; }
                     const isChecked = selectedRows.has(String(row.id)) ? 'checked' : '';
                     let deleteBtn = `<button onclick="deleteUser(${row.row})" class="text-[var(--status-alert-text)] bg-[var(--status-alert-bg)] w-8 h-8 rounded-lg hover:filter hover:brightness-125 transition flex items-center justify-center shadow-lg has-tooltip" data-tip="ลบข้อมูล"><i class="fa-solid fa-trash"></i></button>`;
+                    
                     if (currentAdminRole === 'hr') {
                         deleteBtn = `<button onclick="Swal.fire({icon:'error', title:'ไม่มีสิทธิ์', text:'สิทธิ์ HR สำรอง ไม่สามารถลบข้อมูลได้ครับ', background:'var(--glass-bg)', color:'var(--text-main)'})" class="text-theme-muted bg-[var(--glass-border)] w-8 h-8 rounded-lg opacity-50 cursor-not-allowed flex items-center justify-center shadow-lg"><i class="fa-solid fa-trash"></i></button>`;
                     }
+                    
                     tr.innerHTML = `
                         <td class="px-4 py-5 text-center align-top"><input type="checkbox" class="custom-checkbox mt-1" value="${row.id}" onchange="toggleRowSelection(this)" ${isChecked}></td>
                         <td class="px-4 py-5 align-top">
@@ -1897,9 +1905,14 @@
                                 ${deleteBtn}
                             </div>
                         </td>
-                    `; tbody.appendChild(tr);
+                    `; 
+                    fragment.appendChild(tr); // 🚀 เพิ่มลง Fragment แทนการแปะลง DOM ทันที
                 } catch(e) {}
-            }); updateActionBar();
+            }); 
+            
+            // 🚀 นำตารางทั้งหมดไปแปะลง DOM แค่ครั้งเดียว (เร็วขึ้นมาก!)
+            tbody.appendChild(fragment);
+            updateActionBar();
 
             tbody.querySelectorAll('.edit-row-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -1915,10 +1928,22 @@
             updateActionBar(); 
         }
         function toggleSelectAll() { 
-            const cbs = document.querySelectorAll('.custom-checkbox'); 
-            const all = selectedRows.size === cbs.length; 
-            selectedRows.clear(); 
-            cbs.forEach(cb => { cb.checked = !all; if (!all) selectedRows.add(String(cb.value)); }); 
+            // ดึงเฉพาะ Checkbox ที่กำลังแสดงอยู่บนตารางในขณะนั้น
+            const cbs = document.querySelectorAll('#adminTable .custom-checkbox'); 
+            if (cbs.length === 0) return;
+
+            // เช็คว่า ณ ตอนนี้ทุกแถวที่เห็น "ถูกเลือกครบอยู่แล้ว" หรือไม่
+            const isAllVisibleChecked = Array.from(cbs).every(cb => cb.checked);
+
+            cbs.forEach(cb => { 
+                cb.checked = !isAllVisibleChecked; // สลับสถานะ
+                if (!isAllVisibleChecked) {
+                    selectedRows.add(String(cb.value)); // เพิ่มเข้า Set
+                } else {
+                    selectedRows.delete(String(cb.value)); // เอาออกจาก Set
+                }
+            }); 
+            
             updateActionBar(); 
         }
 
@@ -2026,21 +2051,28 @@
         function openPaymentModal() {
             let passedUsers = adminAllData.filter(row => {
                 let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++; 
-                return attendedDays === 3 && row.status === 'Passed';
+                
+                // 🚀 เพิ่มเงื่อนไข: เช็คว่าในช่อง "หมายเหตุ" มีการพิมพ์คำว่า [ทำจ่ายแล้ว] หรือไม่
+                const isPaid = row.note && String(row.note).includes('[ทำจ่ายแล้ว]');
+                
+                // คนที่จะมาทำจ่ายได้ต้อง: เทรนครบ 3 วัน + สถานะ Passed + และช่องหมายเหตุต้องไม่มีคำว่า [ทำจ่ายแล้ว]
+                return attendedDays === 3 && row.status === 'Passed' && !isPaid;
             });
+
             if (selectedRows.size > 0) {
                 passedUsers = passedUsers.filter(i => selectedRows.has(String(i.id)));
-                if (passedUsers.length === 0) { return Swal.fire({icon:'error', title:'ไม่พบผู้มีสิทธิ์', text:'รายชื่อที่คุณติ๊กเลือก ไม่มีใครเข้าอบรมครบ 3 วัน หรือสถานะยังไม่เป็น Passed ครับ', background: 'var(--glass-bg)', color: 'var(--text-main)'}); }
+                if (passedUsers.length === 0) { return Swal.fire({icon:'error', title:'ไม่พบผู้มีสิทธิ์', text:'รายชื่อที่เลือก ไม่มีใครเข้าอบรมครบ 3 วัน หรืออาจจะมีการทำจ่ายไปแล้วครับ', background: 'var(--glass-bg)', color: 'var(--text-main)'}); }
             } else {
-                if (passedUsers.length === 0) { return Swal.fire({icon:'info', title:'ยังไม่มีผู้ผ่านเกณฑ์', text:'ระบบค้นหาแล้ว ยังไม่มีพนักงานที่เทรนครบ 3 วันและเป็นสถานะ Passed ในตอนนี้ครับ', background: 'var(--glass-bg)', color: 'var(--text-main)'}); }
+                if (passedUsers.length === 0) { return Swal.fire({icon:'info', title:'ยังไม่มีผู้ผ่านเกณฑ์', text:'ระบบค้นหาแล้ว ยังไม่มีพนักงานที่ผ่านเกณฑ์หรือคนที่ยังไม่ได้ทำจ่ายในตอนนี้ครับ', background: 'var(--glass-bg)', color: 'var(--text-main)'}); }
             }
+            
             passedUsers.sort((a, b) => getTeamPriority(a.team) - getTeamPriority(b.team) || (String(a.team || '')).localeCompare(String(b.team || ''), 'th'));
             document.getElementById('paymentCustomDate').value = "";
             window.currentPaymentItems = passedUsers; 
             generatePaymentReportText();
             document.getElementById('paymentModal').classList.remove('hidden'); 
-            const fetchMsg = selectedRows.size > 0 ? 'จากรายชื่อที่คุณเลือก' : 'อัตโนมัติจากทั้งระบบ';
-            Swal.fire({ icon: 'success', title: 'ดึงข้อมูลสำเร็จ', text: `ดึงรายชื่อผู้มีสิทธิ์ทำจ่าย ${passedUsers.length} คน (${fetchMsg})`, toast: true, position: 'top-end', showConfirmButton: false, timer: 2000, background: 'var(--glass-bg)', color: 'var(--text-main)' });
+            const fetchMsg = selectedRows.size > 0 ? 'จากรายชื่อที่คุณเลือก' : 'อัตโนมัติจากทั้งระบบ (ไม่รวมคนที่ทำจ่ายแล้ว)';
+            Swal.fire({ icon: 'success', title: 'ดึงข้อมูลสำเร็จ', text: `ดึงรายชื่อผู้มีสิทธิ์ทำจ่าย ${passedUsers.length} คน ${fetchMsg}`, toast: true, position: 'top-end', showConfirmButton: false, timer: 2000, background: 'var(--glass-bg)', color: 'var(--text-main)' });
         }
 
         function generatePaymentReportText() {
