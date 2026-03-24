@@ -140,7 +140,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Noise texture overlay for depth */
         body::before {
             content: '';
             position: fixed;
@@ -151,7 +150,6 @@
             z-index: 0;
         }
 
-        /* Subtle cyber grid overlay (kept very low opacity) */
         body::after {
             content: '';
             position: fixed;
@@ -176,9 +174,7 @@
             transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); 
             position: relative;
         }
-        .glass-panel:hover {
-            border-color: var(--glass-border-hover);
-        }
+        .glass-panel:hover { border-color: var(--glass-border-hover); }
 
         /* ======== INPUTS ======== */
         .glass-input { 
@@ -300,9 +296,7 @@
             80% { transform: scale(0.95) rotate(-1deg); }
             100% { opacity: 1; transform: scale(1) rotate(0deg); }
         }
-        @keyframes progressFill {
-            from { width: 0%; }
-        }
+        @keyframes progressFill { from { width: 0%; } }
         @keyframes streakPulse {
             0%, 100% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.5); }
             50% { box-shadow: 0 0 0 8px rgba(var(--accent-rgb), 0); }
@@ -327,10 +321,6 @@
             75% { transform: scale(0.9); }
             100% { opacity: 1; transform: scale(1); }
         }
-        @keyframes shimmerAvatar {
-            0% { background-position: -200% center; }
-            100% { background-position: 200% center; }
-        }
         @keyframes completionGlow {
             0% { filter: brightness(1); }
             50% { filter: brightness(1.3) saturate(1.5); }
@@ -342,8 +332,20 @@
             60%  { background-color: rgba(52, 211, 153, 0.12); }
             100% { background-color: rgba(52, 211, 153, 0); }
         }
-        .row-flash { animation: rowFlash 0.65s ease-out forwards; }
 
+        /* 🆕 Hint bar pulse animation */
+        @keyframes hintPulse {
+            0%, 100% { border-color: rgba(var(--accent-rgb), 0.2); }
+            50% { border-color: rgba(var(--accent-rgb), 0.45); }
+        }
+        /* 🆕 Filter badge pop */
+        @keyframes badgePop {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .row-flash { animation: rowFlash 0.65s ease-out forwards; }
         .animate-float { animation: float 6s ease-in-out infinite; }
         .animate-fade-in { animation: fadeInUp 0.4s ease forwards; }
         .animate-badge-reveal { animation: badgeReveal 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
@@ -395,12 +397,7 @@
             white-space: nowrap;
             will-change: transform, opacity;
         }
-        .badge-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 10px;
-        }
+        .badge-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
         .badge-item {
             display: inline-flex;
             align-items: center;
@@ -416,9 +413,7 @@
             position: relative;
             overflow: hidden;
         }
-        .badge-item.unlocked {
-            opacity: 1;
-        }
+        .badge-item.unlocked { opacity: 1; }
         .badge-item.unlocked::after {
             content: '';
             position: absolute;
@@ -445,11 +440,8 @@
             text-shadow: 0 1px 3px rgba(0,0,0,0.3);
             border-radius: inherit;
         }
-        .avatar-ring-animated {
-            animation: avatarGlow 2.5s ease-in-out infinite;
-        }
+        .avatar-ring-animated { animation: avatarGlow 2.5s ease-in-out infinite; }
 
-        /* Starfall effect container */
         .star-particle {
             position: fixed;
             pointer-events: none;
@@ -458,7 +450,6 @@
             animation: starfall 0.8s ease-in forwards;
         }
         
-        /* Completion banner */
         .completion-banner {
             background: linear-gradient(135deg, rgba(251,191,36,0.12), rgba(245,158,11,0.06));
             border: 1px solid rgba(251,191,36,0.35);
@@ -469,10 +460,7 @@
             gap: 10px;
             margin-top: 12px;
         }
-        .completion-banner .trophy-icon {
-            font-size: 22px;
-            animation: float 3s ease-in-out infinite;
-        }
+        .completion-banner .trophy-icon { font-size: 22px; animation: float 3s ease-in-out infinite; }
         .level-badge {
             font-family: 'Chakra Petch', monospace;
             font-size: 8px;
@@ -482,7 +470,6 @@
             letter-spacing: 0.05em;
             transition: all 0.4s ease;
         }
-        
 
         /* ======== NAV ======== */
         .nav-btn { 
@@ -523,68 +510,37 @@
         th.sortable:hover { background: rgba(var(--accent-rgb), 0.06); color: var(--accent); }
         .sort-icon { transition: transform 0.2s; display: inline-block; margin-left: 4px; opacity: 0.35; font-size: 10px; }
         th.sortable:hover .sort-icon { opacity: 1; color: var(--accent); }
-
-        /* Table rows */
-        #adminTable tr {
-            transition: background 0.2s ease;
-        }
-        #adminTable tr:hover {
-            background: rgba(var(--accent-rgb), 0.04);
-        }
+        #adminTable tr { transition: background 0.2s ease; }
+        #adminTable tr:hover { background: rgba(var(--accent-rgb), 0.04); }
 
         /* ======== HEADER ======== */
         header.glass-panel {
             box-shadow: 0 1px 0 var(--glass-border), 0 8px 32px var(--header-glow);
         }
 
-        /* ======== FORM FIELDS — Label refinement ======== */
-        label {
-            letter-spacing: 0.04em;
-        }
+        label { letter-spacing: 0.04em; }
 
-        /* ======== PROFILE CARD ======== */
-        #profileCard {
-            animation: fadeInUp 0.4s ease;
-        }
+        #profileCard { animation: fadeInUp 0.4s ease; }
 
-        /* Day Boxes — glow on complete */
         .day-complete {
             border-color: rgba(52,211,153,0.4) !important;
             box-shadow: 0 0 16px rgba(52,211,153,0.15);
         }
 
-        /* ======== ACTION BAR ======== */
         #actionBar {
             border: 1px solid var(--glass-border-hover);
             box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(var(--accent-rgb),0.08);
         }
 
-        /* ======== MODAL POLISH ======== */
-        .modal-overlay {
-            background: rgba(0,0,0,0.88);
-            backdrop-filter: blur(8px);
-        }
+        .modal-overlay { background: rgba(0,0,0,0.88); backdrop-filter: blur(8px); }
 
-        /* Loading spinner improvement */
-        #loadingOverlay .spin-outer {
-            border-color: rgba(var(--accent-rgb),0.15);
-            border-top-color: var(--accent);
-        }
-
-        /* Theme switcher dot animation */
-        #themeMenuBtn {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+        #themeMenuBtn { transition: transform 0.3s ease, box-shadow 0.3s ease; }
         #themeMenuBtn:hover {
             transform: scale(1.1) rotate(15deg);
             box-shadow: 0 0 20px rgba(var(--accent-rgb),0.4);
         }
 
-        /* Checkin fingerprint button */
-        #btnCheckStatus {
-            transition: all 0.25s ease;
-            border: 1px solid var(--glass-border);
-        }
+        #btnCheckStatus { transition: all 0.25s ease; border: 1px solid var(--glass-border); }
         #btnCheckStatus:hover {
             border-color: var(--accent);
             color: var(--accent);
@@ -592,24 +548,16 @@
             transform: translateY(-1px);
         }
 
-        /* Section transitions */
-        section:not(.hidden) {
-            animation: fadeInUp 0.35s ease;
-        }
+        section:not(.hidden) { animation: fadeInUp 0.35s ease; }
 
-        /* Filter panel */
-        #filterPanel {
-            border-top: 2px solid var(--accent);
-        }
+        #filterPanel { border-top: 2px solid var(--accent); }
 
-        /* Payment info box */
         .payment-info-box {
             background: rgba(52, 211, 153, 0.06);
             border: 1px solid rgba(52, 211, 153, 0.25);
             border-radius: 12px;
         }
 
-        /* Improved select styling */
         select.glass-input {
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364899e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
@@ -618,51 +566,68 @@
             padding-right: 32px;
         }
 
-        /* Focus visible for accessibility */
-        :focus-visible {
-            outline: 2px solid rgba(var(--accent-rgb), 0.5);
-            outline-offset: 2px;
-        }
+        :focus-visible { outline: 2px solid rgba(var(--accent-rgb), 0.5); outline-offset: 2px; }
 
-        /* ======== Phone input glow on valid ======== */
         #checkinPhone:valid:not(:placeholder-shown),
-        #regPhone:valid:not(:placeholder-shown) {
-            border-color: rgba(var(--accent-rgb), 0.4);
-        }
+        #regPhone:valid:not(:placeholder-shown) { border-color: rgba(var(--accent-rgb), 0.4); }
 
-        /* ======== Tooltip for check-in hover icons ======== */
-        [title]:hover::after {
-            content: attr(title);
+        /* ======== IMPROVED TOOLTIP SYSTEM ======== */
+        /* 🆕 ใช้ relative + tooltip แบบใหม่ที่ชัดกว่าเดิม */
+        .has-tooltip { position: relative; }
+        .has-tooltip::after {
+            content: attr(data-tip);
             position: absolute;
-            bottom: 110%;
+            bottom: calc(100% + 6px);
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) scale(0.9);
             background: var(--glass-bg-solid);
-            border: 1px solid var(--glass-border);
+            border: 1px solid var(--glass-border-hover);
             color: var(--text-main);
             font-size: 10px;
-            padding: 3px 8px;
-            border-radius: 6px;
+            font-family: 'Sarabun', sans-serif;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 8px;
             white-space: nowrap;
             pointer-events: none;
-            z-index: 100;
+            z-index: 200;
+            opacity: 0;
+            transition: opacity 0.15s ease, transform 0.15s ease;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        }
+        .has-tooltip:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
         }
 
-        /* ======== Admin table empty state ======== */
-        #adminTable tr td[colspan] {
-            padding: 3rem 1rem;
+        /* 🆕 Filter badge number */
+        #filterBadge {
+            animation: badgePop 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards;
+            min-width: 16px;
+            height: 16px;
         }
 
-        /* ======== Scrollable textarea mono improvement ======== */
-        textarea.glass-input {
-            line-height: 1.6;
-            tab-size: 4;
+        /* 🆕 Hint bar */
+        #selectionHint {
+            animation: hintPulse 3s ease-in-out infinite;
+            transition: all 0.4s ease;
+        }
+        #selectionHint.hint-selected {
+            animation: none;
+            opacity: 0;
+            pointer-events: none;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            border: none;
+            overflow: hidden;
         }
 
-        /* ======== Badge shimmer on unlock ======== */
-        .badge-item.unlocked {
-            animation: badgeReveal 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
+        #adminTable tr td[colspan] { padding: 3rem 1rem; }
+
+        textarea.glass-input { line-height: 1.6; tab-size: 4; }
+
+        .badge-item.unlocked { animation: badgeReveal 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
         .badge-item.unlocked::before {
             content: '';
             position: absolute;
@@ -671,21 +636,10 @@
             animation: shimmer 1.5s ease 1;
         }
 
-        /* ======== Disabled button state ======== */
-        button:disabled {
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
+        button:disabled { cursor: not-allowed; opacity: 0.6; }
 
-        /* ======== Filter panel smooth open ======== */
-        #filterPanel {
-            border-top: 2px solid var(--accent);
-        }
-        #filterPanel:not(.hidden) {
-            animation: fadeInUp 0.25s ease;
-        }
+        #filterPanel:not(.hidden) { animation: fadeInUp 0.25s ease; }
 
-        /* ======== Admin stat row count badge ======== */
         #adminRowCount {
             display: inline-flex;
             align-items: center;
@@ -699,17 +653,12 @@
             margin-left: 6px;
         }
 
-        /* ======== Edit modal — note field XSS-safe display ======== */
         #editModal textarea { font-size: 13px; }
-
-        /* ======== Checkin day label ======== */
         .day-label { font-size: 9px; text-transform: uppercase; font-weight: 700; letter-spacing: .1em; display: block; margin-bottom: 8px; opacity: .7; }
 
-        /* ======== Mobile: admin table -> card-like layout ======== */
         @media (max-width: 640px) {
             #adminTable thead { display: none; }
             #adminTable tbody { display: block; width: 100%; }
-
             #adminTable tbody tr {
                 display: grid !important;
                 grid-template-columns: 44px 1fr;
@@ -723,44 +672,12 @@
                 border-bottom: none !important;
                 box-shadow: 0 18px 40px rgba(0,0,0,0.35), 0 0 0 1px rgba(var(--accent-rgb),0.06) !important;
             }
-
-            #adminTable tbody tr td {
-                padding: 6px 0 !important;
-                background: transparent !important;
-                border: none !important;
-            }
-
-            /* td1: checkbox */
-            #adminTable tbody tr td:nth-child(1) {
-                grid-column: 1;
-                grid-row: 1;
-                display: flex !important;
-                align-items: flex-start;
-                justify-content: center;
-                padding-top: 8px !important;
-            }
-
-            /* td2: name + timeline */
-            #adminTable tbody tr td:nth-child(2) {
-                grid-column: 2;
-                grid-row: 1;
-            }
-
-            /* td4: status */
-            #adminTable tbody tr td:nth-child(4) {
-                grid-column: 2;
-                grid-row: 2;
-                padding-top: 0 !important;
-            }
-
-            /* td5: action buttons (span both columns) */
-            #adminTable tbody tr td:nth-child(5) {
-                grid-column: 1 / span 2;
-                grid-row: 3;
-                padding-top: 4px !important;
-            }
+            #adminTable tbody tr td { padding: 6px 0 !important; background: transparent !important; border: none !important; }
+            #adminTable tbody tr td:nth-child(1) { grid-column: 1; grid-row: 1; display: flex !important; align-items: flex-start; justify-content: center; padding-top: 8px !important; }
+            #adminTable tbody tr td:nth-child(2) { grid-column: 2; grid-row: 1; }
+            #adminTable tbody tr td:nth-child(4) { grid-column: 2; grid-row: 2; padding-top: 0 !important; }
+            #adminTable tbody tr td:nth-child(5) { grid-column: 1 / span 2; grid-row: 3; padding-top: 4px !important; }
         }
-
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden" onload="initApp()">
@@ -812,15 +729,11 @@
 
         <section id="page-register" class="max-w-md mx-auto animate-fade-in">
             <div class="glass-panel p-5 rounded-2xl relative overflow-hidden">
-                
-                <!-- Hero banner -->
                 <div class="flex items-center gap-4 mb-5 p-4 rounded-xl relative overflow-hidden" style="background: linear-gradient(135deg, rgba(var(--accent-rgb),0.08), rgba(var(--accent-rgb),0.02)); border: 1px solid rgba(var(--accent-rgb),0.12);">
                     <div class="absolute -right-4 -top-4 w-20 h-20 rounded-full blur-2xl" style="background: rgba(var(--accent-rgb),0.15);"></div>
-                    
                     <div class="relative z-10 animate-float w-16 h-16 shrink-0">
                         <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Man%20Technologist.png" alt="Man Technologist" class="w-full h-full object-contain drop-shadow-lg">
                     </div>
-
                     <div class="relative z-10 flex-1 min-w-0">
                         <span class="inline-block text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-widest mb-1.5" style="background: rgba(var(--accent-rgb),0.12); color: var(--accent);">Welcome</span>
                         <h2 class="text-lg font-header font-bold text-theme-main leading-snug">ลงทะเบียน <span style="color: var(--accent);">พนักงานใหม่</span></h2>
@@ -880,121 +793,103 @@
 
         <section id="page-checkin" class="hidden max-w-md mx-auto pt-2">
             <div class="glass-panel p-6 rounded-2xl text-center relative overflow-hidden">
-                
-                <!-- Ambient glow -->
                 <div class="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-20 blur-3xl rounded-full opacity-30 pointer-events-none" style="background: var(--accent);"></div>
-                
                 <div class="relative z-10">
                     <div class="w-16 h-16 mx-auto flex items-center justify-center mb-4 rounded-2xl relative" style="background: rgba(var(--accent-rgb),0.1); border: 1px solid rgba(var(--accent-rgb),0.2);">
                         <i class="fa-solid fa-fingerprint text-3xl" style="color: var(--accent);"></i>
                     </div>
                     <h2 class="text-lg font-header font-bold text-theme-main mb-1">ลงชื่อเข้าอบรม</h2>
                     <p class="text-xs text-theme-muted mb-6 font-light">กรอกเบอร์โทรศัพท์เพื่อยืนยันตัวตน</p>
-                    
                     <div class="relative max-w-xs mx-auto mb-4 group">
                         <input type="tel" id="checkinPhone" class="w-full pl-11 pr-4 py-3.5 rounded-xl glass-input text-lg tracking-widest text-center font-digital font-bold transition-colors" placeholder="08X-XXX-XXXX" onkeypress="if(event.key==='Enter') checkStatus()">
                         <i class="fa-solid fa-mobile-screen absolute left-4 top-4 text-theme-muted text-sm group-focus-within:text-theme-accent transition-colors"></i>
                     </div>
-                <button onclick="checkStatus()" id="btnCheckStatus" class="w-full py-3.5 rounded-xl font-header font-bold transition-all text-sm shadow-lg transform active:scale-[0.98] relative overflow-hidden group hover:shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]" style="background: rgba(var(--accent-rgb),0.08); border: 1px solid rgba(var(--accent-rgb),0.3); color: var(--accent);">
-    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-[rgba(var(--accent-rgb),0.2)] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none"></div>
-    
-    <span class="relative z-10 flex items-center justify-center gap-2 tracking-wide">
-        <i class="fa-solid fa-right-to-bracket text-sm"></i>เข้าสู่ระบบเช็คชื่อ
-    </span>
-</button>
+                    <button onclick="checkStatus()" id="btnCheckStatus" class="w-full py-3.5 rounded-xl font-header font-bold transition-all text-sm shadow-lg transform active:scale-[0.98] relative overflow-hidden group hover:shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]" style="background: rgba(var(--accent-rgb),0.08); border: 1px solid rgba(var(--accent-rgb),0.3); color: var(--accent);">
+                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-[rgba(var(--accent-rgb),0.2)] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none"></div>
+                        <span class="relative z-10 flex items-center justify-center gap-2 tracking-wide">
+                            <i class="fa-solid fa-right-to-bracket text-sm"></i>เข้าสู่ระบบเช็คชื่อ
+                        </span>
+                    </button>
 
-                <div id="profileCard" class="hidden mt-5 text-left relative overflow-hidden rounded-2xl p-5 border backdrop-blur-xl" style="background: rgba(var(--accent-rgb),0.04); border-color: rgba(var(--accent-rgb),0.15);">
-                    <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full blur-3xl opacity-20 pointer-events-none" style="background: var(--accent);"></div>
-                    
-                    <!-- Header row -->
-                    <div class="flex justify-between items-start mb-4 pb-4 border-b relative z-10" style="border-color: rgba(var(--accent-rgb),0.1);">
-                        <div class="flex gap-3 items-center">
-                            <div class="relative shrink-0">
-                                <div id="avatarCircle" class="w-12 h-12 rounded-full overflow-hidden ring-2" style="--tw-ring-color: var(--accent);">
-                                    <div id="avatarContent" class="avatar-initials">?</div>
+                    <div id="profileCard" class="hidden mt-5 text-left relative overflow-hidden rounded-2xl p-5 border backdrop-blur-xl" style="background: rgba(var(--accent-rgb),0.04); border-color: rgba(var(--accent-rgb),0.15);">
+                        <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full blur-3xl opacity-20 pointer-events-none" style="background: var(--accent);"></div>
+                        <div class="flex justify-between items-start mb-4 pb-4 border-b relative z-10" style="border-color: rgba(var(--accent-rgb),0.1);">
+                            <div class="flex gap-3 items-center">
+                                <div class="relative shrink-0">
+                                    <div id="avatarCircle" class="w-12 h-12 rounded-full overflow-hidden ring-2" style="--tw-ring-color: var(--accent);">
+                                        <div id="avatarContent" class="avatar-initials">?</div>
+                                    </div>
+                                    <div id="levelBadge" class="level-badge absolute -bottom-1 -right-1 z-10 leading-none" style="background: var(--bg-color); border: 1px solid rgba(var(--accent-rgb),0.4); color: var(--accent);">LV.1</div>
                                 </div>
-                                <div id="levelBadge" class="level-badge absolute -bottom-1 -right-1 z-10 leading-none" style="background: var(--bg-color); border: 1px solid rgba(var(--accent-rgb),0.4); color: var(--accent);">LV.1</div>
+                                <div>
+                                    <h3 class="text-base font-header font-bold text-theme-main leading-tight" id="uiName">...</h3>
+                                    <div class="flex flex-wrap items-center gap-1.5 mt-1">
+                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-md text-theme-muted" style="background: var(--glass-border);" id="uiNick">...</span>
+                                        <span class="text-[9px] font-mono tracking-wider uppercase font-bold px-2 py-0.5 rounded-md" style="background: rgba(var(--accent-rgb),0.1); color: var(--accent);" id="uiDept">...</span>
+                                    </div>
+                                </div>
                             </div>
+                            <span id="uiStatus" class="status-badge status-active mt-1 shrink-0">Active</span>
+                        </div>
+
+                        <p class="text-[9px] font-bold text-theme-muted mb-2.5 uppercase tracking-widest flex items-center gap-1.5 relative z-10">
+                            <i class="fa-regular fa-calendar-check" style="color: var(--accent);"></i> Timeline Record
+                        </p>
+                        <div class="relative z-10">
+                            <div class="absolute left-2 right-2 top-1/2 -translate-y-1/2 pointer-events-none" style="display:grid; grid-template-columns:1fr 1fr; height:1px;">
+                                <div id="stepperLine12" class="h-px" style="background: rgba(var(--accent-rgb),0.22);"></div>
+                                <div id="stepperLine23" class="h-px" style="background: rgba(var(--accent-rgb),0.22);"></div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2.5 relative">
+                                <div id="boxD1" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
+                                    <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 1</span>
+                                    <button class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
+                                        <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
+                                    </button>
+                                </div>
+                                <div id="boxD2" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
+                                    <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 2</span>
+                                    <button class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
+                                        <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
+                                    </button>
+                                </div>
+                                <div id="boxD3" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
+                                    <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 3</span>
+                                    <button class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
+                                        <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 relative z-10">
+                            <div class="flex justify-between items-center mb-1.5">
+                                <span class="text-[9px] text-theme-muted font-bold uppercase tracking-widest flex items-center gap-1">
+                                    <i class="fa-solid fa-bolt text-[8px]" style="color: var(--accent);"></i> XP Progress
+                                </span>
+                                <span id="xpLabel" class="text-[9px] font-digital font-bold" style="color: var(--accent);">0 / 300 XP</span>
+                            </div>
+                            <div class="xp-bar-container">
+                                <div id="xpBarFill" class="xp-bar-fill" style="width: 0%;"></div>
+                            </div>
+                            <p id="xpMotivate" class="text-[9px] text-theme-muted mt-1.5 text-center font-medium opacity-70">มาเริ่มอบรมวันแรกกันเลย! 🚀</p>
+                        </div>
+
+                        <div class="relative z-10">
+                            <div class="badge-container" id="badgeContainer">
+                                <span class="badge-item badge-day1" id="badge-day1"><i class="fa-solid fa-star text-[8px]"></i> Day 1 Explorer</span>
+                                <span class="badge-item badge-day2" id="badge-day2"><i class="fa-solid fa-fire text-[8px]"></i> Day 2 Warrior</span>
+                                <span class="badge-item badge-day3" id="badge-day3"><i class="fa-solid fa-crown text-[8px]"></i> Day 3 Champion</span>
+                                <span class="badge-item badge-complete" id="badge-complete"><i class="fa-solid fa-trophy text-[8px]"></i> GRADUATE ⭐</span>
+                            </div>
+                        </div>
+
+                        <div id="completionBanner" class="hidden completion-banner animate-fade-in relative z-10">
+                            <span class="trophy-icon">🏆</span>
                             <div>
-                                <h3 class="text-base font-header font-bold text-theme-main leading-tight" id="uiName">...</h3>
-                                <div class="flex flex-wrap items-center gap-1.5 mt-1">
-                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-md text-theme-muted" style="background: var(--glass-border);" id="uiNick">...</span>
-                                    <span class="text-[9px] font-mono tracking-wider uppercase font-bold px-2 py-0.5 rounded-md" style="background: rgba(var(--accent-rgb),0.1); color: var(--accent);" id="uiDept">...</span>
-                                </div>
+                                <p class="text-xs font-header font-bold" style="color: #fbbf24;">ยินดีด้วย! เข้าอบรมครบ 3 วันแล้ว</p>
+                                <p class="text-[9px] text-theme-muted mt-0.5">คุณได้รับ Badge <b>GRADUATE</b> และ 300 XP เต็ม 🎉</p>
                             </div>
-                        </div>
-                        <span id="uiStatus" class="status-badge status-active mt-1 shrink-0">Active</span>
-                    </div>
-
-                    <p class="text-[9px] font-bold text-theme-muted mb-2.5 uppercase tracking-widest flex items-center gap-1.5 relative z-10">
-                        <i class="fa-regular fa-calendar-check" style="color: var(--accent);"></i> Timeline Record
-                    </p>
-                    <div class="relative z-10">
-                        <!-- stepper connector line (boxD1/2/3 className is overwritten by JS, so keep this separate) -->
-                        <div class="absolute left-2 right-2 top-1/2 -translate-y-1/2 pointer-events-none" style="display:grid; grid-template-columns:1fr 1fr; height:1px;">
-                            <div id="stepperLine12" class="h-px" style="background: rgba(var(--accent-rgb),0.22);"></div>
-                            <div id="stepperLine23" class="h-px" style="background: rgba(var(--accent-rgb),0.22);"></div>
-                        </div>
-                        <div class="grid grid-cols-3 gap-2.5 relative">
-                            <div id="boxD1" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
-                                <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 1</span>
-                                <button class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
-                                    <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
-                                </button>
-                            </div>
-                            <div id="boxD2" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
-                                <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 2</span>
-                                <button class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
-                                    <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
-                                </button>
-                            </div>
-                            <div id="boxD3" class="p-3 rounded-xl text-center border transition-all duration-300" style="background: var(--glass-input); border-color: var(--glass-input-border);">
-                                <span class="text-[9px] text-theme-muted uppercase font-bold block mb-2 tracking-wider">Day 3</span>
-                                <button class="w-full h-9 rounded-lg flex items-center justify-center transition-all" style="background: rgba(var(--accent-rgb),0.06); border: 1px solid rgba(var(--accent-rgb),0.15);">
-                                    <i class="fa-solid fa-fingerprint text-base text-theme-muted"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- XP Progress Bar -->
-                    <div class="mt-4 relative z-10">
-                        <div class="flex justify-between items-center mb-1.5">
-                            <span class="text-[9px] text-theme-muted font-bold uppercase tracking-widest flex items-center gap-1">
-                                <i class="fa-solid fa-bolt text-[8px]" style="color: var(--accent);"></i> XP Progress
-                            </span>
-                            <span id="xpLabel" class="text-[9px] font-digital font-bold" style="color: var(--accent);">0 / 300 XP</span>
-                        </div>
-                        <div class="xp-bar-container">
-                            <div id="xpBarFill" class="xp-bar-fill" style="width: 0%;"></div>
-                        </div>
-                        <p id="xpMotivate" class="text-[9px] text-theme-muted mt-1.5 text-center font-medium opacity-70">มาเริ่มอบรมวันแรกกันเลย! 🚀</p>
-                    </div>
-
-                    <!-- Badges -->
-                    <div class="relative z-10">
-                        <div class="badge-container" id="badgeContainer">
-                            <span class="badge-item badge-day1" id="badge-day1">
-                                <i class="fa-solid fa-star text-[8px]"></i> Day 1 Explorer
-                            </span>
-                            <span class="badge-item badge-day2" id="badge-day2">
-                                <i class="fa-solid fa-fire text-[8px]"></i> Day 2 Warrior
-                            </span>
-                            <span class="badge-item badge-day3" id="badge-day3">
-                                <i class="fa-solid fa-crown text-[8px]"></i> Day 3 Champion
-                            </span>
-                            <span class="badge-item badge-complete" id="badge-complete">
-                                <i class="fa-solid fa-trophy text-[8px]"></i> GRADUATE ⭐
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Completion Banner (hidden until day 3) -->
-                    <div id="completionBanner" class="hidden completion-banner animate-fade-in relative z-10">
-                        <span class="trophy-icon">🏆</span>
-                        <div>
-                            <p class="text-xs font-header font-bold" style="color: #fbbf24;">ยินดีด้วย! เข้าอบรมครบ 3 วันแล้ว</p>
-                            <p class="text-[9px] text-theme-muted mt-0.5">คุณได้รับ Badge <b>GRADUATE</b> และ 300 XP เต็ม 🎉</p>
                         </div>
                     </div>
                 </div>
@@ -1019,17 +914,37 @@
                     <h2 class="text-theme-main font-header font-bold text-base flex items-center gap-2">
                         <i class="fa-solid fa-database" style="color: var(--accent); font-size: 14px;"></i> ฐานข้อมูล
                         <span id="adminRowCount" class="hidden">0</span>
-                        <button onclick="copyThemeLink()" class="text-sm text-theme-muted hover:text-purple-400 transition ml-1 opacity-60 hover:opacity-100" title="แชร์ลิงก์บังคับใช้ธีมนี้"><i class="fa-solid fa-link text-xs"></i></button>
+                        <button onclick="copyThemeLink()" class="text-sm text-theme-muted hover:text-purple-400 transition ml-1 opacity-60 hover:opacity-100 has-tooltip" data-tip="แชร์ลิงก์พร้อมธีมนี้"><i class="fa-solid fa-link text-xs"></i></button>
                     </h2>
                     <div class="flex gap-2 flex-wrap justify-end w-full md:w-auto">
                         <div class="flex rounded-xl p-1 gap-0.5" style="background: var(--glass-bg); border: 1px solid var(--glass-border);">
-                            <button onclick="toggleFilterPanel()" class="text-xs text-theme-main px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 font-medium hover:bg-[rgba(var(--accent-rgb),0.08)] hover:text-theme-accent">
-                                <i class="fa-solid fa-filter text-[10px]"></i> <span class="hidden sm:inline">ตัวกรอง</span>
+
+                            <!-- 🆕 Filter button with active badge -->
+                            <button onclick="toggleFilterPanel()" 
+                                    class="text-xs text-theme-main px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 font-medium hover:bg-[rgba(var(--accent-rgb),0.08)] hover:text-theme-accent has-tooltip"
+                                    data-tip="เปิด/ปิดตัวกรองข้อมูล">
+                                <i class="fa-solid fa-filter text-[10px]"></i>
+                                <span class="hidden sm:inline">ตัวกรอง</span>
+                                <!-- 🆕 Badge: จำนวน filter ที่เปิดอยู่ -->
+                                <span id="filterBadge" class="hidden rounded-full text-[9px] font-bold flex items-center justify-center leading-none px-1.5 py-0.5" 
+                                      style="background: var(--accent); color: var(--bg-color); min-width:18px; height:16px;">0</span>
                             </button>
-                            <button onclick="toggleSelectAll()" class="text-xs text-theme-main px-3 py-1.5 rounded-lg transition font-medium hover:bg-[rgba(var(--accent-rgb),0.08)]">เลือกทั้งหมด</button>
-                            <button onclick="loadAdminData()" class="text-xs text-theme-main px-3 py-1.5 rounded-lg transition hover:bg-[rgba(var(--accent-rgb),0.08)] hover:text-theme-accent" title="รีเฟรชข้อมูล"><i class="fa-solid fa-rotate-right"></i></button>
+
+                            <button onclick="toggleSelectAll()" 
+                                    class="text-xs text-theme-main px-3 py-1.5 rounded-lg transition font-medium hover:bg-[rgba(var(--accent-rgb),0.08)] has-tooltip"
+                                    data-tip="เลือก/ยกเลิกเลือกทั้งหมด">เลือกทั้งหมด</button>
+
+                            <button onclick="loadAdminData()" 
+                                    class="text-xs text-theme-main px-3 py-1.5 rounded-lg transition hover:bg-[rgba(var(--accent-rgb),0.08)] hover:text-theme-accent has-tooltip"
+                                    data-tip="รีเฟรชข้อมูลจาก Server">
+                                <i class="fa-solid fa-rotate-right"></i>
+                            </button>
                         </div>
-                        <button onclick="openPaymentModal()" class="text-xs text-white px-4 py-2 rounded-xl transition font-bold flex items-center gap-1.5 transform active:scale-95" style="background: linear-gradient(135deg, var(--btn-from), var(--btn-to)); box-shadow: 0 4px 12px rgba(var(--accent-rgb),0.25);">
+
+                        <button onclick="openPaymentModal()" 
+                                class="text-xs text-white px-4 py-2 rounded-xl transition font-bold flex items-center gap-1.5 transform active:scale-95 has-tooltip"
+                                data-tip="สร้างรายงานทำจ่ายค่าอบรม"
+                                style="background: linear-gradient(135deg, var(--btn-from), var(--btn-to)); box-shadow: 0 4px 12px rgba(var(--accent-rgb),0.25);">
                             <i class="fa-solid fa-file-invoice-dollar"></i> สรุปทำจ่าย
                         </button>
                     </div>
@@ -1040,12 +955,13 @@
                         <div class="flex items-center gap-2">
                             <i class="fa-solid fa-sliders text-xs" style="color: var(--accent);"></i>
                             <span class="text-xs font-bold text-theme-main tracking-wide">ตัวกรองข้อมูล</span>
+                            <!-- 🆕 Active filter count inside panel -->
+                            <span id="filterPanelBadge" class="hidden text-[9px] font-bold px-2 py-0.5 rounded-full" style="background: rgba(var(--accent-rgb),0.12); color: var(--accent);">0 ตัวกรอง</span>
                         </div>
-                        <button onclick="clearFilters()" class="text-[10px] text-theme-muted hover:text-red-400 flex items-center gap-1 transition-all font-bold px-2 py-1 rounded-lg hover:bg-red-400/10">
+                        <button onclick="clearFilters()" class="text-[10px] text-theme-muted hover:text-red-400 flex items-center gap-1 transition-all font-bold px-2 py-1 rounded-lg hover:bg-red-400/10 has-tooltip" data-tip="ล้างตัวกรองทั้งหมด">
                             <i class="fa-solid fa-eraser text-[9px]"></i> ล้าง
                         </button>
                     </div>
-                    
                     <div class="grid grid-cols-2 gap-2 mb-2.5">
                         <div>
                             <label class="text-[9px] font-bold mb-1 block uppercase tracking-wider" style="color: var(--accent);">ตั้งแต่วันที่</label>
@@ -1056,7 +972,6 @@
                             <input type="date" id="filterEnd" class="w-full p-2 rounded-xl glass-input text-xs" onchange="applyAdminFilters()">
                         </div>
                     </div>
-                    
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
                         <div class="md:col-span-2">
                             <label class="text-[9px] text-theme-muted font-bold mb-1 block uppercase tracking-wider">ค้นหาชื่อ / ชื่อเล่น</label>
@@ -1081,6 +996,21 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- 🆕 HINT BAR: แนะนำ Admin ให้รู้จัก Action Bar -->
+                <div id="selectionHint" class="flex items-center gap-2.5 py-2 px-4 rounded-xl mb-2 text-[10px] font-medium" 
+                     style="background: rgba(var(--accent-rgb), 0.04); border: 1px dashed rgba(var(--accent-rgb), 0.25); color: var(--text-muted);">
+                    <i class="fa-regular fa-hand-pointer text-sm" style="color: var(--accent); opacity: 0.75;"></i>
+                    <span class="flex-1">
+                        <span class="font-bold" style="color: var(--accent);">ติ๊กเลือกแถว</span> พนักงานในตาราง เพื่อสร้างรายงาน, ส่งรายชื่อ HR หรือสรุปทำจ่ายได้เลย
+                    </span>
+                    <!-- 🆕 Dismiss button: กดซ่อนได้ถาวร -->
+                    <button onclick="dismissHint()" 
+                            class="shrink-0 w-5 h-5 flex items-center justify-center rounded-md transition-all hover:bg-[rgba(var(--accent-rgb),0.12)] has-tooltip"
+                            data-tip="ซ่อนคำแนะนำนี้">
+                        <i class="fa-solid fa-xmark text-[10px]" style="color: var(--text-muted);"></i>
+                    </button>
+                </div>
                 
                 <div class="flex-1 overflow-auto glass-panel rounded-xl mb-20 shadow-lg" style="border: 1px solid var(--glass-border);">
                     <table class="w-full text-left border-collapse min-w-max">
@@ -1103,21 +1033,25 @@
                 </div>
 
                 <div id="actionBar" class="fixed bottom-6 left-0 right-0 mx-auto w-max max-w-[95vw] p-1.5 shadow-2xl transform translate-y-[150%] transition-all duration-500 z-40 flex justify-between items-center rounded-2xl" style="background: var(--glass-bg); border: 1px solid rgba(var(--accent-rgb),0.2); backdrop-filter: blur(20px);">
-                    
                     <div class="flex items-center gap-2.5 pl-3 pr-3 border-r" style="border-color: var(--glass-border);">
                         <div class="flex items-center justify-center w-8 h-8 rounded-xl" style="background: rgba(var(--accent-rgb),0.1);">
                             <span id="selectedCount" class="font-digital text-lg font-bold leading-none" style="color: var(--accent);">0</span>
                         </div>
                         <span class="text-xs text-theme-muted font-medium hidden sm:block tracking-wide">เลือกแล้ว</span>
                     </div>
-                    
                     <div class="flex gap-1.5 pl-2 pr-1">
-                        <button onclick="openReportModal()" class="text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 transform active:scale-95" style="background: linear-gradient(135deg, var(--btn-from), var(--btn-to)); box-shadow: 0 3px 12px rgba(var(--accent-rgb),0.25);">
+                        <button onclick="openReportModal()" 
+                                class="text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 transform active:scale-95 has-tooltip"
+                                data-tip="สร้างรายงานอบรม"
+                                style="background: linear-gradient(135deg, var(--btn-from), var(--btn-to)); box-shadow: 0 3px 12px rgba(var(--accent-rgb),0.25);">
                             <i class="fa-solid fa-file-invoice text-sm"></i> 
                             <span class="hidden sm:inline">สร้างรายงาน</span>
                             <span class="sm:hidden">รายงาน</span>
                         </button>
-                        <button onclick="openHRModal()" class="text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 transform active:scale-95" style="background: linear-gradient(135deg, var(--btn-from), var(--btn-to)); box-shadow: 0 3px 12px rgba(var(--accent-rgb),0.25);">
+                        <button onclick="openHRModal()" 
+                                class="text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 transform active:scale-95 has-tooltip"
+                                data-tip="สร้างข้อความส่ง HR"
+                                style="background: linear-gradient(135deg, var(--btn-from), var(--btn-to)); box-shadow: 0 3px 12px rgba(var(--accent-rgb),0.25);">
                             <i class="fa-solid fa-paper-plane text-sm"></i> 
                             <span class="hidden sm:inline">ส่งรายชื่อ HR</span>
                             <span class="sm:hidden">ส่ง HR</span>
@@ -1136,7 +1070,9 @@
     </main>
 
     <div class="fixed bottom-6 right-4 z-[100]">
-        <button id="themeMenuBtn" class="w-11 h-11 rounded-xl flex items-center justify-center text-theme-muted focus:outline-none" style="background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(12px);">
+        <button id="themeMenuBtn" class="w-11 h-11 rounded-xl flex items-center justify-center text-theme-muted focus:outline-none has-tooltip" 
+                data-tip="เปลี่ยนธีม"
+                style="background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(12px);">
             <i class="fa-solid fa-wand-magic-sparkles text-sm" style="color: var(--accent);"></i>
         </button>
         <div id="themeMenu" class="hidden absolute bottom-14 right-0 p-3 rounded-2xl shadow-2xl flex flex-col gap-1.5 w-44 origin-bottom-right" style="background: var(--glass-bg-solid); border: 1px solid var(--glass-border); backdrop-filter: blur(20px);">
@@ -1189,7 +1125,6 @@
     <!-- ====== REPORT MODAL ====== -->
     <div id="reportModal" class="hidden fixed inset-0 z-[80] bg-black/80 backdrop-blur-md flex items-center justify-center p-4" onclick="if(event.target===this) document.getElementById('reportModal').classList.add('hidden')">
         <div class="glass-panel w-full max-w-lg rounded-2xl flex flex-col max-h-[90vh] overflow-hidden">
-            <!-- Header -->
             <div class="flex justify-between items-center px-5 py-4 border-b" style="border-color: var(--glass-border);">
                 <div class="flex items-center gap-2.5">
                     <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background: rgba(var(--accent-rgb),0.12); border: 1px solid rgba(var(--accent-rgb),0.25);">
@@ -1298,12 +1233,10 @@
                 </button>
             </div>
             <div class="flex-1 overflow-y-auto px-5 py-4 space-y-3">
-                <!-- Info banner -->
                 <div class="flex items-start gap-2.5 p-3 rounded-xl text-[11px]" style="background: rgba(var(--accent-rgb),0.07); border: 1px solid rgba(var(--accent-rgb),0.2); color: var(--accent);">
                     <i class="fa-solid fa-circle-info mt-0.5 shrink-0"></i>
                     <div>ระบบคัดกรองเฉพาะผู้ที่ <b>"ติ๊กเลือก + เข้าอบรมครบ 3 วัน + สถานะ Passed"</b> เท่านั้น</div>
                 </div>
-                <!-- Date range filter -->
                 <div class="grid grid-cols-2 gap-2.5">
                     <div>
                         <label class="text-[9px] text-theme-muted font-bold mb-1.5 block uppercase tracking-wider">ตั้งแต่วันที่ (ลงทะเบียน)</label>
@@ -1314,7 +1247,6 @@
                         <input type="date" id="paymentEndDate" class="w-full p-2.5 rounded-xl glass-input text-xs" onchange="generatePaymentReportText()">
                     </div>
                 </div>
-                <!-- Custom date -->
                 <div>
                     <label class="text-[9px] font-bold mb-1.5 block uppercase tracking-wider" style="color: var(--accent);">ระบุวันที่อบรม (แสดงบน Excel/Sheet)</label>
                     <input type="text" id="paymentCustomDate" class="w-full p-2.5 rounded-xl glass-input text-xs font-mono" style="color: var(--accent); border-color: rgba(var(--accent-rgb),0.25);" placeholder="เช่น 19และ20และ23 ก.พ. 69" onkeyup="generatePaymentReportText()">
@@ -1331,11 +1263,7 @@
     </div>
 
     <script>
-        // **********************************************
-        // 🔴 ใส่ URL WEB APP (Apps Script) ตรงนี้
-        // **********************************************
         const API_URL = "https://script.google.com/macros/s/AKfycbyYYauRspNoRvkhUWKZh4c5Hp1TzhxWGu_T96TvPPMZ6p1DHJqh30Azzi_PrEcGn9dy/exec"; 
-        // **********************************************
 
         const ADMIN_DEFAULT_THEME = 'cyber'; 
         
@@ -1344,7 +1272,7 @@
         let selectedRows = new Set(); 
         let sortState = { key: 'timestamp', asc: false };
         let currentAdminRole = 'master'; 
-        let checkinLock = {}; // กันกดเช็คชื่อซ้ำเร็ว ๆ ก่อน backend ตอบกลับ
+        let checkinLock = {};
 
         function getTodayKey() {
             const now = new Date();
@@ -1358,24 +1286,11 @@
             const line12 = document.getElementById('stepperLine12');
             const line23 = document.getElementById('stepperLine23');
             if (!line12 || !line23) return;
-
             const d1Passed = !!(d && d.d1);
             const d2Passed = !!(d && d.d2);
-
-            const setPassed = (el) => {
-                el.style.background = 'var(--status-passed-text)';
-                el.style.boxShadow = '0 0 14px rgba(52, 211, 153, 0.25)';
-                el.style.opacity = '0.95';
-            };
-
-            const setDefault = (el) => {
-                el.style.background = 'rgba(var(--accent-rgb),0.22)';
-                el.style.boxShadow = 'none';
-                el.style.opacity = '1';
-            };
-
-            setDefault(line12);
-            setDefault(line23);
+            const setPassed = (el) => { el.style.background = 'var(--status-passed-text)'; el.style.boxShadow = '0 0 14px rgba(52, 211, 153, 0.25)'; el.style.opacity = '0.95'; };
+            const setDefault = (el) => { el.style.background = 'rgba(var(--accent-rgb),0.22)'; el.style.boxShadow = 'none'; el.style.opacity = '1'; };
+            setDefault(line12); setDefault(line23);
             if (d1Passed) setPassed(line12);
             if (d2Passed) setPassed(line23);
         }
@@ -1392,6 +1307,32 @@
             startTime();
             setupPhoneFormatting();
             loadSavedPhone();
+
+            // 🆕 เช็คว่า Admin เคย dismiss hint แล้วหรือยัง
+            if (localStorage.getItem('hr_hint_dismissed') === '1') {
+                const hint = document.getElementById('selectionHint');
+                if (hint) hint.style.display = 'none';
+            }
+        }
+
+        // 🆕 Dismiss hint bar ถาวร (บันทึกลง localStorage)
+        function dismissHint() {
+            const hint = document.getElementById('selectionHint');
+            if (hint) {
+                hint.style.transition = 'all 0.3s ease';
+                hint.style.opacity = '0';
+                hint.style.maxHeight = hint.offsetHeight + 'px';
+                // Animate collapse
+                requestAnimationFrame(() => {
+                    hint.style.maxHeight = '0';
+                    hint.style.padding = '0';
+                    hint.style.margin = '0';
+                    hint.style.border = 'none';
+                    hint.style.overflow = 'hidden';
+                });
+                setTimeout(() => hint.style.display = 'none', 350);
+            }
+            localStorage.setItem('hr_hint_dismissed', '1');
         }
 
         function setTheme(theme) {
@@ -1427,10 +1368,9 @@
                 document.getElementById('clockTime').innerText = `${String(today.getHours()).padStart(2,'0')}:${String(today.getMinutes()).padStart(2,'0')}`;
             }
             tick();
-            setInterval(tick, 1000); // 🔴 FIX: setInterval แทน setTimeout nested — ป้องกัน call stack drift
+            setInterval(tick, 1000);
         }
 
-        // 🟢 ESC key ปิด modal ทุกตัว
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 ['editModal', 'reportModal', 'hrModal', 'paymentModal'].forEach(id => {
@@ -1454,27 +1394,16 @@
 
         function loadSavedPhone() {
             const savedPhone = localStorage.getItem('hr_saved_phone');
-            if(savedPhone && /^0\d{9}$/.test(savedPhone)) { // 🔴 FIX: ตรวจสอบว่าเป็น 10 หลักจริงก่อนโหลด
+            if(savedPhone && /^0\d{9}$/.test(savedPhone)) {
                 let match = savedPhone.match(/^(\d{3})(\d{3})(\d{4})$/);
-                if(match) {
-                    document.getElementById('checkinPhone').value = `${match[1]}-${match[2]}-${match[3]}`;
-                }
-                
-                // สลับไปหน้าเช็คชื่ออัตโนมัติ
+                if(match) { document.getElementById('checkinPhone').value = `${match[1]}-${match[2]}-${match[3]}`; }
                 switchTab('checkin');
-                
-                // หน่วงเวลาเล็กน้อยให้ UI โหลดเสร็จ แล้วสั่งเช็คสถานะอัตโนมัติ
-                setTimeout(() => {
-                    checkStatus(true); // ส่งค่า true ไปบอกว่าเป็น Auto-login
-                }, 300);
-            } else if (savedPhone) {
-                localStorage.removeItem('hr_saved_phone'); // 🔴 FIX: เคลียร์ค่าที่ invalid ออก
-            }
+                setTimeout(() => { checkStatus(true); }, 300);
+            } else if (savedPhone) { localStorage.removeItem('hr_saved_phone'); }
         }
         
         function getRawPhone(inputId) { return document.getElementById(inputId).value.replace(/-/g, ''); }
 
-        // --- Core API (Safe Mode) ---
         async function fetchAPI(payload) {
             document.getElementById('loadingOverlay').classList.remove('hidden');
             try { 
@@ -1495,23 +1424,18 @@
             let cleanName = e.target.name.value.trim().replace(/\s+/g, ' '); let cleanNickname = e.target.nickname.value.trim();
             let cleanTeam = e.target.team.value.trim(); let cleanRecruiter = e.target.recruiter.value.trim();
             e.target.name.value = cleanName; e.target.nickname.value = cleanNickname; e.target.team.value = cleanTeam; e.target.recruiter.value = cleanRecruiter;
-
             if (cleanName.split(' ').length < 2 || cleanName.length < 5) { return Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณากรอกทั้ง "ชื่อ" และ "นามสกุล" โดยเว้นวรรคตรงกลางครับ', background: 'var(--glass-bg)', color: 'var(--text-main)' }); }
             let rawPhone = getRawPhone('regPhone');
             if (!/^0\d{9}$/.test(rawPhone)) { return Swal.fire({ icon: 'warning', title: 'เบอร์โทรศัพท์ไม่ถูกต้อง', text: 'เบอร์โทรศัพท์ต้องขึ้นต้นด้วยเลข 0 และมีจำนวน 10 หลักพอดีครับ', background: 'var(--glass-bg)', color: 'var(--text-main)' }); }
-
             const btn = document.getElementById('btnRegister'); const originalText = btn.innerHTML;
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังบันทึก...';
-            
             let formData = Object.fromEntries(new FormData(e.target));
             formData.name = cleanName; formData.nickname = cleanNickname; formData.team = cleanTeam; formData.recruiter = cleanRecruiter; formData.phone = rawPhone; 
-
             const res = await fetchAPI({ action: 'register', ...formData });
             btn.disabled = false; btn.innerHTML = originalText;
-
             if (res.status === 'success') { 
                 Swal.fire({ icon: 'success', title: 'ลงทะเบียนสำเร็จ', confirmButtonColor: 'var(--accent)', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
-                const savedFormattedPhone = document.getElementById('regPhone').value; // 🔴 FIX: save ก่อน reset
+                const savedFormattedPhone = document.getElementById('regPhone').value;
                 e.target.reset(); document.getElementById('checkinPhone').value = savedFormattedPhone; switchTab('checkin'); 
             } else { Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: res.message, background: 'var(--glass-bg)', color: 'var(--text-main)' }); }
         }
@@ -1522,74 +1446,50 @@
                 if(!isAuto) return Swal.fire({ icon: 'warning', text: 'เบอร์โทรศัพท์ต้องขึ้นต้นด้วยเลข 0 และมีจำนวน 10 หลัก', background: 'var(--glass-bg)', color: 'var(--text-main)' });
                 return;
             }
-            
             const btn = document.getElementById('btnCheckStatus'); 
             const originalText = btn.innerHTML;
             btn.disabled = true; 
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังตรวจสอบ...';
-
             const res = await fetchAPI({ action: 'login', phone: rawPhone });
             btn.disabled = false; 
             btn.innerHTML = originalText;
-
             if (res.status === 'success') {
                 const d = res.data;
-                
-                // 🔴 [ส่วนที่เพิ่มใหม่] เช็คว่าเป็นพนักงานที่ออกไปแล้วและกลับมา Retrain หรือไม่
                 if (['Resigned', 'New Job'].includes(d.status)) {
-                    localStorage.removeItem('hr_saved_phone'); // ล้างเบอร์เดิมที่จำไว้
+                    localStorage.removeItem('hr_saved_phone');
                     document.getElementById('checkinPhone').value = '';
-                    switchTab('register'); // เตะกลับหน้าลงทะเบียน
-                    
-                    return Swal.fire({ 
-                        icon: 'info', 
-                        title: 'พบประวัติเก่า (Retrain)', 
-                        text: 'เนื่องจากสถานะเดิมของคุณคือออกจากการอบรม หากกลับมาเริ่มใหม่ กรุณาลงทะเบียนใหม่อีกครั้งครับ', 
-                        background: 'var(--glass-bg)', 
-                        color: 'var(--text-main)',
-                        confirmButtonColor: 'var(--accent)'
-                    });
+                    switchTab('register');
+                    return Swal.fire({ icon: 'info', title: 'พบประวัติเก่า (Retrain)', text: 'เนื่องจากสถานะเดิมของคุณคือออกจากการอบรม หากกลับมาเริ่มใหม่ กรุณาลงทะเบียนใหม่อีกครั้งครับ', background: 'var(--glass-bg)', color: 'var(--text-main)', confirmButtonColor: 'var(--accent)' });
                 }
-
-                // 🟢 ถ้าปกติ (Active/Passed) ให้เข้าหน้าเช็คชื่อตามปกติ
                 localStorage.setItem('hr_saved_phone', rawPhone);
-                window._lastCheckinData = d; // 🔒 store for day-order lock
+                window._lastCheckinData = d;
                 document.getElementById('uiName').innerText = d.name; 
                 document.getElementById('uiNick').innerText = d.nickname; 
                 document.getElementById('uiDept').innerText = d.dept; 
                 document.getElementById('uiStatus').innerText = d.status;
-                
                 let bCls = 'status-default'; 
                 if(d.status==='Active') bCls='status-active'; 
                 else if(d.status==='Passed') bCls='status-passed'; 
-                
                 document.getElementById('uiStatus').className = `status-badge ${bCls}`;
                 document.getElementById('profileCard').classList.remove('hidden');
                 [1,2,3].forEach(i => updateCheckBtn(`boxD${i}`, i, d[`d${i}`]));
                 updateStepperLine(d);
-                
-                // 🎮 Gamification: update avatar + XP + badges
                 updateAvatar(d.name);
                 updateGamification(d);
-                
             } else { 
-                // กรณีค้นหาไม่เจอ
                 localStorage.removeItem('hr_saved_phone');
                 if(!isAuto) Swal.fire({ icon: 'error', text: 'ไม่พบข้อมูล หรือคุณยังไม่ได้ลงทะเบียน', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
                 document.getElementById('profileCard').classList.add('hidden'); 
-                if(isAuto) switchTab('register'); // ถ้าจำเบอร์มาผิดให้เด้งกลับไปหน้าลงทะเบียน
+                if(isAuto) switchTab('register');
             }
         }
 
         function updateCheckBtn(id, day, val) {
-            day = Number(day); // normalize ทุกกรณี
+            day = Number(day);
             const btn = document.querySelector(`#${id} button`); 
             const box = document.getElementById(id);
-            
             if(val) { 
-                // ✅ สไตล์ตอน "เช็คชื่อผ่านแล้ว"
                 box.className="bg-gradient-to-b from-[var(--status-passed-bg)] to-transparent p-3 rounded-xl text-center border border-[var(--status-passed-text)] shadow-[0_0_15px_var(--status-passed-bg)] transform scale-105 transition-all duration-500 z-20 relative"; 
-                
                 let displayVal = val;
                 try {
                     let vStr = String(val).trim();
@@ -1611,25 +1511,20 @@
                         displayVal = `${dd}/${mm}/${yy}<br><span class="text-xs mt-1 block drop-shadow-md text-[var(--status-passed-text)]"><i class="fa-regular fa-circle-check mr-1"></i>${hh}:${min}</span>`;
                     }
                 } catch(e) {}
-
                 btn.className="w-full h-10 rounded bg-transparent text-[var(--status-passed-text)] cursor-default font-digital text-[10px] leading-tight font-bold tracking-wide flex flex-col items-center justify-center opacity-90"; 
                 btn.innerHTML= displayVal; 
                 btn.removeAttribute('onclick'); btn.onclick=null; 
             } else {
-                // 🔒 ตรวจสอบว่า Day ก่อนหน้าเช็คแล้วหรือยัง (ใช้ข้อมูลจาก _lastCheckinData)
                 const d = window._lastCheckinData || {};
                 const dayNum = Number(day);
                 const prevDayDone = (dayNum === 1) || (dayNum === 2 && !!d.d1) || (dayNum === 3 && !!d.d2);
-
                 if (prevDayDone) {
-                    // ⏳ Active — กดได้ตามปกติ
                     box.className="bg-[var(--glass-bg)] p-3 rounded-xl text-center border border-theme-border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-[var(--accent)] group cursor-pointer"; 
                     btn.className="w-full h-10 rounded-lg bg-[var(--glass-border)] text-theme-muted group-hover:text-white group-hover:bg-gradient-to-br group-hover:from-[var(--accent)] group-hover:to-blue-600 transition-all duration-300 flex items-center justify-center shadow-inner group-hover:shadow-[0_0_15px_var(--accent)]"; 
                     btn.innerHTML=`<i class="fa-solid fa-fingerprint text-xl group-hover:scale-110 transition-transform"></i>`; 
                     btn.removeAttribute('onclick'); btn.onclick=()=>doCheckIn(day);
                     btn.disabled = false;
                 } else {
-                    // 🔒 Locked — ยังไม่ถึงคิว ปุ่มสีจางๆ มีไอคอนกุญแจ + Toast แจ้งเตือนเมื่อกด
                     box.className="bg-[var(--glass-bg)] p-3 rounded-xl text-center border border-theme-border opacity-40 cursor-not-allowed transition-all duration-300";
                     btn.className="w-full h-10 rounded-lg bg-[var(--glass-border)] text-theme-muted flex items-center justify-center cursor-not-allowed";
                     btn.innerHTML=`<i class="fa-solid fa-lock text-base"></i>`;
@@ -1641,52 +1536,37 @@
         }
 
         async function doCheckIn(day) {
-            day = Number(day); // normalize string -> number
+            day = Number(day);
             const rawPhone = getRawPhone('checkinPhone');
             const todayKey = getTodayKey();
             const alreadyKey = `hr_checkin_done_${rawPhone}_${day}`;
             const anyDoneKey = `hr_checkin_done_any_${rawPhone}_${todayKey}`;
             const anyLockKey = `hr_checkin_lock_any_${rawPhone}_${todayKey}`;
-
-            // 🔒 กันกดข้าม Day — ตรวจสอบจาก server data ที่ดึงมาล่าสุด
-            // ถ้า _lastCheckinData ยังไม่มี (ยังไม่ได้ตรวจสอบสถานะ) ให้บล็อกทุก Day ยกเว้น Day 1
             const userData = window._lastCheckinData;
             if (!userData && day > 1) {
                 return Swal.fire({ icon: 'info', title: 'กรุณาตรวจสอบสถานะก่อน', text: 'กดปุ่ม "ตรวจสอบสถานะ" เพื่อโหลดข้อมูลก่อนเช็คชื่อครับ', background: 'var(--glass-bg)', color: 'var(--text-main)', timer: 2500, showConfirmButton: false });
             }
-            if (userData && day === 2 && !userData.d1) {
-                return Swal.fire({ icon: 'info', title: 'ยังเช็ค Day 1 ไม่ครบ', text: 'กรุณาเช็คชื่อ Day 1 ก่อนนะครับ 😊', background: 'var(--glass-bg)', color: 'var(--text-main)', timer: 2200, showConfirmButton: false });
-            }
-            if (userData && day === 3 && !userData.d2) {
-                return Swal.fire({ icon: 'info', title: 'ยังเช็ค Day 2 ไม่ครบ', text: 'กรุณาเช็คชื่อ Day 2 ก่อนนะครับ 😊', background: 'var(--glass-bg)', color: 'var(--text-main)', timer: 2200, showConfirmButton: false });
-            }
-
-            // กันกดหลาย Day ใน "วันเดียวกัน" (ทำได้แค่ครั้งเดียวต่อวัน)
+            if (userData && day === 2 && !userData.d1) { return Swal.fire({ icon: 'info', title: 'ยังเช็ค Day 1 ไม่ครบ', text: 'กรุณาเช็คชื่อ Day 1 ก่อนนะครับ 😊', background: 'var(--glass-bg)', color: 'var(--text-main)', timer: 2200, showConfirmButton: false }); }
+            if (userData && day === 3 && !userData.d2) { return Swal.fire({ icon: 'info', title: 'ยังเช็ค Day 2 ไม่ครบ', text: 'กรุณาเช็คชื่อ Day 2 ก่อนนะครับ 😊', background: 'var(--glass-bg)', color: 'var(--text-main)', timer: 2200, showConfirmButton: false }); }
             if (localStorage.getItem(anyDoneKey) === todayKey) {
-                checkinLock[anyLockKey] = false; // 🔴 FIX: release lock ก่อน return
+                checkinLock[anyLockKey] = false;
                 return Swal.fire({ icon: 'info', title: 'ทำรายการแล้ว', text: 'วันนี้คุณเช็คชื่อเรียบร้อยแล้ว (ทำได้วันละ 1 ครั้ง)', background: 'var(--glass-bg)', color: 'var(--text-main)', timer: 1800, showConfirmButton: false });
             }
-
             if (checkinLock[anyLockKey]) return;
             checkinLock[anyLockKey] = true;
-
             if (localStorage.getItem(alreadyKey) === todayKey) {
-                checkinLock[anyLockKey] = false; // 🔴 FIX: release lock ก่อน return
+                checkinLock[anyLockKey] = false;
                 return Swal.fire({ icon: 'info', title: 'ทำรายการแล้ว', text: `Day ${day} ของวันนี้เช็คชื่อเรียบร้อยแล้ว`, background: 'var(--glass-bg)', color: 'var(--text-main)', timer: 1800, showConfirmButton: false });
             }
-
             const lockKey = `hr_checkin_lock_${rawPhone}_${day}`;
-            if (checkinLock[lockKey]) { checkinLock[anyLockKey] = false; return; } // 🔴 FIX: release anyLock too
+            if (checkinLock[lockKey]) { checkinLock[anyLockKey] = false; return; }
             checkinLock[lockKey] = true;
-
-            // 🎮 Day-specific confirm message
             const dayMsgs = [
                 { title: '🚀 เริ่มต้นการเดินทาง!', text: 'เช็คชื่อ Day 1 เพื่อรับ +100 XP' },
                 { title: '🔥 ไฟยังลุกอยู่!', text: 'เช็คชื่อ Day 2 เพื่อรับ +100 XP' },
                 { title: '🏆 วันสุดท้ายแล้ว!', text: 'เช็คชื่อ Day 3 ปิดท้าย รับ GRADUATE Badge!' },
             ];
             const msg = dayMsgs[day - 1] || { title: `เช็คชื่อวันที่ ${day}?`, text: '' };
-
             const cf = await Swal.fire({
                 title: msg.title, text: msg.text,
                 showCancelButton: true, confirmButtonText: '✅ ยืนยัน', cancelButtonText: 'ยกเลิก',
@@ -1699,19 +1579,13 @@
                     if (res.status === 'success') {
                         localStorage.setItem(alreadyKey, todayKey);
                         localStorage.setItem(anyDoneKey, todayKey);
-
-                        // 🎮 Day-specific visual effects
                         const dayBox = document.getElementById(`boxD${day}`);
                         launchDayEffect(day);
                         spawnStarBurst(day, dayBox);
                         spawnXPFloat(100, dayBox);
-
                         await checkStatus();
-
                         if (day === 3) {
-                            setTimeout(() => {
-                                Swal.fire({ icon: 'success', title: '🎉 GRADUATE!', html: '<p class="text-sm">คุณเข้าอบรมครบ <b>3 วัน</b> แล้ว!<br>ยินดีด้วยอย่างยิ่ง 🏆</p>', confirmButtonColor: '#fbbf24', background: 'var(--glass-bg)', color: 'var(--text-main)' });
-                            }, 800);
+                            setTimeout(() => { Swal.fire({ icon: 'success', title: '🎉 GRADUATE!', html: '<p class="text-sm">คุณเข้าอบรมครบ <b>3 วัน</b> แล้ว!<br>ยินดีด้วยอย่างยิ่ง 🏆</p>', confirmButtonColor: '#fbbf24', background: 'var(--glass-bg)', color: 'var(--text-main)' }); }, 800);
                         } else {
                             Swal.fire({ icon: 'success', title: `Day ${day} ✓  +100 XP ⚡`, timer: 1600, showConfirmButton: false, background: 'var(--glass-bg)', color: 'var(--text-main)' });
                         }
@@ -1734,7 +1608,6 @@
             if (res.status === 'success') { 
                 adminPassCache = pass; 
                 currentAdminRole = (pass === 'adminhr0208') ? 'hr' : 'master';
-
                 document.getElementById('adminLogin').classList.add('hidden'); 
                 document.getElementById('adminDashboard').classList.remove('hidden'); 
                 adminAllData = Array.isArray(res.data) ? res.data : []; 
@@ -1757,25 +1630,18 @@
             if (!dateStr) return null;
             let str = String(dateStr).trim();
             if (str === "") return null;
-            
             if (str.includes('/')) {
                 const parts = str.split(' '); 
                 const dPart = parts[0].split('/'); 
                 const tPart = parts[1] ? parts[1].split(':') : ['00','00','00'];
-                
-                // 🟢 เพิ่มการดักจับฟอร์แมต "dd/MM" จากระบบเช็คชื่อ (ไม่มีปีระบุมา)
                 if (dPart.length === 2) {
                     const currentYear = new Date().getFullYear();
-                    // แปลงเป็นฟอร์แมต ISO (YYYY-MM-DDTHH:mm:ss) เพื่อให้ทำงานได้ชัวร์ 100% บนทุก Browser
                     return new Date(`${currentYear}-${dPart[1]}-${dPart[0]}T${tPart[0]}:${tPart[1]}:${tPart[2]||'00'}`);
                 }
-                
-                // กรณีมีปีระบุมาด้วย (dd/MM/yyyy)
                 if (dPart.length >= 3) {
                     return new Date(`${dPart[2]}-${dPart[1]}-${dPart[0]}T${tPart[0]}:${tPart[1]}:${tPart[2]||'00'}`);
                 }
             }
-            
             const parsed = new Date(str);
             if (!isNaN(parsed.getTime())) return parsed;
             return null;
@@ -1789,26 +1655,73 @@
         }
 
         // --- Filters & Sorting ---
-        function toggleFilterPanel() { document.getElementById('filterPanel').classList.toggle('hidden'); }
-        function clearFilters() { document.getElementById('filterStart').value = ''; document.getElementById('filterEnd').value = ''; document.getElementById('filterName').value = ''; document.getElementById('filterTeam').value = ''; document.getElementById('filterStatus').value = 'all'; applyAdminFilters(); }
+        function toggleFilterPanel() { 
+            const panel = document.getElementById('filterPanel');
+            panel.classList.toggle('hidden'); 
+        }
+
+        function clearFilters() { 
+            document.getElementById('filterStart').value = ''; 
+            document.getElementById('filterEnd').value = ''; 
+            document.getElementById('filterName').value = ''; 
+            document.getElementById('filterTeam').value = ''; 
+            document.getElementById('filterStatus').value = 'all'; 
+            applyAdminFilters(); 
+        }
         
         function handleSort(key) {
             if (sortState.key === key) sortState.asc = !sortState.asc; else { sortState.key = key; sortState.asc = true; }
-            document.querySelectorAll('.sort-icon').forEach(i => i.className = 'fa-solid fa-sort sort-icon'); const iconId = `sort-icon-${key}`; if (document.getElementById(iconId)) document.getElementById(iconId).className = sortState.asc ? 'fa-solid fa-sort-up sort-icon opacity-100' : 'fa-solid fa-sort-down sort-icon opacity-100'; applyAdminFilters();
+            document.querySelectorAll('.sort-icon').forEach(i => i.className = 'fa-solid fa-sort sort-icon'); 
+            const iconId = `sort-icon-${key}`; 
+            if (document.getElementById(iconId)) document.getElementById(iconId).className = sortState.asc ? 'fa-solid fa-sort-up sort-icon opacity-100' : 'fa-solid fa-sort-down sort-icon opacity-100'; 
+            applyAdminFilters();
         }
 
         function applyAdminFilters() {
-            // ใช้ .trim() เพื่อป้องกันการกด Spacebar เกินมาโดยไม่ตั้งใจ
             const fStart = document.getElementById('filterStart').value; 
             const fEnd = document.getElementById('filterEnd').value; 
             const fName = document.getElementById('filterName').value.trim().toLowerCase(); 
             const fTeam = document.getElementById('filterTeam').value.trim().toLowerCase(); 
             const fStatus = document.getElementById('filterStatus').value;
 
-            // 🟢 ตรวจสอบ date range ไม่ให้ start > end
+            // 🆕 นับจำนวน filter ที่ active และอัปเดต badge
+            let activeFilterCount = 0;
+            if (fStart) activeFilterCount++;
+            if (fEnd) activeFilterCount++;
+            if (fName) activeFilterCount++;
+            if (fTeam) activeFilterCount++;
+            if (fStatus !== 'all') activeFilterCount++;
+            
+            // อัปเดต badge บนปุ่ม filter
+            const filterBadge = document.getElementById('filterBadge');
+            if (filterBadge) {
+                if (activeFilterCount > 0) {
+                    filterBadge.textContent = activeFilterCount;
+                    if (filterBadge.classList.contains('hidden')) {
+                        filterBadge.classList.remove('hidden');
+                        // Trigger pop animation โดย reset แล้วเพิ่มใหม่
+                        filterBadge.style.animation = 'none';
+                        requestAnimationFrame(() => { filterBadge.style.animation = ''; });
+                    }
+                } else {
+                    filterBadge.classList.add('hidden');
+                }
+            }
+
+            // อัปเดต badge ใน filter panel header
+            const panelBadge = document.getElementById('filterPanelBadge');
+            if (panelBadge) {
+                if (activeFilterCount > 0) {
+                    panelBadge.textContent = `${activeFilterCount} ตัวกรอง`;
+                    panelBadge.classList.remove('hidden');
+                } else {
+                    panelBadge.classList.add('hidden');
+                }
+            }
+
             if (fStart && fEnd && new Date(fStart) > new Date(fEnd)) {
                 document.getElementById('filterEnd').style.borderColor = 'rgba(248,113,113,0.6)';
-                return; // รอให้แก้ไขก่อน ไม่ filter
+                return;
             } else {
                 document.getElementById('filterEnd').style.borderColor = '';
             }
@@ -1817,56 +1730,31 @@
 
             let filtered = adminAllData.filter(row => {
                 if (!row || typeof row !== 'object') return false; 
-
                 const safeName = String(row.name || '').toLowerCase();
                 const safeNick = String(row.nickname || '').toLowerCase();
                 const safeTeam = String(row.team || '').toLowerCase();
                 const safeStatus = String(row.status || '');
-
                 const matchName = safeName.includes(fName) || safeNick.includes(fName); 
                 const matchTeam = safeTeam.includes(fTeam);
-                
                 let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
                 const isDropout = (attendedDays > 0 && attendedDays < 3) && ['Resigned', 'New Job'].includes(safeStatus);
-                
                 let matchStatus = true; 
                 if (fStatus === 'active') matchStatus = safeStatus === 'Active'; 
                 else if (fStatus === 'passed') matchStatus = (safeStatus === 'Passed' || attendedDays === 3); 
                 else if (fStatus === 'dropout') matchStatus = isDropout; 
                 else if (fStatus === 'resigned') matchStatus = ['Resigned', 'New Job'].includes(safeStatus);
-                
-                // --- ส่วนที่ปรับปรุงการเปรียบเทียบวันที่แบบ 100% แม่นยำ ---
                 let matchDate = true;
                 if (fStart || fEnd) { 
                     const rDate = parseToDateObj(row.timestamp); 
                     if (rDate) { 
-                        // เซ็ตเวลาของข้อมูลแถวนี้ให้เป็นเที่ยงคืนตรง (00:00:00.000)
                         rDate.setHours(0, 0, 0, 0); 
-                        
-                        if (fStart) {
-                            // สร้าง Date Object ของวันเริ่มต้น และเซ็ตเป็นเที่ยงคืนตรง
-                            const startDate = new Date(fStart);
-                            startDate.setHours(0, 0, 0, 0);
-                            if (rDate < startDate) matchDate = false;
-                        }
-                        
-                        if (fEnd) {
-                            // สร้าง Date Object ของวันสิ้นสุด และเซ็ตเป็นเที่ยงคืนตรง
-                            const endDate = new Date(fEnd);
-                            endDate.setHours(0, 0, 0, 0);
-                            if (rDate > endDate) matchDate = false;
-                        }
-                    } else {
-                        // ถ้าแถวนั้นไม่มีข้อมูลวันที่ที่ถูกต้อง จะถูกซ่อนไปเมื่อเปิดใช้ตัวกรองวันที่
-                        matchDate = false;
-                    }
+                        if (fStart) { const startDate = new Date(fStart); startDate.setHours(0, 0, 0, 0); if (rDate < startDate) matchDate = false; }
+                        if (fEnd) { const endDate = new Date(fEnd); endDate.setHours(0, 0, 0, 0); if (rDate > endDate) matchDate = false; }
+                    } else { matchDate = false; }
                 }
-                // --------------------------------------------------
-
                 return matchName && matchTeam && matchStatus && matchDate;
             });
 
-            // Thai string sorting support (คงไว้เหมือนเดิม)
             filtered.sort((a, b) => { 
                 let valA = a[sortState.key] || ''; 
                 let valB = b[sortState.key] || ''; 
@@ -1883,8 +1771,6 @@
 
         function renderAdminTable(data) {
             const tbody = document.getElementById('adminTable'); tbody.innerHTML = '';
-
-            // อัปเดต badge นับจำนวนแถว
             const countEl = document.getElementById('adminRowCount');
             if (countEl) { countEl.textContent = data ? data.length : 0; countEl.classList.remove('hidden'); }
 
@@ -1893,43 +1779,28 @@
                 updateActionBar(); return;
             }
 
-            // 🟢 อัปเกรดฟังก์ชันจัดรูปแบบเวลา ให้จับการแปลง Date อัตโนมัติจาก Google Sheets ได้เป๊ะ 100%
             const formatCheckinHover = (val, timestamp) => {
                 if (!val) return "";
                 try {
                     let vStr = String(val).trim();
                     let fallbackYear = new Date().getFullYear();
-                    
-                    if (timestamp) {
-                        const rDate = parseToDateObj(timestamp);
-                        if (rDate) fallbackYear = rDate.getFullYear();
-                    }
-
-                    // 1. กรณีที่ 1: ข้อมูลยังคงเป็น String ดิบๆ แบบ "04/03 09:13"
+                    if (timestamp) { const rDate = parseToDateObj(timestamp); if (rDate) fallbackYear = rDate.getFullYear(); }
                     const slashParts = vStr.split('/');
                     if (slashParts.length === 2 && vStr.includes(' ')) {
                         const spaceParts = vStr.split(' ');
                         const dParts = spaceParts[0].split('/');
-                        if (dParts.length === 2) {
-                            const dd = String(dParts[0]).padStart(2, '0');
-                            const mm = String(dParts[1]).padStart(2, '0');
-                            return `${dd}-${mm}-${fallbackYear} ${spaceParts[1]}`;
-                        }
+                        if (dParts.length === 2) { const dd = String(dParts[0]).padStart(2, '0'); const mm = String(dParts[1]).padStart(2, '0'); return `${dd}-${mm}-${fallbackYear} ${spaceParts[1]}`; }
                     }
-
-                    // 2. กรณีที่ 2: Google Sheets แปลงค่าในเซลล์เป็น Date Object (ส่งมาเป็น ISO String ยาวๆ)
                     const parsedDate = new Date(vStr);
                     if (!isNaN(parsedDate.getTime())) {
                         const dd = String(parsedDate.getDate()).padStart(2, '0');
                         const mm = String(parsedDate.getMonth() + 1).padStart(2, '0');
                         let yy = parsedDate.getFullYear();
-                        if (yy < 2000) yy = fallbackYear; // ป้องกันบั๊กกรณีชีตมองเป็นแค่เวลา (ปี 1899)
-                        
+                        if (yy < 2000) yy = fallbackYear;
                         const hh = String(parsedDate.getHours()).padStart(2, '0');
                         const min = String(parsedDate.getMinutes()).padStart(2, '0');
                         return `${dd}-${mm}-${yy} ${hh}:${min}`;
                     }
-
                     return vStr; 
                 } catch(e) { return val; }
             };
@@ -1940,66 +1811,43 @@
                     let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++;
                     const safeStatus = String(row.status || '');
                     const isDropout = (attendedDays > 0 && attendedDays < 3) && ['Resigned', 'New Job'].includes(safeStatus);
-                    
                     tr.className = isDropout ? "transition border-b border-[var(--status-alert-text)] bg-[var(--status-alert-bg)]" : "hover:bg-[var(--glass-border)] transition border-b border-theme-border";
-                    
                     const icon = (v, ts) => v ? `<i class="fa-solid fa-circle-check text-[var(--status-passed-text)] text-sm cursor-help hover:scale-125 transition-transform" title="${formatCheckinHover(v, ts)}"></i>` : `<i class="fa-regular fa-circle text-theme-muted text-sm opacity-50 cursor-not-allowed" title="-"></i>`;
-                    
                     let badge = "status-default"; 
                     let displayStatus = safeStatus || '-';
-                    let overdueWarning = ''; // 🟢 ตัวแปรสำหรับเก็บป้ายแจ้งเตือนค้างสถานะ
-                    
+                    let overdueWarning = '';
                     if (safeStatus === 'Active') {
                         displayStatus = `ACTIVE (${attendedDays} วัน)`;
-                        if (attendedDays === 0) {
-                            badge = "status-active !bg-gray-500/20 !text-gray-400 !border-gray-400 !shadow-none";
-                        } else if (attendedDays === 1) {
-                            badge = "status-active !bg-blue-500/20 !text-blue-400 !border-blue-400";
-                        } else if (attendedDays === 2) {
-                            badge = "status-active !bg-purple-500/20 !text-purple-400 !border-purple-400";
-                        } else if (attendedDays >= 3) {
-                            badge = "status-active !bg-teal-500/20 !text-teal-400 !border-teal-400";
-                        }
-
-                        // 🟢 ระบบคำนวณวัน: นับจาก "เช็คชื่อวันแรก" ถึง "วันนี้" ผ่านมากี่วันแล้ว
+                        if (attendedDays === 0) { badge = "status-active !bg-gray-500/20 !text-gray-400 !border-gray-400 !shadow-none"; }
+                        else if (attendedDays === 1) { badge = "status-active !bg-blue-500/20 !text-blue-400 !border-blue-400"; }
+                        else if (attendedDays === 2) { badge = "status-active !bg-purple-500/20 !text-purple-400 !border-purple-400"; }
+                        else if (attendedDays >= 3) { badge = "status-active !bg-teal-500/20 !text-teal-400 !border-teal-400"; }
                         let firstCheckin = row.d1 || row.d2 || row.d3;
                         if (firstCheckin) {
                             let startDate = parseToDateObj(firstCheckin);
                             if (startDate) {
                                 let today = new Date();
-                                startDate.setHours(0, 0, 0, 0); // ตัดเวลาทิ้ง เทียบแค่วันที่
+                                startDate.setHours(0, 0, 0, 0);
                                 today.setHours(0, 0, 0, 0);
-                                
                                 let diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-                                
-                                // ถ้าผ่านมา 3 วันขึ้นไป (เช่น เทรนจบแล้ว หรือ หายไปเฉยๆ) ให้ขึ้นป้ายเตือน Admin
-                                if (diffDays >= 3) {
-                                    overdueWarning = `<div class="mt-2 inline-block bg-orange-500/20 border border-orange-500/50 text-orange-400 text-[9px] font-bold px-2 py-1 rounded shadow-lg animate-pulse" title="ค้างสถานะ Active มา ${diffDays} วัน นับจากเช็คชื่อวันแรก"><i class="fa-solid fa-bell mr-1"></i>ผ่านมา ${diffDays} วัน (รอเปลี่ยนสถานะ)</div>`;
-                                }
+                                if (diffDays >= 3) { overdueWarning = `<div class="mt-2 inline-block bg-orange-500/20 border border-orange-500/50 text-orange-400 text-[9px] font-bold px-2 py-1 rounded shadow-lg animate-pulse" title="ค้างสถานะ Active มา ${diffDays} วัน นับจากเช็คชื่อวันแรก"><i class="fa-solid fa-bell mr-1"></i>ผ่านมา ${diffDays} วัน (รอเปลี่ยนสถานะ)</div>`; }
                             }
                         }
                     } 
                     else if (safeStatus === 'Passed') { badge = "status-passed"; } 
                     else if (['Resigned','New Job'].includes(safeStatus)) { badge = "status-alert"; }
-                    
                     let dayColor = attendedDays === 3 ? 'var(--status-passed-text)' : (isDropout ? 'var(--status-alert-text)' : 'var(--accent)');
-                    
-                    // ปรับขนาดชื่อจริงให้ใหญ่ขึ้นเป็น text-base (16px) และเพิ่มระยะห่าง
                     let nameDisplay = `<div class="font-bold text-theme-main text-base mb-1.5">${row.name || '-'}</div>`;
                     if (isDropout) { nameDisplay = `<div class="font-bold text-[var(--status-alert-text)] text-base mb-1.5 flex items-center gap-1.5 drop-shadow-md"><i class="fa-solid fa-circle-exclamation animate-pulse"></i>${row.name}</div>`; }
-
                     const isChecked = selectedRows.has(String(row.id)) ? 'checked' : '';
-
-                    let deleteBtn = `<button onclick="deleteUser(${row.row})" class="text-[var(--status-alert-text)] bg-[var(--status-alert-bg)] w-8 h-8 rounded-lg hover:filter hover:brightness-125 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-trash"></i></button>`;
+                    let deleteBtn = `<button onclick="deleteUser(${row.row})" class="text-[var(--status-alert-text)] bg-[var(--status-alert-bg)] w-8 h-8 rounded-lg hover:filter hover:brightness-125 transition flex items-center justify-center shadow-lg has-tooltip" data-tip="ลบข้อมูล"><i class="fa-solid fa-trash"></i></button>`;
                     if (currentAdminRole === 'hr') {
                         deleteBtn = `<button onclick="Swal.fire({icon:'error', title:'ไม่มีสิทธิ์', text:'สิทธิ์ HR สำรอง ไม่สามารถลบข้อมูลได้ครับ', background:'var(--glass-bg)', color:'var(--text-main)'})" class="text-theme-muted bg-[var(--glass-border)] w-8 h-8 rounded-lg opacity-50 cursor-not-allowed flex items-center justify-center shadow-lg"><i class="fa-solid fa-trash"></i></button>`;
                     }
-
                     tr.innerHTML = `
                         <td class="px-4 py-5 text-center align-top"><input type="checkbox" class="custom-checkbox mt-1" value="${row.id}" onchange="toggleRowSelection(this)" ${isChecked}></td>
                         <td class="px-4 py-5 align-top">
                             ${nameDisplay}
-                            
                             <div class="flex flex-wrap items-center gap-2 mb-3">
                                 <span class="bg-[var(--glass-border)] text-theme-main px-2.5 py-1 rounded-md text-sm font-medium shadow-sm border border-theme-border">
                                     <i class="fa-regular fa-face-smile text-theme-muted mr-1 opacity-70"></i>${row.nickname || '-'}
@@ -2009,33 +1857,24 @@
                                 </span>
                                 <span class="text-xs text-theme-muted font-medium ml-1 bg-black/20 px-2 py-1 rounded-md">${row.dept || '-'}</span>
                             </div>
-                            
                             ${formatPrettyDate(row.timestamp)}
-                            
                             <div class="mt-3 bg-theme-panel p-3 rounded-xl border border-theme-border shadow-inner w-56 transition-all hover:border-[var(--accent)] hover:shadow-[0_0_15px_rgba(var(--accent-rgb),0.1)]">
-    <div class="flex justify-between items-center mb-2">
-        <span class="text-[9px] text-theme-muted font-bold uppercase tracking-widest flex items-center gap-1.5">
-            <i class="fa-solid fa-chart-simple" style="color: ${dayColor};"></i> Progress
-        </span>
-        <span class="text-xs font-digital font-bold" style="color: ${dayColor};">${attendedDays}/3 วัน</span>
-    </div>
-    
-    <div class="w-full bg-[var(--glass-border)] rounded-full h-1.5 mb-2.5 overflow-hidden relative">
-        <div class="h-full rounded-full transition-all duration-1000 ease-out relative" 
-             style="width: ${(attendedDays/3)*100}%; background: ${dayColor}; box-shadow: 0 0 10px ${dayColor};">
-            ${attendedDays > 0 && attendedDays < 3 ? '<div class="absolute inset-0 bg-white/20 animate-pulse"></div>' : ''}
-        </div>
-    </div>
-    
-    <div class="flex justify-between items-center text-[9px]">
-        <div class="flex gap-1.5">
-            ${icon(row.d1, row.timestamp)}${icon(row.d2, row.timestamp)}${icon(row.d3, row.timestamp)}
-        </div>
-        <span class="font-mono font-bold px-1.5 py-0.5 rounded" style="background: rgba(var(--accent-rgb),0.1); color: ${dayColor};">
-            ${Math.round((attendedDays/3)*100)}%
-        </span>
-    </div>
-</div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-[9px] text-theme-muted font-bold uppercase tracking-widest flex items-center gap-1.5">
+                                        <i class="fa-solid fa-chart-simple" style="color: ${dayColor};"></i> Progress
+                                    </span>
+                                    <span class="text-xs font-digital font-bold" style="color: ${dayColor};">${attendedDays}/3 วัน</span>
+                                </div>
+                                <div class="w-full bg-[var(--glass-border)] rounded-full h-1.5 mb-2.5 overflow-hidden relative">
+                                    <div class="h-full rounded-full transition-all duration-1000 ease-out relative" style="width: ${(attendedDays/3)*100}%; background: ${dayColor}; box-shadow: 0 0 10px ${dayColor};">
+                                        ${attendedDays > 0 && attendedDays < 3 ? '<div class="absolute inset-0 bg-white/20 animate-pulse"></div>' : ''}
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center text-[9px]">
+                                    <div class="flex gap-1.5">${icon(row.d1, row.timestamp)}${icon(row.d2, row.timestamp)}${icon(row.d3, row.timestamp)}</div>
+                                    <span class="font-mono font-bold px-1.5 py-0.5 rounded" style="background: rgba(var(--accent-rgb),0.1); color: ${dayColor};">${Math.round((attendedDays/3)*100)}%</span>
+                                </div>
+                            </div>
                         </td>
                         <td class="px-4 py-5 text-center hidden md:table-cell align-middle"><div class="flex justify-center gap-2">${icon(row.d1, row.timestamp)}${icon(row.d2, row.timestamp)}${icon(row.d3, row.timestamp)}</div></td>
                         <td class="px-4 py-5 text-center align-top">
@@ -2045,7 +1884,8 @@
                         </td>
                         <td class="px-4 py-5 text-center align-top">
                             <div class="flex justify-center gap-2">
-                                <button class="edit-row-btn text-theme-accent bg-[var(--glass-border)] w-9 h-9 rounded-xl hover:bg-[var(--accent)] hover:text-white transition flex items-center justify-center shadow-lg"
+                                <button class="edit-row-btn text-theme-accent bg-[var(--glass-border)] w-9 h-9 rounded-xl hover:bg-[var(--accent)] hover:text-white transition flex items-center justify-center shadow-lg has-tooltip"
+                                    data-tip="แก้ไขข้อมูล"
                                     data-row="${row.row}"
                                     data-status="${safeStatus}"
                                     data-team="${String(row.team||'').replace(/"/g,'&quot;')}"
@@ -2061,25 +1901,49 @@
                 } catch(e) {}
             }); updateActionBar();
 
-            // 🔴 FIX: ใช้ event delegation สำหรับปุ่ม edit แทน inline onclick (ป้องกัน XSS + special chars)
             tbody.querySelectorAll('.edit-row-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    openEditModal(
-                        this.dataset.row,
-                        this.dataset.status,
-                        this.dataset.team,
-                        this.dataset.note,
-                        this.dataset.name,
-                        this.dataset.nickname
-                    );
+                    openEditModal(this.dataset.row, this.dataset.status, this.dataset.team, this.dataset.note, this.dataset.name, this.dataset.nickname);
                 });
             });
         }
 
         // --- Selection & Action Bar ---
-        function toggleRowSelection(cb) { if (cb.checked) selectedRows.add(String(cb.value)); else selectedRows.delete(String(cb.value)); updateActionBar(); }
-        function toggleSelectAll() { const cbs = document.querySelectorAll('.custom-checkbox'); const all = selectedRows.size === cbs.length; selectedRows.clear(); cbs.forEach(cb => { cb.checked = !all; if (!all) selectedRows.add(String(cb.value)); }); updateActionBar(); }
-        function updateActionBar() { const count = selectedRows.size; document.getElementById('selectedCount').innerText = count; const bar = document.getElementById('actionBar'); if (count > 0) bar.classList.remove('translate-y-[150%]'); else bar.classList.add('translate-y-[150%]'); }
+        function toggleRowSelection(cb) { 
+            if (cb.checked) selectedRows.add(String(cb.value)); 
+            else selectedRows.delete(String(cb.value)); 
+            updateActionBar(); 
+        }
+        function toggleSelectAll() { 
+            const cbs = document.querySelectorAll('.custom-checkbox'); 
+            const all = selectedRows.size === cbs.length; 
+            selectedRows.clear(); 
+            cbs.forEach(cb => { cb.checked = !all; if (!all) selectedRows.add(String(cb.value)); }); 
+            updateActionBar(); 
+        }
+
+        function updateActionBar() { 
+            const count = selectedRows.size; 
+            document.getElementById('selectedCount').innerText = count; 
+            const bar = document.getElementById('actionBar'); 
+            if (count > 0) {
+                bar.classList.remove('translate-y-[150%]');
+                // 🆕 ซ่อน hint เมื่อมีการเลือกแถว
+                const hint = document.getElementById('selectionHint');
+                if (hint && localStorage.getItem('hr_hint_dismissed') !== '1') {
+                    hint.style.opacity = '0.3';
+                    hint.style.animation = 'none';
+                }
+            } else {
+                bar.classList.add('translate-y-[150%]');
+                // 🆕 คืน hint เมื่อยกเลิกเลือกทั้งหมด
+                const hint = document.getElementById('selectionHint');
+                if (hint && localStorage.getItem('hr_hint_dismissed') !== '1') {
+                    hint.style.opacity = '';
+                    hint.style.animation = '';
+                }
+            }
+        }
 
         // --- General Utilities ---
         function copyToClipboard(id) { let t = document.getElementById(id).value; navigator.clipboard.writeText(t).then(() => Swal.fire({ icon: 'success', title: 'คัดลอกแล้ว', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000, background: 'var(--glass-bg)', color: 'var(--text-main)' })).catch(() => Swal.fire({ icon: 'error', title: 'ไม่สามารถคัดลอกได้', text: 'กรุณาคัดลอกด้วยตนเอง (Ctrl+A, Ctrl+C)', background: 'var(--glass-bg)', color: 'var(--text-main)' })); }
@@ -2098,7 +1962,6 @@
             let currentText = document.getElementById('finalReportText').value; currentText = currentText.replace(/อบรมทั้งหมดจำนวน \d+ คน/, `อบรมทั้งหมดจำนวน ${reportTotalCount} คน`);
             if(currentText.includes("ขอบคุณครับ")) currentText = currentText.replace("ขอบคุณครับ", txt + "ขอบคุณครับ"); else currentText += txt + "ขอบคุณครับ";
             document.getElementById('finalReportText').value = currentText;
-            // 🟢 ใช้ Helper กลาง + Toast แจ้งผล
             clearSelectionAfterAction();
             Swal.fire({ icon: 'success', title: `เพิ่ม ${items.length} คนแล้ว`, text: 'ยกเลิกการติ๊กเลือกอัตโนมัติ พร้อมเลือกรอบถัดไปได้เลย', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000, background: 'var(--glass-bg)', color: 'var(--text-main)' });
         }
@@ -2107,38 +1970,23 @@
         function openHRModal() {
             const tEl = document.getElementById('hrTrainingDate');
             const wEl = document.getElementById('hrWorkDate');
-
-            // ดึงวันเริ่มอบรมจาก Day 1 (d1) ของคนที่ติ๊กเลือกไว้
             const items = adminAllData.filter(i => selectedRows.has(String(i.id)));
             let fallbackDate = new Date();
             let dates = [];
-            if (items && items.length) {
-                dates = items.map(i => parseToDateObj(i.d1)).filter(Boolean);
-            }
-
+            if (items && items.length) { dates = items.map(i => parseToDateObj(i.d1)).filter(Boolean); }
             let chosen = dates.length ? dates.sort((a, b) => a - b)[0] : fallbackDate;
             chosen.setHours(0, 0, 0, 0);
-
             const isoLocal = `${chosen.getFullYear()}-${String(chosen.getMonth() + 1).padStart(2, '0')}-${String(chosen.getDate()).padStart(2, '0')}`;
             tEl.value = isoLocal;
             wEl.value = "";
-            // ไม่ล้าง hrReportText เพื่อให้ append ต่อได้
             document.getElementById('hrModal').classList.remove('hidden');
         }
-        // --- 🟢 Helper: Flash แถวที่เลือกแล้วค่อยล้าง Checkbox ---
+
         function clearSelectionAfterAction() {
-            // 1. Flash สีเขียวที่แถวที่เลือกไว้ก่อน
             selectedRows.forEach(id => {
                 const cb = document.querySelector(`.custom-checkbox[value="${id}"]`);
-                if (cb) {
-                    const row = cb.closest('tr');
-                    if (row) {
-                        row.classList.add('row-flash');
-                        setTimeout(() => row.classList.remove('row-flash'), 700);
-                    }
-                }
+                if (cb) { const row = cb.closest('tr'); if (row) { row.classList.add('row-flash'); setTimeout(() => row.classList.remove('row-flash'), 700); } }
             });
-            // 2. หน่วง 120ms แล้วค่อย clear (เพื่อให้เห็น flash ก่อนที่ checkbox จะหาย)
             setTimeout(() => {
                 selectedRows.clear();
                 document.querySelectorAll('.custom-checkbox').forEach(cb => { cb.checked = false; });
@@ -2147,21 +1995,17 @@
         }
 
         function generateHRReport() {
-            const tDate = document.getElementById('hrTrainingDate').value; const wDate = document.getElementById('hrWorkDate').value; if(!tDate || !wDate) return Swal.fire({icon:'warning', title:'เลือกวันที่ให้ครบ', toast:true, position:'top', showConfirmButton:false, timer:1500});
-            const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate)); const items = adminAllData.filter(i => selectedRows.has(String(i.id)));
+            const tDate = document.getElementById('hrTrainingDate').value; const wDate = document.getElementById('hrWorkDate').value; 
+            if(!tDate || !wDate) return Swal.fire({icon:'warning', title:'เลือกวันที่ให้ครบ', toast:true, position:'top', showConfirmButton:false, timer:1500});
+            const tStr = formatDateThai(new Date(tDate)); const wStr = formatDateThai(new Date(wDate)); 
+            const items = adminAllData.filter(i => selectedRows.has(String(i.id)));
             if (!items.length) return Swal.fire({icon:'warning', title:'ยังไม่ได้เลือกรายชื่อ', text:'กลับไปติ๊กเลือกพนักงานในตารางก่อนนะครับ', background:'var(--glass-bg)', color:'var(--text-main)'});
             let newBlock = "";
             items.forEach(i => { newBlock += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันเริ่มเทรน ${tStr}\nวันเริ่มงาน ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
             newBlock += "ขอบคุณครับ";
             const txtEl = document.getElementById('hrReportText');
-            // ถ้ามีข้อความเดิมอยู่แล้ว ให้ต่อท้ายด้วยบรรทัดว่าง
-            if (txtEl.value.trim()) {
-                txtEl.value = txtEl.value.trimEnd() + "\n\n" + newBlock;
-            } else {
-                txtEl.value = newBlock;
-            }
+            if (txtEl.value.trim()) { txtEl.value = txtEl.value.trimEnd() + "\n\n" + newBlock; } else { txtEl.value = newBlock; }
             txtEl.scrollTop = txtEl.scrollHeight;
-            // 🟢 Auto-clear selection หลังเพิ่มรายการแล้ว
             clearSelectionAfterAction();
             Swal.fire({ icon: 'success', title: `เพิ่ม ${items.length} คนแล้ว`, text: 'ยกเลิกการติ๊กเลือกอัตโนมัติ พร้อมเลือกรอบถัดไปได้เลย', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000, background: 'var(--glass-bg)', color: 'var(--text-main)' });
         }
@@ -2170,7 +2014,7 @@
             Swal.fire({ icon: 'info', title: 'ล้างข้อมูลแล้ว', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000, background: 'var(--glass-bg)', color: 'var(--text-main)' });
         }
 
-        // --- 🔴 3. PAYMENT REPORT LOGIC (อัปเกรดเรียงทีม และ คอลัมน์) ---
+        // --- 3. Payment Report ---
         function getTeamPriority(teamName) {
             if (!teamName) return 999;
             const t = String(teamName).toUpperCase();
@@ -2180,116 +2024,69 @@
         }
 
         function openPaymentModal() {
-            // 1. ดึงคนที่มีคุณสมบัติครบ (3 วัน + Passed) ทั้งหมดในระบบออกมาก่อน
             let passedUsers = adminAllData.filter(row => {
                 let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++; 
                 return attendedDays === 3 && row.status === 'Passed';
             });
-
-            // 2. ถ้า Admin มีการ "ติ๊กเลือก" (Checkbox) ไว้หน้าตาราง ให้กรองเอาเฉพาะคนที่ติ๊ก
             if (selectedRows.size > 0) {
                 passedUsers = passedUsers.filter(i => selectedRows.has(String(i.id)));
-                if (passedUsers.length === 0) {
-                    return Swal.fire({icon:'error', title:'ไม่พบผู้มีสิทธิ์', text:'รายชื่อที่คุณติ๊กเลือก ไม่มีใครเข้าอบรมครบ 3 วัน หรือสถานะยังไม่เป็น Passed ครับ', background: 'var(--glass-bg)', color: 'var(--text-main)'}); 
-                }
+                if (passedUsers.length === 0) { return Swal.fire({icon:'error', title:'ไม่พบผู้มีสิทธิ์', text:'รายชื่อที่คุณติ๊กเลือก ไม่มีใครเข้าอบรมครบ 3 วัน หรือสถานะยังไม่เป็น Passed ครับ', background: 'var(--glass-bg)', color: 'var(--text-main)'}); }
             } else {
-                // ถ้าไม่ได้ติ๊กเลย แต่ไม่มีคนผ่านโปรเลยในระบบ
-                if (passedUsers.length === 0) {
-                    return Swal.fire({icon:'info', title:'ยังไม่มีผู้ผ่านเกณฑ์', text:'ระบบค้นหาแล้ว ยังไม่มีพนักงานที่เทรนครบ 3 วันและเป็นสถานะ Passed ในตอนนี้ครับ', background: 'var(--glass-bg)', color: 'var(--text-main)'}); 
-                }
+                if (passedUsers.length === 0) { return Swal.fire({icon:'info', title:'ยังไม่มีผู้ผ่านเกณฑ์', text:'ระบบค้นหาแล้ว ยังไม่มีพนักงานที่เทรนครบ 3 วันและเป็นสถานะ Passed ในตอนนี้ครับ', background: 'var(--glass-bg)', color: 'var(--text-main)'}); }
             }
-
-            // เรียงทีม (ตาม Priority ที่ตั้งไว้)
             passedUsers.sort((a, b) => getTeamPriority(a.team) - getTeamPriority(b.team) || (String(a.team || '')).localeCompare(String(b.team || ''), 'th'));
-
-            // เคลียร์ช่อง Input วันที่ให้ว่าง
             document.getElementById('paymentCustomDate').value = "";
-            
             window.currentPaymentItems = passedUsers; 
             generatePaymentReportText();
             document.getElementById('paymentModal').classList.remove('hidden'); 
-            
-            // แจ้งเตือนเล็กๆ ให้ Admin รู้ตัวว่าดึงมากี่คน
             const fetchMsg = selectedRows.size > 0 ? 'จากรายชื่อที่คุณเลือก' : 'อัตโนมัติจากทั้งระบบ';
             Swal.fire({ icon: 'success', title: 'ดึงข้อมูลสำเร็จ', text: `ดึงรายชื่อผู้มีสิทธิ์ทำจ่าย ${passedUsers.length} คน (${fetchMsg})`, toast: true, position: 'top-end', showConfirmButton: false, timer: 2000, background: 'var(--glass-bg)', color: 'var(--text-main)' });
         }
 
         function generatePaymentReportText() {
             let passedUsers = window.currentPaymentItems || [];
-            
-            // --- 🟢 ส่วนที่แก้ไขเพิ่ม: นำค่าจาก Input วันที่มากรองข้อมูล ---
             const startDateStr = document.getElementById('paymentStartDate').value;
             const endDateStr = document.getElementById('paymentEndDate').value;
-
             if (startDateStr || endDateStr) {
                 passedUsers = passedUsers.filter(user => {
                     const uDate = parseToDateObj(user.timestamp);
                     if (!uDate) return false; 
-                    
-                    // เซ็ตเวลาเป็นเที่ยงคืนตรงเพื่อเทียบแค่วันที่
                     uDate.setHours(0, 0, 0, 0);
-                    
                     let match = true;
-                    if (startDateStr) {
-                        const sDate = new Date(startDateStr);
-                        sDate.setHours(0, 0, 0, 0);
-                        if (uDate < sDate) match = false;
-                    }
-                    if (endDateStr) {
-                        const eDate = new Date(endDateStr);
-                        eDate.setHours(0, 0, 0, 0);
-                        if (uDate > eDate) match = false;
-                    }
+                    if (startDateStr) { const sDate = new Date(startDateStr); sDate.setHours(0, 0, 0, 0); if (uDate < sDate) match = false; }
+                    if (endDateStr) { const eDate = new Date(endDateStr); eDate.setHours(0, 0, 0, 0); if (uDate > eDate) match = false; }
                     return match;
                 });
             }
-            // -----------------------------------------------------
-
             const customDate = document.getElementById('paymentCustomDate').value.trim();
             const shortMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-
             let tsvText = "ลำดับ\tคำนำหน้า\tชื่อ - นามสกุล\tชื่อเล่น\tทีม\tมี(ประสบการณ์)\tไม่มี(ประสบการณ์)\tวันที่อบรม\n";
-            
             passedUsers.forEach((user, index) => { 
                 let userDateStr = "-";
-
-                // ถ้า Admin พิมพ์ระบุวันที่ในช่อง Input ระบบจะใช้วันที่นั้นแทน
                 if (customDate !== "") {
                     userDateStr = customDate;
                 } else {
-                    // ดึงข้อมูลวันที่เช็คชื่อจาก d1, d2, d3 ของพนักงานแต่ละคนมาประมวลผล
                     let dates = [];
                     let finalYearMonth = "";
-
                     [user.d1, user.d2, user.d3].forEach(d => {
                         if (d) {
                             const dateObj = parseToDateObj(d);
-                            if (dateObj) {
-                                dates.push(dateObj.getDate());
-                                // เก็บเดือนและปีของวันสุดท้ายไว้ต่อท้าย
-                                finalYearMonth = ` ${shortMonths[dateObj.getMonth()]} ${(dateObj.getFullYear() + 543).toString().slice(-2)}`;
-                            }
+                            if (dateObj) { dates.push(dateObj.getDate()); finalYearMonth = ` ${shortMonths[dateObj.getMonth()]} ${(dateObj.getFullYear() + 543).toString().slice(-2)}`; }
                         }
                     });
-
-                    // นำวันที่มารวมกัน เช่น "19และ20และ23 ก.พ. 69"
-                    if (dates.length > 0) {
-                        userDateStr = dates.join('และ') + finalYearMonth;
-                    }
+                    if (dates.length > 0) { userDateStr = dates.join('และ') + finalYearMonth; }
                 }
-
                 tsvText += `${index + 1}\t${user.prefix||""}\t${user.name||""}\t${user.nickname||""}\t${user.team||""}\t\t/\t${userDateStr}\n`; 
             }); 
-            
             document.getElementById('paymentReportText').value = tsvText;
         }
+
         function copyToClipboardPayment() { 
             const text = document.getElementById('paymentReportText').value; 
             if(!text.trim()) return Swal.fire({ icon: 'warning', text: 'ไม่มีข้อมูลให้คัดลอก', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
             navigator.clipboard.writeText(text).then(() => { 
                 Swal.fire({ icon: 'success', title: 'คัดลอกสำเร็จ!', html: '<p class="text-sm mt-2">สลับไปที่ Google Sheet คลิกขวาที่เซลล์บนสุดแล้วกด <b>Paste (วาง)</b> ข้อมูลจะถูกแบ่งคอลัมน์ให้ทันที</p>', confirmButtonColor: '#38bdf8', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
                 document.getElementById('paymentModal').classList.add('hidden');
-                // 🟢 Auto-clear selection หลัง copy ทำจ่ายสำเร็จ
                 clearSelectionAfterAction();
             }).catch(() => Swal.fire({ icon: 'error', title: 'ไม่สามารถคัดลอกได้', text: 'กรุณาคัดลอกข้อความด้วยตนเอง (Ctrl+A, Ctrl+C)', background: 'var(--glass-bg)', color: 'var(--text-main)' })); 
         }
@@ -2297,29 +2094,24 @@
         // =============================================
         // 🎮 GAMIFICATION ENGINE
         // =============================================
-
-        // Avatar color palette — deterministic from name hash
         const AVATAR_PALETTES = [
             ['#f87171','#991b1b'], ['#fb923c','#9a3412'], ['#fbbf24','#92400e'],
             ['#34d399','#065f46'], ['#38bdf8','#0c4a6e'], ['#818cf8','#312e81'],
             ['#e879f9','#701a75'], ['#f472b6','#831843'], ['#a78bfa','#4c1d95'],
             ['#6ee7b7','#064e3b'], ['#67e8f9','#164e63'], ['#93c5fd','#1e3a5f'],
         ];
-
         function getAvatarColor(name) {
             if (!name) return AVATAR_PALETTES[0];
             let hash = 0;
             for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
             return AVATAR_PALETTES[Math.abs(hash) % AVATAR_PALETTES.length];
         }
-
         function getInitials(name) {
             if (!name || name.trim() === '...') return '?';
             const parts = name.trim().split(/\s+/);
             if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
             return parts[0].slice(0, 2).toUpperCase();
         }
-
         function updateAvatar(name) {
             const avatarEl = document.getElementById('avatarContent');
             const ringEl = document.getElementById('avatarCircle');
@@ -2331,8 +2123,6 @@
             ringEl.classList.remove('avatar-ring-animated');
             void ringEl.offsetWidth;
         }
-
-        // XP config: day -> xp
         const DAY_XP = { 1: 100, 2: 100, 3: 100 };
         const MOTIVATE_MSG = [
             'มาเริ่มอบรมวันแรกกันเลย! 🚀',
@@ -2346,91 +2136,45 @@
             { lv: 3, label: 'LV.3', style: 'background: rgba(167,139,250,0.15); border: 1px solid #a78bfa; color: #a78bfa;' },
             { lv: 4, label: 'MAX ⭐', style: 'background: linear-gradient(135deg, rgba(251,191,36,0.25), rgba(245,158,11,0.1)); border: 1px solid #fbbf24; color: #fbbf24;' },
         ];
-
-        function countDays(d) {
-            let c = 0;
-            if (d && d.d1) c++;
-            if (d && d.d2) c++;
-            if (d && d.d3) c++;
-            return c;
-        }
-
+        function countDays(d) { let c = 0; if (d && d.d1) c++; if (d && d.d2) c++; if (d && d.d3) c++; return c; }
         function updateGamification(d) {
             const days = countDays(d);
             const xp = days * 100;
             const pct = (xp / 300) * 100;
-
-            // XP bar
             const fillEl = document.getElementById('xpBarFill');
             const labelEl = document.getElementById('xpLabel');
             const motivateEl = document.getElementById('xpMotivate');
             if (fillEl) { fillEl.style.width = pct + '%'; }
             if (labelEl) { labelEl.textContent = `${xp} / 300 XP`; }
             if (motivateEl) { motivateEl.textContent = MOTIVATE_MSG[days]; }
-
-            // Level badge
             const lvConf = LEVEL_CONFIG[Math.min(days, 3)];
             const lvEl = document.getElementById('levelBadge');
-            if (lvEl) {
-                lvEl.textContent = lvConf.label;
-                lvEl.style.cssText = lvConf.style;
-            }
-
-            // Avatar ring animated at max level
+            if (lvEl) { lvEl.textContent = lvConf.label; lvEl.style.cssText = lvConf.style; }
             const ringEl = document.getElementById('avatarCircle');
-            if (ringEl) {
-                if (days === 3) ringEl.classList.add('avatar-ring-animated');
-                else ringEl.classList.remove('avatar-ring-animated');
-            }
-
-            // Badges
-            const badgeMap = { 1: 'badge-day1', 2: 'badge-day2', 3: 'badge-day3' };
+            if (ringEl) { if (days === 3) ringEl.classList.add('avatar-ring-animated'); else ringEl.classList.remove('avatar-ring-animated'); }
             for (let i = 1; i <= 3; i++) {
                 const el = document.getElementById(`badge-day${i}`);
-                if (el) {
-                    if (d && d[`d${i}`]) el.classList.add('unlocked');
-                    else el.classList.remove('unlocked');
-                }
+                if (el) { if (d && d[`d${i}`]) el.classList.add('unlocked'); else el.classList.remove('unlocked'); }
             }
             const completeEl = document.getElementById('badge-complete');
-            if (completeEl) {
-                if (days === 3) completeEl.classList.add('unlocked');
-                else completeEl.classList.remove('unlocked');
-            }
-
-            // Completion banner
+            if (completeEl) { if (days === 3) completeEl.classList.add('unlocked'); else completeEl.classList.remove('unlocked'); }
             const banner = document.getElementById('completionBanner');
-            if (banner) {
-                if (days === 3) banner.classList.remove('hidden');
-                else banner.classList.add('hidden');
-            }
+            if (banner) { if (days === 3) banner.classList.remove('hidden'); else banner.classList.add('hidden'); }
         }
-
-        // Floating XP burst
         function spawnXPFloat(xpAmt, anchorEl) {
             const el = document.createElement('div');
             el.className = 'xp-float';
             el.textContent = `+${xpAmt} XP ⚡`;
             document.body.appendChild(el);
-            const rect = anchorEl
-                ? anchorEl.getBoundingClientRect()
-                : { left: window.innerWidth / 2, top: window.innerHeight / 2, width: 0, height: 0 };
+            const rect = anchorEl ? anchorEl.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight / 2, width: 0, height: 0 };
             el.style.left = (rect.left + rect.width / 2 - 24) + 'px';
             el.style.top = (rect.top + rect.height / 2) + 'px';
             setTimeout(() => el.remove(), 1000);
         }
-
-        // Star / sparkle burst
-        const STAR_EMOJIS_BY_DAY = [
-            ['⭐','✨','💫'],          // day 1
-            ['🔥','⚡','💥','✨'],     // day 2
-            ['🏆','🌟','🎊','🎉','💎'], // day 3
-        ];
+        const STAR_EMOJIS_BY_DAY = [['⭐','✨','💫'], ['🔥','⚡','💥','✨'], ['🏆','🌟','🎊','🎉','💎']];
         function spawnStarBurst(dayIndex, anchorEl) {
             const stars = STAR_EMOJIS_BY_DAY[Math.min(dayIndex - 1, 2)];
-            const rect = anchorEl
-                ? anchorEl.getBoundingClientRect()
-                : { left: window.innerWidth / 2, top: window.innerHeight / 2, width: 60, height: 40 };
+            const rect = anchorEl ? anchorEl.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight / 2, width: 60, height: 40 };
             const cx = rect.left + rect.width / 2;
             const cy = rect.top + rect.height / 2;
             for (let i = 0; i < 8; i++) {
@@ -2446,21 +2190,15 @@
                 setTimeout(() => el.remove(), 1200);
             }
         }
-
-        // Day-specific confetti configs
         function launchDayEffect(day) {
             const configs = [
-                // Day 1 — cool blue burst
                 { particleCount: 100, spread: 70, origin: { y: 0.65 }, colors: ['#38bdf8','#818cf8','#ffffff'], zIndex: 9999 },
-                // Day 2 — fire orange wide
                 { particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#fb923c','#fbbf24','#f87171'], startVelocity: 35, zIndex: 9999 },
-                // Day 3 — full gold rainbow
                 { particleCount: 220, spread: 140, origin: { y: 0.55 }, colors: ['#fbbf24','#34d399','#818cf8','#f472b6','#38bdf8'], startVelocity: 45, scalar: 1.1, zIndex: 9999 },
             ];
             if (typeof confetti !== 'undefined') {
                 const cfg = configs[Math.min(day - 1, 2)];
                 confetti(cfg);
-                // For day 3, fire double salvo
                 if (day === 3) {
                     setTimeout(() => confetti({ ...cfg, origin: { x: 0.25, y: 0.6 }, angle: 60 }), 400);
                     setTimeout(() => confetti({ ...cfg, origin: { x: 0.75, y: 0.6 }, angle: 120 }), 700);
@@ -2468,40 +2206,23 @@
             }
         }
 
-        // =============================================
-        // END GAMIFICATION ENGINE
-        // =============================================
-
         // --- Data Mutators ---
         function toggleTeamInput(s) { const i = document.getElementById('editTeamInput'); if (s.value === 'OTHER') { i.classList.remove('hidden'); i.focus(); } else { i.classList.add('hidden'); } }
         function openEditModal(row, st, tm, nt, name, nickname) {
             document.getElementById('editRowId').value = row; 
             document.getElementById('editStatus').value = st; 
             document.getElementById('editNote').value = nt;
-            
-            // ใส่ชื่อให้ Admin เห็นชัดๆ ป้องกันแก้ผิดคน
             const titleEl = document.getElementById('editModalTitle');
             if (titleEl) {
-                // 🔴 FIX: escape HTML เพื่อป้องกัน XSS จากชื่อที่มีอักขระพิเศษ
                 const safeName = String(name).replace(/</g,'&lt;').replace(/>/g,'&gt;');
                 const safeNickname = String(nickname).replace(/</g,'&lt;').replace(/>/g,'&gt;');
                 titleEl.innerHTML = `แก้ไขข้อมูล: <span class="text-theme-accent font-sans text-sm block mt-1"><i class="fa-regular fa-user mr-1"></i>${safeName} (${safeNickname})</span>`;
             }
-
-            // 🔴 FIX: เปลี่ยนชื่อตัวแปร sel/inp เพื่อไม่ shadow parameter
             const sel = document.getElementById('editTeamSelect'); 
             const inp = document.getElementById('editTeamInput'); 
             const opts = Array.from(sel.options).map(o => o.value);
-            
-            if (opts.includes(tm)) { 
-                sel.value = tm; 
-                inp.classList.add('hidden'); 
-                inp.value = ""; 
-            } else { 
-                sel.value = 'OTHER'; 
-                inp.classList.remove('hidden'); 
-                inp.value = tm; 
-            } 
+            if (opts.includes(tm)) { sel.value = tm; inp.classList.add('hidden'); inp.value = ""; } 
+            else { sel.value = 'OTHER'; inp.classList.remove('hidden'); inp.value = tm; } 
             document.getElementById('editModal').classList.remove('hidden');
         }
         
@@ -2511,16 +2232,12 @@
             const inp = document.getElementById('editTeamInput'); 
             const tm = sel.value === 'OTHER' ? inp.value.trim() : sel.value; 
             const res = await fetchAPI({ action: 'admin_update', row: document.getElementById('editRowId').value, team: tm, status: document.getElementById('editStatus').value, note: document.getElementById('editNote').value }); 
-            if (res && res.status === 'error') {
-                Swal.fire({ icon: 'error', title: 'บันทึกไม่สำเร็จ', text: res.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่', background: 'var(--glass-bg)', color: 'var(--text-main)' });
-            }
+            if (res && res.status === 'error') { Swal.fire({ icon: 'error', title: 'บันทึกไม่สำเร็จ', text: res.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่', background: 'var(--glass-bg)', color: 'var(--text-main)' }); }
             loadAdminData(); 
         }
 
         async function deleteUser(row) { 
-            if (currentAdminRole === 'hr') {
-                return Swal.fire({ icon: 'error', title: 'ไม่อนุญาต', text: 'สิทธิ์ HR สำรอง ไม่สามารถลบข้อมูลได้ครับ', background: 'var(--glass-bg)', color: 'var(--text-main)' });
-            }
+            if (currentAdminRole === 'hr') { return Swal.fire({ icon: 'error', title: 'ไม่อนุญาต', text: 'สิทธิ์ HR สำรอง ไม่สามารถลบข้อมูลได้ครับ', background: 'var(--glass-bg)', color: 'var(--text-main)' }); }
             const c = await Swal.fire({ title: 'ลบข้อมูล?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
             if (c.isConfirmed) { await fetchAPI({ action: 'admin_delete', row }); loadAdminData(); } 
         }
