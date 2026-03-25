@@ -558,6 +558,13 @@
             border-radius: 12px;
         }
 
+        /* ✅ Paid badge glow */
+        @keyframes paidGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(52,211,153,0.4); }
+            50% { box-shadow: 0 0 0 5px rgba(52,211,153,0); }
+        }
+        .paid-badge-new { animation: paidGlow 1.5s ease 3; }
+
         select.glass-input {
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364899e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
@@ -947,6 +954,12 @@
                                 style="background: linear-gradient(135deg, var(--btn-from), var(--btn-to)); box-shadow: 0 4px 12px rgba(var(--accent-rgb),0.25);">
                             <i class="fa-solid fa-file-invoice-dollar"></i> สรุปทำจ่าย
                         </button>
+                        <button onclick="openPaidHistoryModal()" 
+                                class="text-xs px-3 py-2 rounded-xl transition font-bold flex items-center gap-1.5 transform active:scale-95 has-tooltip"
+                                data-tip="ดูรายชื่อที่ทำจ่ายแล้วทั้งหมด"
+                                style="background:rgba(52,211,153,0.12);color:#34d399;border:1px solid rgba(52,211,153,0.35);">
+                            <i class="fa-solid fa-shield-check text-[11px]"></i> ทำจ่ายแล้ว
+                        </button>
                     </div>
                 </div>
 
@@ -1273,6 +1286,12 @@
         let sortState = { key: 'timestamp', asc: false };
         let currentAdminRole = 'master'; 
         let checkinLock = {};
+        // ✅ ระบบป้องกันทำจ่ายซ้ำ — เก็บไว้ใน localStorage
+        let paidRegistry = JSON.parse(localStorage.getItem('hr_paid_registry') || '{}');
+        function savePaidRegistry() { localStorage.setItem('hr_paid_registry', JSON.stringify(paidRegistry)); }
+        function markAsPaid(users) { const now = new Date().toLocaleString('th-TH'); users.forEach(u => { paidRegistry[String(u.id)] = { name: u.name, paidAt: now }; }); savePaidRegistry(); }
+        function isPaid(id) { return !!paidRegistry[String(id)]; }
+        function resetPaidStatus(id) { delete paidRegistry[String(id)]; savePaidRegistry(); }
 
         function getTodayKey() {
             const now = new Date();
@@ -1770,10 +1789,16 @@
         }
 
         function renderAdminTable(data) {
-            const tbody = document.getElementById('adminTable'); 
-            tbody.innerHTML = '';
+            const tbody = document.getElementById('adminTable'); tbody.innerHTML = '';
             const countEl = document.getElementById('adminRowCount');
             if (countEl) { countEl.textContent = data ? data.length : 0; countEl.classList.remove('hidden'); }
+
+            // ✅ FIX: ล้าง selectedRows ที่ค้างอยู่จาก render ก่อนหน้า
+            const currentIds = new Set((data || []).map(r => String(r.id)));
+            selectedRows.forEach(id => { if (!currentIds.has(id)) selectedRows.delete(id); });
+
+            // ✅ เก็บ filtered data ไว้ใช้ re-render เมื่อรีเซ็ตสถานะทำจ่าย
+            window._lastFilteredData = data;
 
             if(!data || data.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" class="text-center py-12 text-theme-muted"><div class="flex flex-col items-center gap-3"><i class="fa-solid fa-inbox text-3xl opacity-30"></i><span class="text-sm">ไม่พบข้อมูลที่ตรงกับเงื่อนไข</span></div></td></tr>';
@@ -1806,9 +1831,6 @@
                 } catch(e) { return val; }
             };
 
-            // 🚀 อัปเกรด: ใช้ DocumentFragment เพื่อวาดตารางทีเดียว ลดอาการหน้าจอค้าง
-            const fragment = document.createDocumentFragment();
-
             data.forEach(row => {
                 try {
                     const tr = document.createElement('tr'); 
@@ -1820,7 +1842,6 @@
                     let badge = "status-default"; 
                     let displayStatus = safeStatus || '-';
                     let overdueWarning = '';
-                    
                     if (safeStatus === 'Active') {
                         displayStatus = `ACTIVE (${attendedDays} วัน)`;
                         if (attendedDays === 0) { badge = "status-active !bg-gray-500/20 !text-gray-400 !border-gray-400 !shadow-none"; }
@@ -1841,17 +1862,14 @@
                     } 
                     else if (safeStatus === 'Passed') { badge = "status-passed"; } 
                     else if (['Resigned','New Job'].includes(safeStatus)) { badge = "status-alert"; }
-                    
                     let dayColor = attendedDays === 3 ? 'var(--status-passed-text)' : (isDropout ? 'var(--status-alert-text)' : 'var(--accent)');
                     let nameDisplay = `<div class="font-bold text-theme-main text-base mb-1.5">${row.name || '-'}</div>`;
                     if (isDropout) { nameDisplay = `<div class="font-bold text-[var(--status-alert-text)] text-base mb-1.5 flex items-center gap-1.5 drop-shadow-md"><i class="fa-solid fa-circle-exclamation animate-pulse"></i>${row.name}</div>`; }
                     const isChecked = selectedRows.has(String(row.id)) ? 'checked' : '';
                     let deleteBtn = `<button onclick="deleteUser(${row.row})" class="text-[var(--status-alert-text)] bg-[var(--status-alert-bg)] w-8 h-8 rounded-lg hover:filter hover:brightness-125 transition flex items-center justify-center shadow-lg has-tooltip" data-tip="ลบข้อมูล"><i class="fa-solid fa-trash"></i></button>`;
-                    
                     if (currentAdminRole === 'hr') {
                         deleteBtn = `<button onclick="Swal.fire({icon:'error', title:'ไม่มีสิทธิ์', text:'สิทธิ์ HR สำรอง ไม่สามารถลบข้อมูลได้ครับ', background:'var(--glass-bg)', color:'var(--text-main)'})" class="text-theme-muted bg-[var(--glass-border)] w-8 h-8 rounded-lg opacity-50 cursor-not-allowed flex items-center justify-center shadow-lg"><i class="fa-solid fa-trash"></i></button>`;
                     }
-                    
                     tr.innerHTML = `
                         <td class="px-4 py-5 text-center align-top"><input type="checkbox" class="custom-checkbox mt-1" value="${row.id}" onchange="toggleRowSelection(this)" ${isChecked}></td>
                         <td class="px-4 py-5 align-top">
@@ -1888,6 +1906,7 @@
                         <td class="px-4 py-5 text-center align-top">
                             <div class="status-badge ${badge}">${displayStatus}</div>
                             ${overdueWarning} ${isDropout ? `<div class="mt-3 block bg-[var(--status-alert-bg)] border border-[var(--status-alert-text)] text-[var(--status-alert-text)] text-xs font-bold px-2 py-1.5 rounded shadow-lg animate-pulse"><i class="fa-solid fa-user-slash mr-1"></i>ออกระหว่างเทรน</div>` : ''}
+                            ${isPaid(row.id) ? `<div class="mt-2 inline-flex items-center gap-1 bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 text-[9px] font-bold px-2 py-1 rounded cursor-pointer has-tooltip" data-tip="คลิกเพื่อยกเลิกสถานะทำจ่าย" onclick="if(confirm('ยกเลิกสถานะ ทำจ่ายแล้ว ของ ${row.name} ?')) { resetPaidStatus('${row.id}'); renderAdminTable(window._lastFilteredData || []); }"><i class="fa-solid fa-circle-check"></i> ทำจ่ายแล้ว</div>` : ''}
                             ${row.note ? `<div class="text-[11px] text-theme-muted mt-3 max-w-[120px] truncate mx-auto bg-[var(--glass-bg)] px-2 py-1 rounded border border-theme-border" title="${String(row.note).replace(/"/g,'&quot;')}"><i class="fa-solid fa-comment-dots mr-1"></i> ${String(row.note).replace(/</g,'&lt;')}</div>` : ''}
                         </td>
                         <td class="px-4 py-5 text-center align-top">
@@ -1905,14 +1924,9 @@
                                 ${deleteBtn}
                             </div>
                         </td>
-                    `; 
-                    fragment.appendChild(tr); // 🚀 เพิ่มลง Fragment แทนการแปะลง DOM ทันที
+                    `; tbody.appendChild(tr);
                 } catch(e) {}
-            }); 
-            
-            // 🚀 นำตารางทั้งหมดไปแปะลง DOM แค่ครั้งเดียว (เร็วขึ้นมาก!)
-            tbody.appendChild(fragment);
-            updateActionBar();
+            }); updateActionBar();
 
             tbody.querySelectorAll('.edit-row-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -1928,22 +1942,11 @@
             updateActionBar(); 
         }
         function toggleSelectAll() { 
-            // ดึงเฉพาะ Checkbox ที่กำลังแสดงอยู่บนตารางในขณะนั้น
-            const cbs = document.querySelectorAll('#adminTable .custom-checkbox'); 
-            if (cbs.length === 0) return;
-
-            // เช็คว่า ณ ตอนนี้ทุกแถวที่เห็น "ถูกเลือกครบอยู่แล้ว" หรือไม่
-            const isAllVisibleChecked = Array.from(cbs).every(cb => cb.checked);
-
-            cbs.forEach(cb => { 
-                cb.checked = !isAllVisibleChecked; // สลับสถานะ
-                if (!isAllVisibleChecked) {
-                    selectedRows.add(String(cb.value)); // เพิ่มเข้า Set
-                } else {
-                    selectedRows.delete(String(cb.value)); // เอาออกจาก Set
-                }
-            }); 
-            
+            const cbs = document.querySelectorAll('.custom-checkbox'); 
+            // ✅ FIX: ตรวจสอบจาก checkbox จริง ไม่ใช่ selectedRows.size (ซึ่งอาจ stale)
+            const allChecked = cbs.length > 0 && Array.from(cbs).every(cb => cb.checked);
+            selectedRows.clear(); 
+            cbs.forEach(cb => { cb.checked = !allChecked; if (!allChecked) selectedRows.add(String(cb.value)); }); 
             updateActionBar(); 
         }
 
@@ -2026,7 +2029,7 @@
             const items = adminAllData.filter(i => selectedRows.has(String(i.id)));
             if (!items.length) return Swal.fire({icon:'warning', title:'ยังไม่ได้เลือกรายชื่อ', text:'กลับไปติ๊กเลือกพนักงานในตารางก่อนนะครับ', background:'var(--glass-bg)', color:'var(--text-main)'});
             let newBlock = "";
-            items.forEach(i => { newBlock += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันเริ่ม อบรม ${tStr}\nวันเริ่มงาน ลงแผนก ${wStr} (ที่เริ่มงานจริง)\n\n`; });
+            items.forEach(i => { newBlock += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันเริ่ม อบรม ${tStr}\nวันเริ่มงาน ${wStr} (ที่เริ่มงานจริง)\n\n`; });
             newBlock += "ขอบคุณครับ";
             const txtEl = document.getElementById('hrReportText');
             if (txtEl.value.trim()) { txtEl.value = txtEl.value.trimEnd() + "\n\n" + newBlock; } else { txtEl.value = newBlock; }
@@ -2051,28 +2054,45 @@
         function openPaymentModal() {
             let passedUsers = adminAllData.filter(row => {
                 let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++; 
-                
-                // 🚀 เพิ่มเงื่อนไข: เช็คว่าในช่อง "หมายเหตุ" มีการพิมพ์คำว่า [ทำจ่ายแล้ว] หรือไม่
-                const isPaid = row.note && String(row.note).includes('[ทำจ่ายแล้ว]');
-                
-                // คนที่จะมาทำจ่ายได้ต้อง: เทรนครบ 3 วัน + สถานะ Passed + และช่องหมายเหตุต้องไม่มีคำว่า [ทำจ่ายแล้ว]
-                return attendedDays === 3 && row.status === 'Passed' && !isPaid;
+                return attendedDays === 3 && row.status === 'Passed';
             });
-
             if (selectedRows.size > 0) {
                 passedUsers = passedUsers.filter(i => selectedRows.has(String(i.id)));
-                if (passedUsers.length === 0) { return Swal.fire({icon:'error', title:'ไม่พบผู้มีสิทธิ์', text:'รายชื่อที่เลือก ไม่มีใครเข้าอบรมครบ 3 วัน หรืออาจจะมีการทำจ่ายไปแล้วครับ', background: 'var(--glass-bg)', color: 'var(--text-main)'}); }
+                if (passedUsers.length === 0) { return Swal.fire({icon:'error', title:'ไม่พบผู้มีสิทธิ์', text:'รายชื่อที่คุณติ๊กเลือก ไม่มีใครเข้าอบรมครบ 3 วัน หรือสถานะยังไม่เป็น Passed ครับ', background: 'var(--glass-bg)', color: 'var(--text-main)'}); }
             } else {
-                if (passedUsers.length === 0) { return Swal.fire({icon:'info', title:'ยังไม่มีผู้ผ่านเกณฑ์', text:'ระบบค้นหาแล้ว ยังไม่มีพนักงานที่ผ่านเกณฑ์หรือคนที่ยังไม่ได้ทำจ่ายในตอนนี้ครับ', background: 'var(--glass-bg)', color: 'var(--text-main)'}); }
+                if (passedUsers.length === 0) { return Swal.fire({icon:'info', title:'ยังไม่มีผู้ผ่านเกณฑ์', text:'ระบบค้นหาแล้ว ยังไม่มีพนักงานที่เทรนครบ 3 วันและเป็นสถานะ Passed ในตอนนี้ครับ', background: 'var(--glass-bg)', color: 'var(--text-main)'}); }
             }
-            
+
+            // ✅ แยกรายชื่อที่ทำจ่ายแล้ว vs ยังไม่ทำจ่าย
+            const alreadyPaid = passedUsers.filter(u => isPaid(u.id));
+            const notYetPaid  = passedUsers.filter(u => !isPaid(u.id));
+
             passedUsers.sort((a, b) => getTeamPriority(a.team) - getTeamPriority(b.team) || (String(a.team || '')).localeCompare(String(b.team || ''), 'th'));
             document.getElementById('paymentCustomDate').value = "";
-            window.currentPaymentItems = passedUsers; 
+
+            // ✅ เตือนหากมีคนที่ทำจ่ายแล้วอยู่ในรายการ
+            if (alreadyPaid.length > 0) {
+                const paidNames = alreadyPaid.map(u => `• ${u.name}`).join('<br>');
+                Swal.fire({
+                    icon: 'warning',
+                    title: `⚠️ พบรายการที่ทำจ่ายแล้ว ${alreadyPaid.length} คน`,
+                    html: `<div class="text-left text-sm mt-2 max-h-40 overflow-y-auto" style="color:var(--text-main)">${paidNames}</div>
+                           <p class="mt-3 text-xs" style="color:var(--text-muted)">รายการเหล่านี้จะ<b>ถูกแยกออก</b>จากรายงานทำจ่ายเพื่อป้องกันการทำซ้ำ<br>หากต้องการรวม ให้คลิก badge "ทำจ่ายแล้ว" ในตารางก่อน</p>`,
+                    confirmButtonText: 'เข้าใจแล้ว ดำเนินการต่อ',
+                    confirmButtonColor: 'var(--accent)',
+                    background: 'var(--glass-bg)', color: 'var(--text-main)'
+                });
+                // ✅ ใช้เฉพาะรายชื่อที่ยังไม่ทำจ่ายในรายงาน
+                window.currentPaymentItems = notYetPaid.sort((a, b) => getTeamPriority(a.team) - getTeamPriority(b.team) || (String(a.team || '')).localeCompare(String(b.team || ''), 'th'));
+            } else {
+                window.currentPaymentItems = passedUsers;
+            }
+
             generatePaymentReportText();
             document.getElementById('paymentModal').classList.remove('hidden'); 
-            const fetchMsg = selectedRows.size > 0 ? 'จากรายชื่อที่คุณเลือก' : 'อัตโนมัติจากทั้งระบบ (ไม่รวมคนที่ทำจ่ายแล้ว)';
-            Swal.fire({ icon: 'success', title: 'ดึงข้อมูลสำเร็จ', text: `ดึงรายชื่อผู้มีสิทธิ์ทำจ่าย ${passedUsers.length} คน ${fetchMsg}`, toast: true, position: 'top-end', showConfirmButton: false, timer: 2000, background: 'var(--glass-bg)', color: 'var(--text-main)' });
+            const fetchMsg = selectedRows.size > 0 ? 'จากรายชื่อที่คุณเลือก' : 'อัตโนมัติจากทั้งระบบ';
+            const newCount = (window.currentPaymentItems || []).length;
+            Swal.fire({ icon: 'success', title: 'ดึงข้อมูลสำเร็จ', text: `ดึงรายชื่อผู้มีสิทธิ์ทำจ่าย ${newCount} คน (${fetchMsg})`, toast: true, position: 'top-end', showConfirmButton: false, timer: 2000, background: 'var(--glass-bg)', color: 'var(--text-main)' });
         }
 
         function generatePaymentReportText() {
@@ -2117,10 +2137,63 @@
             const text = document.getElementById('paymentReportText').value; 
             if(!text.trim()) return Swal.fire({ icon: 'warning', text: 'ไม่มีข้อมูลให้คัดลอก', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
             navigator.clipboard.writeText(text).then(() => { 
-                Swal.fire({ icon: 'success', title: 'คัดลอกสำเร็จ!', html: '<p class="text-sm mt-2">สลับไปที่ Google Sheet คลิกขวาที่เซลล์บนสุดแล้วกด <b>Paste (วาง)</b> ข้อมูลจะถูกแบ่งคอลัมน์ให้ทันที</p>', confirmButtonColor: '#38bdf8', background: 'var(--glass-bg)', color: 'var(--text-main)' }); 
+                // ✅ Mark ทุกคนในรายงานว่า "ทำจ่ายแล้ว" ทันทีที่คัดลอก
+                const paidNow = window.currentPaymentItems || [];
+                markAsPaid(paidNow);
+                // ✅ Re-render ตารางให้แสดง badge ทันที
+                if (window._lastFilteredData) renderAdminTable(window._lastFilteredData);
+                Swal.fire({ 
+                    icon: 'success', 
+                    title: 'คัดลอกสำเร็จ!', 
+                    html: `<p class="text-sm mt-2">สลับไปที่ Google Sheet คลิกขวาที่เซลล์บนสุดแล้วกด <b>Paste (วาง)</b><br><span class="text-xs mt-2 block" style="color:var(--status-passed-text)"><i class="fa-solid fa-shield-check mr-1"></i>บันทึกสถานะ "ทำจ่ายแล้ว" ให้ <b>${paidNow.length} คน</b> เรียบร้อยแล้ว</span></p>`,
+                    confirmButtonColor: '#38bdf8', 
+                    background: 'var(--glass-bg)', 
+                    color: 'var(--text-main)' 
+                }); 
                 document.getElementById('paymentModal').classList.add('hidden');
                 clearSelectionAfterAction();
             }).catch(() => Swal.fire({ icon: 'error', title: 'ไม่สามารถคัดลอกได้', text: 'กรุณาคัดลอกข้อความด้วยตนเอง (Ctrl+A, Ctrl+C)', background: 'var(--glass-bg)', color: 'var(--text-main)' })); 
+        }
+
+        // ✅ ดูประวัติการทำจ่ายทั้งหมด
+        function openPaidHistoryModal() {
+            const entries = Object.entries(paidRegistry);
+            if (entries.length === 0) {
+                return Swal.fire({ icon: 'info', title: 'ยังไม่มีประวัติการทำจ่าย', text: 'ยังไม่เคยทำจ่ายค่าอบรมให้ใครในระบบนี้', background: 'var(--glass-bg)', color: 'var(--text-main)' });
+            }
+            const rows = entries.map(([id, info]) => 
+                `<tr style="border-bottom:1px solid var(--glass-border)">
+                    <td class="py-2 px-3 text-sm" style="color:var(--text-main)">${info.name || '-'}</td>
+                    <td class="py-2 px-3 text-xs text-right" style="color:var(--text-muted)">${info.paidAt || '-'}</td>
+                    <td class="py-2 px-3 text-center">
+                        <button onclick="resetPaidStatus('${id}'); openPaidHistoryModal();" 
+                                class="text-[10px] px-2 py-0.5 rounded" 
+                                style="background:var(--status-alert-bg);color:var(--status-alert-text);border:1px solid var(--status-alert-text)">
+                            ยกเลิก
+                        </button>
+                    </td>
+                </tr>`
+            ).join('');
+            Swal.fire({
+                title: `<i class="fa-solid fa-shield-check mr-2" style="color:var(--status-passed-text)"></i>ทำจ่ายแล้ว ${entries.length} คน`,
+                html: `<div style="max-height:320px;overflow-y:auto;border:1px solid var(--glass-border);border-radius:10px">
+                           <table style="width:100%;border-collapse:collapse">
+                               <thead><tr style="background:var(--glass-bg)">
+                                   <th class="py-2 px-3 text-left text-xs" style="color:var(--accent)">ชื่อ</th>
+                                   <th class="py-2 px-3 text-right text-xs" style="color:var(--accent)">ทำจ่ายเมื่อ</th>
+                                   <th class="py-2 px-3 text-xs" style="color:var(--accent)">ยกเลิก</th>
+                               </tr></thead>
+                               <tbody>${rows}</tbody>
+                           </table>
+                       </div>
+                       <p class="text-xs mt-3" style="color:var(--text-muted)">กด "ยกเลิก" เพื่อรีเซ็ตสถานะรายบุคคล</p>`,
+                width: '480px',
+                confirmButtonText: 'ปิด',
+                confirmButtonColor: 'var(--accent)',
+                background: 'var(--glass-bg)', color: 'var(--text-main)'
+            }).then(() => {
+                if (window._lastFilteredData) renderAdminTable(window._lastFilteredData);
+            });
         }
 
         // =============================================
