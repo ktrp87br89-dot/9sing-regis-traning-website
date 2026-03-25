@@ -2026,7 +2026,7 @@
             const items = adminAllData.filter(i => selectedRows.has(String(i.id)));
             if (!items.length) return Swal.fire({icon:'warning', title:'ยังไม่ได้เลือกรายชื่อ', text:'กลับไปติ๊กเลือกพนักงานในตารางก่อนนะครับ', background:'var(--glass-bg)', color:'var(--text-main)'});
             let newBlock = "";
-            items.forEach(i => { newBlock += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันเริ่มเทรน ${tStr}\nวันเริ่มงาน ${wStr} ที่เริ่มงานจริง ลงแผนก\n\n`; });
+            items.forEach(i => { newBlock += `${i.prefix||''}${i.name}\n${i.nickname}  ${i.team}\nวันเริ่ม training ${tStr}\nวันเริ่มงาน ลงแผนก ${wStr} (ที่เริ่มงานจริง)\n\n`; });
             newBlock += "ขอบคุณครับ";
             const txtEl = document.getElementById('hrReportText');
             if (txtEl.value.trim()) { txtEl.value = txtEl.value.trimEnd() + "\n\n" + newBlock; } else { txtEl.value = newBlock; }
