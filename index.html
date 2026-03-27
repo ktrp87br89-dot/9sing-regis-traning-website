@@ -1248,7 +1248,7 @@
             <div class="flex-1 overflow-y-auto px-5 py-4 space-y-3">
                 <div class="flex items-start gap-2.5 p-3 rounded-xl text-[11px]" style="background: rgba(var(--accent-rgb),0.07); border: 1px solid rgba(var(--accent-rgb),0.2); color: var(--accent);">
                     <i class="fa-solid fa-circle-info mt-0.5 shrink-0"></i>
-                    <div>ระบบคัดกรองเฉพาะผู้ที่ <b>"ติ๊กเลือก + เข้าอบรมครบ 3 วัน + สถานะ Passed"</b> เท่านั้น</div>
+                    <div>ระบบคัดกรองเฉพาะผู้ที่ <b>"ติ๊กเลือก + เข้าอบรมครบ 3 วัน + สถานะ Passed + ไม่มีคำว่า [ทำจ่ายแล้ว] ในหมายเหตุ"</b> เท่านั้น</div>
                 </div>
                 <div class="grid grid-cols-2 gap-2.5">
                     <div>
@@ -2054,7 +2054,9 @@
         function openPaymentModal() {
             let passedUsers = adminAllData.filter(row => {
                 let attendedDays = 0; if (row.d1) attendedDays++; if (row.d2) attendedDays++; if (row.d3) attendedDays++; 
-                return attendedDays === 3 && row.status === 'Passed';
+                // เพิ่มเงื่อนไขตรวจสอบคำว่า [ทำจ่ายแล้ว] ในช่องหมายเหตุ
+                let hasPaidNote = row.note && String(row.note).includes('[ทำจ่ายแล้ว]');
+                return attendedDays === 3 && row.status === 'Passed' && !hasPaidNote;
             });
             if (selectedRows.size > 0) {
                 passedUsers = passedUsers.filter(i => selectedRows.has(String(i.id)));
