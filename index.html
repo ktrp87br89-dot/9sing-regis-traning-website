@@ -1110,7 +1110,7 @@
                 <div>
                     <label class="text-[9px] text-theme-muted font-bold block mb-1.5 uppercase tracking-wider">ทีม (Team)</label>
                     <select id="editTeamSelect" onchange="toggleTeamInput(this)" class="w-full p-2.5 rounded-xl glass-input text-sm">
-                        <option value="RETAIL 1" class="bg-white text-black">RETAIL 1</option><option value="RETAIL 2" class="bg-white text-black">RETAIL 2</option><option value="RETAIL 3" class="bg-white text-black">RETAIL 3</option><option value="RETAIL 4" class="bg-white text-black">RETAIL 4</option>
+                        <option value="RETAIL 1" class="bg-white text-black">RETAIL 1</option><option value="RETAIL 2" class="bg-white text-black">RETAIL 2</option><option value="RETAIL 3" class="bg-white text-black">RETAIL 3</option><option value="RETAIL 4" class="bg-white text-black">RETAIL 4</option><option value="RETAIL 5" class="bg-white text-black">RETAIL 5</option>
                         <option value="PA 1A" class="bg-white text-black">PA 1A</option><option value="PA 1B" class="bg-white text-black">PA 1B</option><option value="PA 1C" class="bg-white text-black">PA 1C</option><option value="PA 1D" class="bg-white text-black">PA 1D</option>
                         <option value="PA 2A" class="bg-white text-black">PA 2A</option><option value="PA 2B" class="bg-white text-black">PA 2B</option><option value="PA 2C" class="bg-white text-black">PA 2C</option>
                         <option value="MOTOR 1" class="bg-white text-black">MOTOR 1</option><option value="OTHER" class="bg-white text-black font-bold">+ พิมพ์เอง</option>
@@ -2046,7 +2046,7 @@
         function getTeamPriority(teamName) {
             if (!teamName) return 999;
             const t = String(teamName).toUpperCase();
-            const order = ["RETAIL 1", "RETAIL 2", "RETAIL 3", "RETAIL 4", "PA 1A", "PA 1B", "PA 1C", "PA 1D", "PA 2A", "PA 2B", "PA 2C", "MOTOR 1"];
+            const order = ["RETAIL 1", "RETAIL 2", "RETAIL 3", "RETAIL 4", "RETAIL 5", "PA 1A", "PA 1B", "PA 1C", "PA 1D", "PA 2A", "PA 2B", "PA 2C", "MOTOR 1"];
             const index = order.indexOf(t);
             return index !== -1 ? index : 999;
         }
